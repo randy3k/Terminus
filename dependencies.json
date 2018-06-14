@@ -1,0 +1,17 @@
+{
+    "windows": {
+        ">3000": [
+            "pyte",
+            "pywinpty",
+            "wcwidth"
+        ]
+    },
+
+    "*": {
+        ">3000": [
+            "ptyprocess",
+            "pyte",
+            "wcwidth"
+        ]
+    }
+}
