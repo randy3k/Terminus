@@ -40,13 +40,13 @@ def which_char(text, cursor_position):
 def render_line(buffer_line):
     is_wide_char = False
     text = ""
-    for i in range(len(buffer_line)):
-        if is_wide_char:  # Skip stub
+    for i in buffer_line:
+        if is_wide_char:
             is_wide_char = False
             continue
-        char = buffer_line[i].data
-        is_wide_char = wcwidth(char) == 2
-        text += char
+        data = buffer_line[i].data
+        is_wide_char = wcwidth(data) == 2
+        text += data
     return text
 
 
@@ -56,32 +56,33 @@ def segment_buffer_line(buffer_line):
     """
     is_wide_char = False
     text = ""
-    for i in range(len(buffer_line)):
-        if is_wide_char:  # Skip stub
+    start = 0
+    counter = 0
+    fg = "default"
+    bg = "default"
+    for i in buffer_line:
+        if is_wide_char:
             is_wide_char = False
             continue
-        c = buffer_line[i]
-        is_wide_char = wcwidth(c.data) == 2
-        if i == 0:
-            start = 0
-            end = 0
-            fg = c.fg
-            bg = c.bg
+        char = buffer_line[i]
+        is_wide_char = wcwidth(char.data) == 2
 
-        if fg != c.fg or bg != c.bg:
-            yield text, start, end, fg, bg
-            fg = c.fg
-            bg = c.bg
-            text = c.data
-            start = end
-            end += 1
+        if counter == 0:
+            counter = i
+            text = " " * i
+
+        if fg != char.fg or bg != char.bg:
+            yield text, start, counter, fg, bg
+            fg = char.fg
+            bg = char.bg
+            text = char.data
+            start = counter
         else:
-            text += c.data
-            end += 1
+            text += char.data
 
-        if i == len(buffer_line) - 1:
-            end += 1
-            yield text, start, end, fg, bg
+        counter += 1
+
+    yield text, start, counter, fg, bg
 
 
 class ConsolePtyProcess(PtyProcess):
@@ -296,7 +297,7 @@ class Console():
 _counter = [0]
 
 
-def get_key():
+def get_incremental_key():
     _counter[0] += 1
     return "#{}".format(_counter)
 
@@ -328,7 +329,7 @@ class ConsoleRender(sublime_plugin.TextCommand):
         cursor = screen.cursor
         offset = screen.offset
         # make sure the view has enough lines
-        self.ensure_line(edit, cursor.y + offset)
+        self.ensure_position(edit, cursor.y + offset)
 
         line_region = view.line(view.text_point(cursor.y + offset, 0))
         text = view.substr(line_region)
@@ -361,26 +362,40 @@ class ConsoleRender(sublime_plugin.TextCommand):
                 self.update_line(edit, line + offset, buffer_line)
 
     def update_line(self, edit, line, buffer_line):
+        if line == 5:
+            print(buffer_line)
+            print(list(segment_buffer_line(buffer_line)))
         view = self.view
         # make sure the view has enough lines
-        self.ensure_line(edit, line)
+        self.ensure_position(edit, line)
         line_region = view.line(view.text_point(line, 0))
         segments = list(segment_buffer_line(buffer_line))
-        view.replace(edit, line_region, "".join(s[0] for s in segments))
+        view.erase(edit, line_region)
+        view.insert(edit, line_region.begin(), "".join(s[0] for s in segments))
+        self.colorize_line(edit, line, segments)
+
+    def colorize_line(self, edit, line, segments):
+        view = self.view
         for s in segments:
-            print(s)
             fg, bg = s[3:]
             if fg != "default" or bg != "default":
+                self.ensure_position(edit, line, s[2])
+                a = view.text_point(line, s[1])
+                b = view.text_point(line, s[2])
                 view.add_regions(
-                    get_key(),
-                    [sublime.Region(view.text_point(line, s[1]), view.text_point(line, s[2]))],
+                    get_incremental_key(),
+                    [sublime.Region(a, b)],
                     "console.{}.{}".format(fg, bg))
 
-    def ensure_line(self, edit, line):
+    def ensure_position(self, edit, row, col=0):
         view = self.view
         lastrow = view.rowcol(view.size())[0]
-        if lastrow < line:
-            view.insert(edit, view.size(), "\n" * (line - lastrow))
+        if lastrow < row:
+            view.insert(edit, view.size(), "\n" * (row - lastrow))
+        line_region = view.line(view.text_point(row, 0))
+        lastcol = view.rowcol(line_region.end())[1]
+        if lastcol < col:
+            view.insert(edit, line_region.end(), " " * (col - lastcol))
 
     def trim_trailing_spaces(self, edit, screen):
         view = self.view
@@ -425,7 +440,6 @@ class ConsoleKeypress(sublime_plugin.TextCommand):
     def run(self, _, **kwargs):
         console = Console.from_id(self.view.id())
         console.send_key(**kwargs)
-        sublime.set_timeout_async(lambda: self.view.run_command("console_render"))
 
 
 class ConsoleSendString(sublime_plugin.TextCommand):
@@ -433,7 +447,6 @@ class ConsoleSendString(sublime_plugin.TextCommand):
     def run(self, _, string):
         console = Console.from_id(self.view.id())
         console.send_string(string)
-        sublime.set_timeout_async(lambda: self.view.run_command("console_render"))
 
 
 class ConsolePaste(sublime_plugin.TextCommand):
@@ -501,7 +514,7 @@ class ConsoleOpen(sublime_plugin.WindowCommand):
             if sys.platform.startswith("win"):
                 env = {}
             else:
-                env = {"TERM": "xterm-256color", "LANG": "en_US.UTF-8"}
+                env = {"TERM": "linux", "LANG": "en_US.UTF-8"}
 
         if not cwd:
             if self.window.folders():
