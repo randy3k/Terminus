@@ -1,6 +1,6 @@
 {
     // the name of the theme
-    // "default" or "user" are the only supported options now
+    // change it to "user" if you want to use customized theme
     "theme": "default",
     "user_theme_colors": {
         // pur your own colors here and do not edit `default_theme_colors`
