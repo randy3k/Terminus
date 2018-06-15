@@ -1,0 +1,24 @@
+[
+    {
+        "caption": "Console: login shell",
+        "command": "console_open"
+    },
+    {
+        "caption": "Console Utilities: Generate User Theme",
+        "command": "console_generate_theme"
+    },
+    {
+        "caption": "Console Utilities: Remove User Theme",
+        "command": "console_generate_theme",
+        "args": {"remove": true}
+    },
+    {
+        "caption": "Preferences: Console Settings",
+        "command": "edit_settings",
+        "args":
+        {
+            "base_file": "${packages}/Console/Console.sublime-settings",
+            "default": "{\n\t$0\n}\n"
+        }
+    }
+]

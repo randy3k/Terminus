@@ -161,7 +161,7 @@ class Console():
         self.view.settings().set("draw_indent_guides", False)
         self.view.settings().set("caret_style", "blink")
         self.view.settings().set("scroll_past_end", True)
-        self.view.settings().set("color_scheme", "Console-ansi.sublime-color-scheme")
+        self.view.settings().set("color_scheme", "Console.sublime-color-scheme")
 
     @classmethod
     def from_id(cls, vid):
@@ -294,12 +294,16 @@ class Console():
         self.process.terminate(force=True)
 
 
-_counter = [0]
+def _get_incremental_key():
+    _counter = [0]
+
+    def _():
+        _counter[0] += 1
+        return "#{}".format(_counter)
+    return _
 
 
-def get_incremental_key():
-    _counter[0] += 1
-    return "#{}".format(_counter)
+get_incremental_key = _get_incremental_key()
 
 
 class ConsoleRender(sublime_plugin.TextCommand):
