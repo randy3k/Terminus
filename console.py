@@ -19,7 +19,6 @@ else:
 
 
 logger = logging.getLogger('Console')
-logger.setLevel(logging.DEBUG)
 
 if not logger.hasHandlers():
     ch = logging.StreamHandler(sys.stdout)
@@ -366,9 +365,6 @@ class ConsoleRender(sublime_plugin.TextCommand):
                 self.update_line(edit, line + offset, buffer_line)
 
     def update_line(self, edit, line, buffer_line):
-        if line == 5:
-            print(buffer_line)
-            print(list(segment_buffer_line(buffer_line)))
         view = self.view
         # make sure the view has enough lines
         self.ensure_position(edit, line)
