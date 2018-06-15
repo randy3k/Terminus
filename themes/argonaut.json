@@ -1,0 +1,23 @@
+{
+    "name": "Argonaut",
+    "theme_colors": {
+        "foreground": "#fffaf4",
+        "background": "#0e1019",
+        "black": "#232323",
+        "red": "#ff000f",
+        "green": "#8ce10b",
+        "brown": "#ffb900",
+        "blue": "#008df8",
+        "magenta": "#6d43a6",
+        "cyan": "#00d8eb",
+        "white": "#ffffff",
+        "light_black": "#444444",
+        "light_red": "#ff2740",
+        "light_green": "#abe15b",
+        "light_brown": "#ffd242",
+        "light_blue": "#0092ff",
+        "light_magenta": "#9a5feb",
+        "light_cyan": "#67fff0",
+        "light_white": "#ffffff"
+    }
+}

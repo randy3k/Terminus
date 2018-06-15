@@ -1,0 +1,23 @@
+{
+    "name": "Elemental",
+    "theme_colors": {
+        "foreground": "#807a74",
+        "background": "#22211d",
+        "black": "#3c3c30",
+        "red": "#98290f",
+        "green": "#479a43",
+        "brown": "#7f7111",
+        "blue": "#497f7d",
+        "magenta": "#7f4e2f",
+        "cyan": "#387f58",
+        "white": "#807974",
+        "light_black": "#555445",
+        "light_red": "#e0502a",
+        "light_green": "#61e070",
+        "light_brown": "#d69927",
+        "light_blue": "#79d9d9",
+        "light_magenta": "#cd7c54",
+        "light_cyan": "#59d599",
+        "light_white": "#fff1e9"
+    }
+}

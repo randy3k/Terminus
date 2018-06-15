@@ -1,0 +1,23 @@
+{
+    "name": "Rippedcasts",
+    "theme_colors": {
+        "foreground": "#ffffff",
+        "background": "#2b2b2b",
+        "black": "#000000",
+        "red": "#cdaf95",
+        "green": "#a8ff60",
+        "brown": "#bfbb1f",
+        "blue": "#75a5b0",
+        "magenta": "#ff73fd",
+        "cyan": "#5a647e",
+        "white": "#bfbfbf",
+        "light_black": "#666666",
+        "light_red": "#eecbad",
+        "light_green": "#bcee68",
+        "light_brown": "#e5e500",
+        "light_blue": "#86bdc9",
+        "light_magenta": "#e500e5",
+        "light_cyan": "#8c9bc4",
+        "light_white": "#e5e5e5"
+    }
+}

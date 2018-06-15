@@ -1,0 +1,23 @@
+{
+    "name": "Alien Blood",
+    "theme_colors": {
+        "foreground": "#637d75",
+        "background": "#0f1610",
+        "black": "#112616",
+        "red": "#7f2b27",
+        "green": "#2f7e25",
+        "brown": "#717f24",
+        "blue": "#2f6a7f",
+        "magenta": "#47587f",
+        "cyan": "#327f77",
+        "white": "#647d75",
+        "light_black": "#3c4812",
+        "light_red": "#e08009",
+        "light_green": "#18e000",
+        "light_brown": "#bde000",
+        "light_blue": "#00aae0",
+        "light_magenta": "#0058e0",
+        "light_cyan": "#00e0c4",
+        "light_white": "#73fa91"
+    }
+}

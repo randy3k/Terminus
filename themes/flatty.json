@@ -1,0 +1,23 @@
+{
+    "name": "Flatty",
+    "theme_colors": {
+        "foreground": "#A1B0B8",
+        "background": "#1F2C3A",
+        "black": "#2C3E50",
+        "red": "#C0392B",
+        "green": "#27AE5F",
+        "brown": "#F39C11",
+        "blue": "#2880B9",
+        "magenta": "#8E44AD",
+        "cyan": "#16A085",
+        "white": "#BDC3C7",
+        "light_black": "#33495E",
+        "light_red": "#E74B3B",
+        "light_green": "#2ECC71",
+        "light_brown": "#F1C30F",
+        "light_blue": "#3497DB",
+        "light_magenta": "#9A59B6",
+        "light_cyan": "#29A198",
+        "light_white": "#EEEEEC"
+    }
+}

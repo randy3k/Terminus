@@ -1,0 +1,23 @@
+{
+    "name": "AdventureTime",
+    "theme_colors": {
+        "foreground": "#f8dcc0",
+        "background": "#1f1d45",
+        "black": "#050404",
+        "red": "#bd0013",
+        "green": "#4ab118",
+        "brown": "#e7741e",
+        "blue": "#0f4ac6",
+        "magenta": "#665993",
+        "cyan": "#70a598",
+        "white": "#f8dcc0",
+        "light_black": "#4e7cbf",
+        "light_red": "#fc5f5a",
+        "light_green": "#9eff6e",
+        "light_brown": "#efc11a",
+        "light_blue": "#1997c6",
+        "light_magenta": "#9b5953",
+        "light_cyan": "#c8faf4",
+        "light_white": "#f6f5fb"
+    }
+}

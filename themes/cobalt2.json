@@ -1,0 +1,23 @@
+{
+    "name": "Cobalt2",
+    "theme_colors": {
+        "foreground": "#ffffff",
+        "background": "#132738",
+        "black": "#000000",
+        "red": "#ff0000",
+        "green": "#38de21",
+        "brown": "#ffe50a",
+        "blue": "#1460d2",
+        "magenta": "#ff005d",
+        "cyan": "#00bbbb",
+        "white": "#bbbbbb",
+        "light_black": "#555555",
+        "light_red": "#f40e17",
+        "light_green": "#3bd01d",
+        "light_brown": "#edc809",
+        "light_blue": "#5555ff",
+        "light_magenta": "#ff55ff",
+        "light_cyan": "#6ae3fa",
+        "light_white": "#ffffff"
+    }
+}

@@ -1,0 +1,23 @@
+{
+    "name": "Github",
+    "theme_colors": {
+        "foreground": "#3e3e3e",
+        "background": "#f4f4f4",
+        "black": "#3e3e3e",
+        "red": "#970b16",
+        "green": "#07962a",
+        "brown": "#f8eec7",
+        "blue": "#003e8a",
+        "magenta": "#e94691",
+        "cyan": "#89d1ec",
+        "white": "#ffffff",
+        "light_black": "#666666",
+        "light_red": "#de0000",
+        "light_green": "#87d5a2",
+        "light_brown": "#f1d007",
+        "light_blue": "#2e6cba",
+        "light_magenta": "#ffa29f",
+        "light_cyan": "#1cfafe",
+        "light_white": "#ffffff"
+    }
+}

@@ -1,0 +1,23 @@
+{
+    "name": "Hipster Green",
+    "theme_colors": {
+        "foreground": "#84c138",
+        "background": "#100b05",
+        "black": "#000000",
+        "red": "#b6214a",
+        "green": "#00a600",
+        "brown": "#bfbf00",
+        "blue": "#246eb2",
+        "magenta": "#b200b2",
+        "cyan": "#00a6b2",
+        "white": "#bfbfbf",
+        "light_black": "#666666",
+        "light_red": "#e50000",
+        "light_green": "#86a93e",
+        "light_brown": "#e5e500",
+        "light_blue": "#0000ff",
+        "light_magenta": "#e500e5",
+        "light_cyan": "#00e5e5",
+        "light_white": "#e5e5e5"
+    }
+}

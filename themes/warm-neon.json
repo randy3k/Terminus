@@ -1,0 +1,23 @@
+{
+    "name": "Warm Neon",
+    "theme_colors": {
+        "foreground": "#afdab6",
+        "background": "#404040",
+        "black": "#000000",
+        "red": "#e24346",
+        "green": "#39b13a",
+        "brown": "#dae145",
+        "blue": "#4261c5",
+        "magenta": "#f920fb",
+        "cyan": "#2abbd4",
+        "white": "#d0b8a3",
+        "light_black": "#fefcfc",
+        "light_red": "#e97071",
+        "light_green": "#9cc090",
+        "light_brown": "#ddda7a",
+        "light_blue": "#7b91d6",
+        "light_magenta": "#f674ba",
+        "light_cyan": "#5ed1e5",
+        "light_white": "#d8c8bb"
+    }
+}

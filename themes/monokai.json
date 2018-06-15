@@ -1,0 +1,23 @@
+{
+    "name": "Monokai Dark",
+    "theme_colors": {
+        "foreground": "#F8F8F2",
+        "background": "#272822",
+        "black": "#272822",
+        "red": "#f92672",
+        "green": "#a6e22e",
+        "brown": "#f4bf75",
+        "blue": "#66d9ef",
+        "magenta": "#ae81ff",
+        "cyan": "#a1efe4",
+        "white": "#f8f8f2",
+        "light_black": "#75715e",
+        "light_red": "#f92672",
+        "light_green": "#a6e22e",
+        "light_brown": "#f4bf75",
+        "light_blue": "#66d9ef",
+        "light_magenta": "#ae81ff",
+        "light_cyan": "#a1efe4",
+        "light_white": "#f9f8f5"
+    }
+}

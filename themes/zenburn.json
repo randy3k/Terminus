@@ -1,0 +1,23 @@
+{
+    "name": "Zenburn",
+    "theme_colors": {
+        "foreground": "#dcdccc",
+        "background": "#3f3f3f",
+        "black": "#4d4d4d",
+        "red": "#705050",
+        "green": "#60b48a",
+        "brown": "#f0dfaf",
+        "blue": "#506070",
+        "magenta": "#dc8cc3",
+        "cyan": "#8cd0d3",
+        "white": "#dcdccc",
+        "light_black": "#709080",
+        "light_red": "#dca3a3",
+        "light_green": "#c3bf9f",
+        "light_brown": "#e0cf9f",
+        "light_blue": "#94bff3",
+        "light_magenta": "#ec93d3",
+        "light_cyan": "#93e0e3",
+        "light_white": "#ffffff"
+    }
+}

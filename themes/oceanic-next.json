@@ -1,0 +1,23 @@
+{
+    "name": "Oceanic-Next",
+    "theme_colors": {
+        "foreground": "#b3b8c3",
+        "background": "#121b21",
+        "black": "#121C21",
+        "red": "#E44754",
+        "green": "#89BD82",
+        "brown": "#F7BD51",
+        "blue": "#5486C0",
+        "magenta": "#B77EB8",
+        "cyan": "#50A5A4",
+        "white": "#FFFFFF",
+        "light_black": "#52606B",
+        "light_red": "#E44754",
+        "light_green": "#89BD82",
+        "light_brown": "#F7BD51",
+        "light_blue": "#5486C0",
+        "light_magenta": "#B77EB8",
+        "light_cyan": "#50A5A4",
+        "light_white": "#FFFFFF"
+    }
+}

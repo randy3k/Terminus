@@ -1,0 +1,23 @@
+{
+    "name": "C64",
+    "theme_colors": {
+        "foreground": "#7869c4",
+        "background": "#40318d",
+        "black": "#090300",
+        "red": "#883932",
+        "green": "#55a049",
+        "brown": "#bfce72",
+        "blue": "#40318d",
+        "magenta": "#8b3f96",
+        "cyan": "#67b6bd",
+        "white": "#ffffff",
+        "light_black": "#000000",
+        "light_red": "#883932",
+        "light_green": "#55a049",
+        "light_brown": "#bfce72",
+        "light_blue": "#40318d",
+        "light_magenta": "#8b3f96",
+        "light_cyan": "#67b6bd",
+        "light_white": "#f7f7f7"
+    }
+}

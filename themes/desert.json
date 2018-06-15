@@ -1,0 +1,23 @@
+{
+    "name": "Desert",
+    "theme_colors": {
+        "foreground": "#ffffff",
+        "background": "#333333",
+        "black": "#4d4d4d",
+        "red": "#ff2b2b",
+        "green": "#98fb98",
+        "brown": "#f0e68c",
+        "blue": "#cd853f",
+        "magenta": "#ffdead",
+        "cyan": "#ffa0a0",
+        "white": "#f5deb3",
+        "light_black": "#555555",
+        "light_red": "#ff5555",
+        "light_green": "#55ff55",
+        "light_brown": "#ffff55",
+        "light_blue": "#87ceff",
+        "light_magenta": "#ff55ff",
+        "light_cyan": "#ffd700",
+        "light_white": "#ffffff"
+    }
+}

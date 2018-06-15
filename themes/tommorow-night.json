@@ -1,0 +1,23 @@
+{
+    "name": "Tommorow Night",
+    "theme_colors": {
+        "foreground": "#c5c8c6",
+        "background": "#1d1f21",
+        "black": "#000000",
+        "red": "#cc6666",
+        "green": "#b5bd68",
+        "brown": "#f0c674",
+        "blue": "#81a2be",
+        "magenta": "#b294bb",
+        "cyan": "#8abeb7",
+        "white": "#ffffff",
+        "light_black": "#000000",
+        "light_red": "#cc6666",
+        "light_green": "#b5bd68",
+        "light_brown": "#f0c674",
+        "light_blue": "#81a2be",
+        "light_magenta": "#b294bb",
+        "light_cyan": "#8abeb7",
+        "light_white": "#ffffff"
+    }
+}

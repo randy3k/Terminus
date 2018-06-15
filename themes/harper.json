@@ -1,0 +1,23 @@
+{
+    "name": "Harper",
+    "theme_colors": {
+        "foreground": "#a8a49d",
+        "background": "#010101",
+        "black": "#010101",
+        "red": "#f8b63f",
+        "green": "#7fb5e1",
+        "brown": "#d6da25",
+        "blue": "#489e48",
+        "magenta": "#b296c6",
+        "cyan": "#f5bfd7",
+        "white": "#a8a49d",
+        "light_black": "#726e6a",
+        "light_red": "#f8b63f",
+        "light_green": "#7fb5e1",
+        "light_brown": "#d6da25",
+        "light_blue": "#489e48",
+        "light_magenta": "#b296c6",
+        "light_cyan": "#f5bfd7",
+        "light_white": "#fefbea"
+    }
+}

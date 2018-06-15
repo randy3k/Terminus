@@ -1,0 +1,23 @@
+{
+    "name": "Urple",
+    "theme_colors": {
+        "foreground": "#877a9b",
+        "background": "#1b1b23",
+        "black": "#000000",
+        "red": "#b0425b",
+        "green": "#37a415",
+        "brown": "#ad5c42",
+        "blue": "#564d9b",
+        "magenta": "#6c3ca1",
+        "cyan": "#808080",
+        "white": "#87799c",
+        "light_black": "#5d3225",
+        "light_red": "#ff6388",
+        "light_green": "#29e620",
+        "light_brown": "#f08161",
+        "light_blue": "#867aed",
+        "light_magenta": "#a05eee",
+        "light_cyan": "#eaeaea",
+        "light_white": "#bfa3ff"
+    }
+}

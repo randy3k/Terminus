@@ -1,0 +1,23 @@
+{
+    "name": "Sea Shells",
+    "theme_colors": {
+        "foreground": "#deb88d",
+        "background": "#09141b",
+        "black": "#17384c",
+        "red": "#d15123",
+        "green": "#027c9b",
+        "brown": "#fca02f",
+        "blue": "#1e4950",
+        "magenta": "#68d4f1",
+        "cyan": "#50a3b5",
+        "white": "#deb88d",
+        "light_black": "#434b53",
+        "light_red": "#d48678",
+        "light_green": "#628d98",
+        "light_brown": "#fdd39f",
+        "light_blue": "#1bbcdd",
+        "light_magenta": "#bbe3ee",
+        "light_cyan": "#87acb4",
+        "light_white": "#fee4ce"
+    }
+}

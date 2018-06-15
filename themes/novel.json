@@ -1,0 +1,23 @@
+{
+    "name": "Novel",
+    "theme_colors": {
+        "foreground": "#3b2322",
+        "background": "#dfdbc3",
+        "black": "#000000",
+        "red": "#cc0000",
+        "green": "#009600",
+        "brown": "#d06b00",
+        "blue": "#0000cc",
+        "magenta": "#cc00cc",
+        "cyan": "#0087cc",
+        "white": "#cccccc",
+        "light_black": "#808080",
+        "light_red": "#cc0000",
+        "light_green": "#009600",
+        "light_brown": "#d06b00",
+        "light_blue": "#0000cc",
+        "light_magenta": "#cc00cc",
+        "light_cyan": "#0087cc",
+        "light_white": "#ffffff"
+    }
+}

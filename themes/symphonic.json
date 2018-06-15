@@ -1,0 +1,23 @@
+{
+    "name": "Symphonic",
+    "theme_colors": {
+        "foreground": "#ffffff",
+        "background": "#000000",
+        "black": "#000000",
+        "red": "#dc322f",
+        "green": "#56db3a",
+        "brown": "#ff8400",
+        "blue": "#0084d4",
+        "magenta": "#b729d9",
+        "cyan": "#ccccff",
+        "white": "#ffffff",
+        "light_black": "#1b1d21",
+        "light_red": "#dc322f",
+        "light_green": "#56db3a",
+        "light_brown": "#ff8400",
+        "light_blue": "#0084d4",
+        "light_magenta": "#b729d9",
+        "light_cyan": "#ccccff",
+        "light_white": "#ffffff"
+    }
+}

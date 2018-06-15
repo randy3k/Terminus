@@ -1,0 +1,23 @@
+{
+    "name": "Misterioso",
+    "theme_colors": {
+        "foreground": "#e1e1e0",
+        "background": "#2d3743",
+        "black": "#000000",
+        "red": "#ff4242",
+        "green": "#74af68",
+        "brown": "#ffad29",
+        "blue": "#338f86",
+        "magenta": "#9414e6",
+        "cyan": "#23d7d7",
+        "white": "#e1e1e0",
+        "light_black": "#555555",
+        "light_red": "#ff3242",
+        "light_green": "#74cd68",
+        "light_brown": "#ffb929",
+        "light_blue": "#23d7d7",
+        "light_magenta": "#ff37ff",
+        "light_cyan": "#00ede1",
+        "light_white": "#ffffff"
+    }
+}

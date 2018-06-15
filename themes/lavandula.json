@@ -1,0 +1,23 @@
+{
+    "name": "Lavandula",
+    "theme_colors": {
+        "foreground": "#736e7d",
+        "background": "#050014",
+        "black": "#230046",
+        "red": "#7d1625",
+        "green": "#337e6f",
+        "brown": "#7f6f49",
+        "blue": "#4f4a7f",
+        "magenta": "#5a3f7f",
+        "cyan": "#58777f",
+        "white": "#736e7d",
+        "light_black": "#372d46",
+        "light_red": "#e05167",
+        "light_green": "#52e0c4",
+        "light_brown": "#e0c386",
+        "light_blue": "#8e87e0",
+        "light_magenta": "#a776e0",
+        "light_cyan": "#9ad4e0",
+        "light_white": "#8c91fa"
+    }
+}

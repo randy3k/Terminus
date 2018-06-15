@@ -1,0 +1,23 @@
+{
+    "name": "IR Black",
+    "theme_colors": {
+        "foreground": "#f1f1f1",
+        "background": "#000000",
+        "black": "#4f4f4f",
+        "red": "#fa6c60",
+        "green": "#a8ff60",
+        "brown": "#fffeb7",
+        "blue": "#96cafe",
+        "magenta": "#fa73fd",
+        "cyan": "#c6c5fe",
+        "white": "#efedef",
+        "light_black": "#7b7b7b",
+        "light_red": "#fcb6b0",
+        "light_green": "#cfffab",
+        "light_brown": "#ffffcc",
+        "light_blue": "#b5dcff",
+        "light_magenta": "#fb9cfe",
+        "light_cyan": "#e0e0fe",
+        "light_white": "#ffffff"
+    }
+}

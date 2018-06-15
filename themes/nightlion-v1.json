@@ -1,0 +1,23 @@
+{
+    "name": "Nightlion V1",
+    "theme_colors": {
+        "foreground": "#bbbbbb",
+        "background": "#000000",
+        "black": "#4c4c4c",
+        "red": "#bb0000",
+        "green": "#5fde8f",
+        "brown": "#f3f167",
+        "blue": "#276bd8",
+        "magenta": "#bb00bb",
+        "cyan": "#00dadf",
+        "white": "#bbbbbb",
+        "light_black": "#555555",
+        "light_red": "#ff5555",
+        "light_green": "#55ff55",
+        "light_brown": "#ffff55",
+        "light_blue": "#5555ff",
+        "light_magenta": "#ff55ff",
+        "light_cyan": "#55ffff",
+        "light_white": "#ffffff"
+    }
+}

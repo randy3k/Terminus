@@ -1,0 +1,23 @@
+{
+    "name": "Chalkboard",
+    "theme_colors": {
+        "foreground": "#d9e6f2",
+        "background": "#29262f",
+        "black": "#000000",
+        "red": "#c37372",
+        "green": "#72c373",
+        "brown": "#c2c372",
+        "blue": "#7372c3",
+        "magenta": "#c372c2",
+        "cyan": "#72c2c3",
+        "white": "#d9d9d9",
+        "light_black": "#323232",
+        "light_red": "#dbaaaa",
+        "light_green": "#aadbaa",
+        "light_brown": "#dadbaa",
+        "light_blue": "#aaaadb",
+        "light_magenta": "#dbaada",
+        "light_cyan": "#aadadb",
+        "light_white": "#ffffff"
+    }
+}

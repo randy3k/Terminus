@@ -1,0 +1,23 @@
+{
+    "name": "Jellybeans",
+    "theme_colors": {
+        "foreground": "#dedede",
+        "background": "#121212",
+        "black": "#929292",
+        "red": "#e27373",
+        "green": "#94b979",
+        "brown": "#ffba7b",
+        "blue": "#97bedc",
+        "magenta": "#e1c0fa",
+        "cyan": "#00988e",
+        "white": "#dedede",
+        "light_black": "#bdbdbd",
+        "light_red": "#ffa1a1",
+        "light_green": "#bddeab",
+        "light_brown": "#ffdca0",
+        "light_blue": "#b1d8f6",
+        "light_magenta": "#fbdaff",
+        "light_cyan": "#1ab2a8",
+        "light_white": "#ffffff"
+    }
+}

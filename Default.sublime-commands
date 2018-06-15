@@ -4,6 +4,10 @@
         "command": "console_open"
     },
     {
+        "caption": "Console Utilities: Select Theme",
+        "command": "console_select_theme"
+    },
+    {
         "caption": "Console Utilities: Generate User Theme",
         "command": "console_generate_theme"
     },

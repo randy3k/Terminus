@@ -1,0 +1,23 @@
+{
+    "name": "Red Sands",
+    "theme_colors": {
+        "foreground": "#d7c9a7",
+        "background": "#7a251e",
+        "black": "#000000",
+        "red": "#ff3f00",
+        "green": "#00bb00",
+        "brown": "#e7b000",
+        "blue": "#0072ff",
+        "magenta": "#bb00bb",
+        "cyan": "#00bbbb",
+        "white": "#bbbbbb",
+        "light_black": "#555555",
+        "light_red": "#bb0000",
+        "light_green": "#00bb00",
+        "light_brown": "#e7b000",
+        "light_blue": "#0072ae",
+        "light_magenta": "#ff55ff",
+        "light_cyan": "#55ffff",
+        "light_white": "#ffffff"
+    }
+}

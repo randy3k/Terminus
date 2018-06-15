@@ -1,0 +1,23 @@
+{
+    "name": "Vaughn",
+    "theme_colors": {
+        "foreground": "#dcdccc",
+        "background": "#25234f",
+        "black": "#25234f",
+        "red": "#705050",
+        "green": "#60b48a",
+        "brown": "#dfaf8f",
+        "blue": "#5555ff",
+        "magenta": "#f08cc3",
+        "cyan": "#8cd0d3",
+        "white": "#709080",
+        "light_black": "#709080",
+        "light_red": "#dca3a3",
+        "light_green": "#60b48a",
+        "light_brown": "#f0dfaf",
+        "light_blue": "#5555ff",
+        "light_magenta": "#ec93d3",
+        "light_cyan": "#93e0e3",
+        "light_white": "#ffffff"
+    }
+}

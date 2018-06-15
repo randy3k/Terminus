@@ -1,0 +1,23 @@
+{
+    "name": "Wryan",
+    "theme_colors": {
+        "foreground": "#999993",
+        "background": "#101010",
+        "black": "#333333",
+        "red": "#8c4665",
+        "green": "#287373",
+        "brown": "#7c7c99",
+        "blue": "#395573",
+        "magenta": "#5e468c",
+        "cyan": "#31658c",
+        "white": "#899ca1",
+        "light_black": "#3d3d3d",
+        "light_red": "#bf4d80",
+        "light_green": "#53a6a6",
+        "light_brown": "#9e9ecb",
+        "light_blue": "#477ab3",
+        "light_magenta": "#7e62b3",
+        "light_cyan": "#6096bf",
+        "light_white": "#c0c0c0"
+    }
+}

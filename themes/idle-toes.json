@@ -1,0 +1,23 @@
+{
+    "name": "Idle Toes",
+    "theme_colors": {
+        "foreground": "#ffffff",
+        "background": "#323232",
+        "black": "#323232",
+        "red": "#d25252",
+        "green": "#7fe173",
+        "brown": "#ffc66d",
+        "blue": "#4099ff",
+        "magenta": "#f680ff",
+        "cyan": "#bed6ff",
+        "white": "#eeeeec",
+        "light_black": "#535353",
+        "light_red": "#f07070",
+        "light_green": "#9dff91",
+        "light_brown": "#ffe48b",
+        "light_blue": "#5eb7f7",
+        "light_magenta": "#ff9dff",
+        "light_cyan": "#dcf4ff",
+        "light_white": "#ffffff"
+    }
+}

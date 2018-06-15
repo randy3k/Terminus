@@ -1,0 +1,23 @@
+{
+    "name": "Espresso",
+    "theme_colors": {
+        "foreground": "#ffffff",
+        "background": "#323232",
+        "black": "#353535",
+        "red": "#d25252",
+        "green": "#a5c261",
+        "brown": "#ffc66d",
+        "blue": "#6c99bb",
+        "magenta": "#d197d9",
+        "cyan": "#bed6ff",
+        "white": "#eeeeec",
+        "light_black": "#535353",
+        "light_red": "#f00c0c",
+        "light_green": "#c2e075",
+        "light_brown": "#e1e48b",
+        "light_blue": "#8ab7d9",
+        "light_magenta": "#efb5f7",
+        "light_cyan": "#dcf4ff",
+        "light_white": "#ffffff"
+    }
+}

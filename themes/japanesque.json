@@ -1,0 +1,23 @@
+{
+    "name": "Japanesque",
+    "theme_colors": {
+        "foreground": "#f7f6ec",
+        "background": "#1e1e1e",
+        "black": "#343935",
+        "red": "#cf3f61",
+        "green": "#7bb75b",
+        "brown": "#e9b32a",
+        "blue": "#4c9ad4",
+        "magenta": "#a57fc4",
+        "cyan": "#389aad",
+        "white": "#fafaf6",
+        "light_black": "#595b59",
+        "light_red": "#d18fa6",
+        "light_green": "#767f2c",
+        "light_brown": "#78592f",
+        "light_blue": "#135979",
+        "light_magenta": "#604291",
+        "light_cyan": "#76bbca",
+        "light_white": "#b2b5ae"
+    }
+}

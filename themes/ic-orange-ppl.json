@@ -1,0 +1,23 @@
+{
+    "name": "IC Orange PPL",
+    "theme_colors": {
+        "foreground": "#ffcb83",
+        "background": "#262626",
+        "black": "#000000",
+        "red": "#c13900",
+        "green": "#a4a900",
+        "brown": "#caaf00",
+        "blue": "#bd6d00",
+        "magenta": "#fc5e00",
+        "cyan": "#f79500",
+        "white": "#ffc88a",
+        "light_black": "#6a4f2a",
+        "light_red": "#ff8c68",
+        "light_green": "#f6ff40",
+        "light_brown": "#ffe36e",
+        "light_blue": "#ffbe55",
+        "light_magenta": "#fc874f",
+        "light_cyan": "#c69752",
+        "light_white": "#fafaff"
+    }
+}
