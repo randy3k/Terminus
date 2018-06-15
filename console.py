@@ -539,3 +539,25 @@ class ConsoleActivate(sublime_plugin.TextCommand):
     def run_async(self, **kwargs):
         console = Console(self.view)
         console.open(**kwargs)
+
+
+def plugin_loaded():
+    settings = sublime.load_settings("Console.sublime-settings")
+    if settings.get("debug", False):
+        logger.setLevel(logging.DEBUG)
+    else:
+        logger.setLevel(logging.WARNING)
+
+    _cached = {"debug": settings.get("debug", False)}
+
+    def on_change():
+        debug = settings.get("debug", False)
+        if debug != _cached["debug"]:
+            if debug:
+                logger.setLevel(logging.DEBUG)
+            else:
+                logger.setLevel(logging.WARNING)
+            _cached["debug"] = debug
+
+    settings.clear_on_change("debug")
+    settings.add_on_change("debug", on_change)

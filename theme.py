@@ -94,7 +94,6 @@ def plugin_loaded():
         theme = settings.get("theme", "default")
         user_theme_colors = settings.get("user_theme_colors", {}).copy()
         if theme != _cached["theme"] or user_theme_colors != _cached["user_theme_colors"]:
-            print("will generate")
             sublime.active_window().run_command("console_generate_theme")
             _cached["theme"] = theme
             _cached["user_theme_colors"] = user_theme_colors

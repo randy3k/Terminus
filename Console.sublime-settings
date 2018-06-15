@@ -26,5 +26,7 @@
         "light_magenta": "#ff00ff",
         "light_cyan": "#00ffff",
         "light_white": "#ffffff"
-    }
+    },
+
+    "debug": false
 }
