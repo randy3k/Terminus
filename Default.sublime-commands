@@ -1,6 +1,6 @@
 [
     {
-        "caption": "Console: login shell",
+        "caption": "Console: Default Shell",
         "command": "console_open"
     },
     {

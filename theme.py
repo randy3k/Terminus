@@ -45,19 +45,21 @@ def plugin_loaded():
         "Console.sublime-color-scheme"
     )
 
-    if settings.get("theme", "default") == "user":
+    if settings.get("theme", "default") != "default":
         if not os.path.isfile(path):
             sublime.active_window().run_command("console_generate_theme")
 
+    _cached_theme = settings.get("theme", "default")
     _cached_user_theme_colors = settings.get("user_theme_colors", {}).copy()
 
     def on_change():
-        nonlocal _cached_user_theme_colors
-        if settings.get("theme", "default") == "user":
-            user_theme_colors = settings.get("user_theme_colors", {}).copy()
-            if user_theme_colors != _cached_user_theme_colors:
-                sublime.active_window().run_command("console_generate_theme")
-                _cached_user_theme_colors = user_theme_colors
+        nonlocal _cached_theme, _cached_user_theme_colors
+        theme = settings.get("theme", "default")
+        user_theme_colors = settings.get("user_theme_colors", {}).copy()
+        if theme != _cached_theme or user_theme_colors != _cached_user_theme_colors:
+            sublime.active_window().run_command("console_generate_theme")
+            _cached_user_theme_colors = user_theme_colors
+            _cached_theme = theme
 
     settings.clear_on_change("user_theme_colors")
     settings.add_on_change("user_theme_colors", on_change)
