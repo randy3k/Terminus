@@ -25,11 +25,19 @@ class ConsoleSelectTheme(sublime_plugin.WindowCommand):
         else:
             self.themes = ["default", "user"] + \
                 sorted([f.replace(".json", "") for f in os.listdir(THEMES) if f.endswith(".json")])
+            settings = sublime.load_settings("Console.sublime-settings")
+            self.original_theme = settings.get("theme", "default")
             self.window.show_quick_panel(
                 self.themes,
-                self.on_selection)
+                self.on_selection,
+                on_highlight=lambda x: sublime.set_timeout_async(lambda: self.on_selection(x)))
 
     def on_selection(self, index):
+        if index == -1:
+            self.window.run_command(
+                "console_select_theme",
+                {"theme": self.original_theme})
+            return
         theme = self.themes[index]
         self.window.run_command("console_select_theme", {"theme": theme})
 
