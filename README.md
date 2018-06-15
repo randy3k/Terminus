@@ -21,7 +21,7 @@ It is a cross platform terminal for Sublime Text which works on Windows, macOS a
     </tr>
 </table>
 
-This package heavily inspired by [TerminalView](https://github.com/Wramberg/TerminalView). Compare with TerminalView, this has
+This package is heavily inspired by [TerminalView](https://github.com/Wramberg/TerminalView). Compare with TerminalView, this has
 
 - Windows support
 - Continuous history
