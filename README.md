@@ -31,23 +31,17 @@ This package heavily inspired by [TerminalView](https://github.com/Wramberg/Term
 
 ### Installation
 
-This package is not yet available via Package Control, you have to install it manually.
+This package is not yet available via Package Control default channel, you have to add the following repository manually.
 
-- Add the following repository to Package Control (this step is necessary until [this](https://github.com/wbond/package_control_channel/pull/7154) is merged)
-    - Run `Package Control: Add Repository`
-    - Paste
+- Run `Package Control: Add Repository`
+- Paste
 
-        ```
-        https://gist.githubusercontent.com/randy3k/9f619b9b5c38b901aa8d15a2cd85be79/raw/5d8c1e71d734faa8db71ccbdb33e245bdb04dcc5/dependencies.json
-        ```
-        and hit enter
-
-- Git Clone this repo to your Sublime Text Packages directory
     ```
-    git clone https://github.com/randy3k/Console <PATH/TO/SUBLIMETEXT_PACKAGES/>
+    https://raw.githubusercontent.com/randy3k/Console/master/package_control.json
     ```
-- Run `Package Control: Satisfy Dependencies`
-- Restart Sublime Text after done
+    and hit enter
+
+- Run `Package Control: Install Package` and search for `Console`
 
 
 ### Acknowledgments
