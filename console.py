@@ -440,6 +440,7 @@ class ConsoleKeypress(sublime_plugin.TextCommand):
     def run(self, _, **kwargs):
         console = Console.from_id(self.view.id())
         console.send_key(**kwargs)
+        self.view.run_command("console_render")
 
 
 class ConsoleSendString(sublime_plugin.TextCommand):
@@ -447,6 +448,7 @@ class ConsoleSendString(sublime_plugin.TextCommand):
     def run(self, _, string):
         console = Console.from_id(self.view.id())
         console.send_string(string)
+        self.view.run_command("console_render")
 
 
 class ConsolePaste(sublime_plugin.TextCommand):
