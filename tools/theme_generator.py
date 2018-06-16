@@ -1,6 +1,7 @@
 import os
 import json
 import pyte
+from copy import deepcopy
 from collections import OrderedDict
 
 TEMPLATE = OrderedDict(
@@ -44,17 +45,17 @@ ANSI_COLORS = [
 
 def generate_theme_file(
         path, variables={}, globals={}, ansi_scopes=True, color256_scopes=False):
-    COLOR_SCHEME = TEMPLATE.copy()
+    COLOR_SCHEME = deepcopy(TEMPLATE)
 
     _colors16 = OrderedDict()
-    for i in range(8):
+    for i in range(16):
         _colors16[ANSI_COLORS[i]] = "#{}".format(pyte.graphics.FG_BG_256[i])
 
-    for i in range(8):
-        _colors16["light_" + ANSI_COLORS[i]] = "#{}".format(
-            pyte.graphics.FG_BG_256[8 + i])
-
     if variables:
+        if "caret" not in variables and "foreground" in variables:
+            variables["caret"] = variables["foreground"]
+
+        COLOR_SCHEME["variables"].update(variables)
         COLOR_SCHEME["variables"].update(_colors16)
         COLOR_SCHEME["variables"].update(variables)
 
@@ -106,13 +107,19 @@ if __name__ == "__main__":
     path = os.path.join(os.path.dirname(__file__), "..", "Console.sublime-color-scheme")
     variables = {
         "background": "#262626",
-        "foreground": "#ffffff"
+        "foreground": "#ffffff",
+        "caret": "white",
+        "selection": "#444444",
+        "selection_foreground": "#ffffff"
     }
     globals = {
         "background": "var(background)",
         "foreground": "var(foreground)",
-        "caret": "white",
-        "selection": "grey"
+        "caret": "var(caret)",
+        "selection": "var(selection)",
+        "selection_foreground": "var(selection_foreground)",
+        "selection_corner_style": "square",
+        "selection_border_width": "0"
     }
 
     generate_theme_file(path, variables=variables, globals=globals)

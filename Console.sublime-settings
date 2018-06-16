@@ -1,32 +1,34 @@
 {
-    // the name of the theme
-    // change it to "user" if you want to use customized theme
-    "theme": "default",
-    "user_theme_colors": {
-        // pur your own colors here and do not edit `default_theme_colors`
-    },
-
-    // read only
-    "default_theme_colors": {
-        "background": "#262626",
-        "foreground": "#ffffff",
-        "black": "#000000",
-        "red": "#cd0000",
-        "green": "#00cd00",
-        "brown": "#cdcd00",
-        "blue": "#0000ee",
-        "magenta": "#cd00cd",
-        "cyan": "#00cdcd",
-        "white": "#e5e5e5",
-        "light_black": "#7f7f7f",
-        "light_red": "#ff0000",
-        "light_green": "#00ff00",
-        "light_brown": "#ffff00",
-        "light_blue": "#5c5cff",
-        "light_magenta": "#ff00ff",
-        "light_cyan": "#00ffff",
-        "light_white": "#ffffff"
-    },
     "256color": false,  // not working
-    "debug": false
+    "debug": false,
+
+    // the name of the theme
+    // change it to "user" if you want to user customized theme
+    "theme": "default",
+    // put the user theme colors here
+    // see https://www.sublimetext.com/docs/3/color_schemes.html#colors for the
+    // available colors
+    "user_theme_colors": {
+        // "background": "#262626",
+        // "foreground": "#ffffff",
+        // "caret": "white",
+        // "selection": "#444444",
+        // "selection_foreground": "#ffffff"
+        // "00": "#000000",  // black
+        // "01": "#cd0000",  // red
+        // "02": "#00cd00",  // green
+        // "03": "#cdcd00",  // brown
+        // "04": "#0000ee",  // blue
+        // "05": "#cd00cd",  // magenta
+        // "06": "#00cdcd",  // cyan
+        // "07": "#e5e5e5",  // white
+        // "08": "#7f7f7f",  // light_black
+        // "09": "#ff0000",  // light_red
+        // "10": "#00ff00",  // light_green
+        // "11": "#ffff00",  // light_brown
+        // "12": "#5c5cff",  // light_blue
+        // "13": "#ff00ff",  // light_magenta
+        // "14": "#00ffff",  // light_cyan
+        // "15": "#ffffff"   // light_white
+    }
 }

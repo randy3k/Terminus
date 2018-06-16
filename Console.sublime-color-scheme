@@ -1,6 +1,11 @@
 {
     "name": "Console",
     "variables": {
+        "background": "#262627",
+        "foreground": "#ffffff",
+        "caret": "white",
+        "selection": "#444444",
+        "selection_foreground": "#ffffff",
         "black": "#000000",
         "red": "#cd0000",
         "green": "#00cd00",
@@ -16,15 +21,16 @@
         "light_blue": "#5c5cff",
         "light_magenta": "#ff00ff",
         "light_cyan": "#00ffff",
-        "light_white": "#ffffff",
-        "background": "#262627",
-        "foreground": "#ffffff"
+        "light_white": "#ffffff"
     },
     "globals": {
         "background": "#262626",
         "foreground": "var(foreground)",
-        "caret": "white",
-        "selection": "grey"
+        "caret": "var(caret)",
+        "selection": "var(selection)",
+        "selection_foreground": "var(selection_foreground)",
+        "selection_corner_style": "square",
+        "selection_border_width": "0"
     },
     "rules": [
         {
