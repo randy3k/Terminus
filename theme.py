@@ -69,7 +69,8 @@ class ConsoleGenerateTheme(sublime_plugin.WindowCommand):
             "Console.sublime-color-scheme"
         )
         if remove:
-            os.unlink(path)
+            if os.path.isfile(path):
+                os.unlink(path)
             print("Theme removed: {}".format(path))
             sublime.status_message("Theme removed")
         else:

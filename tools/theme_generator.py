@@ -1,25 +1,14 @@
 import os
 import json
 import pyte
+from collections import OrderedDict
 
-TEMPLATE = {
-    "name": "Console",
-    "variables":
-    {
-        "background": "#262626",
-        "foreground": "#ffffff"
-    },
-    "globals":
-    {
-        "background": "to be set",
-        "foreground": "var(foreground)",
-        "caret": "white",
-        "selection": "grey"
-    },
-    "rules":
-    [
-    ]
-}
+TEMPLATE = OrderedDict(
+    name="Console",
+    variables=OrderedDict(),
+    globals=OrderedDict(),
+    rules=[]
+)
 
 
 def next_color(color_text):
@@ -41,15 +30,23 @@ ANSI_COLORS = [
     "blue",
     "magenta",
     "cyan",
-    "white"
+    "white",
+    "light_black",
+    "light_red",
+    "light_green",
+    "light_brown",
+    "light_blue",
+    "light_magenta",
+    "light_cyan",
+    "light_white"
 ]
 
 
 def generate_theme_file(
-        path, variables={}, ansi_scopes=True, color256_scopes=False, pretty=False):
+        path, variables={}, globals={}, ansi_scopes=True, color256_scopes=False):
     COLOR_SCHEME = TEMPLATE.copy()
 
-    _colors16 = {}
+    _colors16 = OrderedDict()
     for i in range(8):
         _colors16[ANSI_COLORS[i]] = "#{}".format(pyte.graphics.FG_BG_256[i])
 
@@ -57,32 +54,39 @@ def generate_theme_file(
         _colors16["light_" + ANSI_COLORS[i]] = "#{}".format(
             pyte.graphics.FG_BG_256[8 + i])
 
-    _colors16["default"] = "#default"
-    COLOR_SCHEME["variables"].update(_colors16)
-    COLOR_SCHEME["variables"].update(variables)
+    if variables:
+        COLOR_SCHEME["variables"].update(_colors16)
+        COLOR_SCHEME["variables"].update(variables)
+
+    if globals:
+        COLOR_SCHEME["globals"].update(globals)
 
     # There is a bug/feature of add_regions: if the background of a scope is exactly the same as the
     # background of the theme. The foregound and background colors would be inverted. check
     # https://github.com/SublimeTextIssues/Core/issues/817
 
-    background = COLOR_SCHEME["variables"]["background"]
-    COLOR_SCHEME["variables"]["background"] = next_color(background)
-    COLOR_SCHEME["globals"]["background"] = background
+    if "background" in COLOR_SCHEME["variables"]:
+        background = COLOR_SCHEME["variables"]["background"]
+        COLOR_SCHEME["variables"]["background"] = next_color(background)
+        COLOR_SCHEME["globals"]["background"] = background
+    else:
+        background = None
 
-    colors = {}
+    colors = OrderedDict()
     if ansi_scopes:
         colors.update(_colors16)
+        colors["default"] = "#default"
     if color256_scopes:
         for i, rgb in enumerate(pyte.graphics.FG_BG_256):
             colors[rgb] = "#{}".format(rgb)
 
     for u, ucolor in colors.items():
         for v, vcolor in colors.items():
-            if u.replace("light_", "") in ANSI_COLORS:
+            if u in ANSI_COLORS:
                 ucolor = "var({})".format(u)
             elif ucolor == "#default":
                 ucolor = "var(foreground)"
-            if v.replace("light_", "") in ANSI_COLORS:
+            if v in ANSI_COLORS:
                 vcolor = "var({})".format(v)
             elif vcolor == "#default" or vcolor == background:
                 vcolor = "var(background)"
@@ -100,4 +104,15 @@ def generate_theme_file(
 if __name__ == "__main__":
 
     path = os.path.join(os.path.dirname(__file__), "..", "Console.sublime-color-scheme")
-    generate_theme_file(path)
+    variables = {
+        "background": "#262626",
+        "foreground": "#ffffff"
+    }
+    globals = {
+        "background": "var(background)",
+        "foreground": "var(foreground)",
+        "caret": "white",
+        "selection": "grey"
+    }
+
+    generate_theme_file(path, variables=variables, globals=globals)

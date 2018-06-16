@@ -1,8 +1,6 @@
 {
     "name": "Console",
     "variables": {
-        "background": "#262627",
-        "foreground": "#ffffff",
         "black": "#000000",
         "red": "#cd0000",
         "green": "#00cd00",
@@ -19,7 +17,8 @@
         "light_magenta": "#ff00ff",
         "light_cyan": "#00ffff",
         "light_white": "#ffffff",
-        "default": "#default"
+        "background": "#262627",
+        "foreground": "#ffffff"
     },
     "globals": {
         "background": "#262626",

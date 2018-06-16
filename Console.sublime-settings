@@ -27,6 +27,6 @@
         "light_cyan": "#00ffff",
         "light_white": "#ffffff"
     },
-
+    "256color": false,  // not working
     "debug": false
 }
