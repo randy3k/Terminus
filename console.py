@@ -6,6 +6,8 @@ import sys
 import time
 import threading
 import logging
+from functools import wraps
+from contextlib import contextmanager
 
 import pyte
 from wcwidth import wcwidth
@@ -84,6 +86,47 @@ def segment_buffer_line(buffer_line):
     yield text, start, counter, fg, bg
 
 
+def responsive_condition(period=0.1, default=True):
+    """
+    make a condition checker more responsive
+    """
+    def wrapper(f):
+        t = [0]
+
+        @wraps(f)
+        def _(*args, **kwargs):
+            now = time.time()
+            if now - t[0] > period:
+                t[0] = now
+                return f(*args, **kwargs)
+            else:
+                return default
+
+        return _
+
+    return wrapper
+
+
+@contextmanager
+def intermission(period=0.1):
+    """
+    intermission of period seconds.
+    """
+    startt = time.time()
+    yield
+    deltat = time.time() - startt
+    if deltat < period:
+        time.sleep(period - deltat)
+
+
+def cached(f):
+    _cache = {}
+
+    @wraps(f)
+    def _(self, *args, **kwargs):
+        return f(self, _cache, *args, **kwargs)
+
+
 class ConsolePtyProcess(PtyProcess):
 
     def read(self, nbytes):
@@ -143,7 +186,6 @@ class Console():
     _consoles = {}
     _cached_cursor = [0, 0]
     _cached_cursor_is_hidden = [True]
-    _cached_size = [0, 0]
 
     def __init__(self, view):
         self._consoles[view.id()] = self
@@ -178,8 +220,6 @@ class Console():
         _env = os.environ.copy()
         _env.update(env)
         size = self.view_size()
-        self._cached_size[0] = size[0]
-        self._cached_size[1] = size[1]
         logger.debug("view size: {}".format(str(size)))
 
         self.process = ConsolePtyProcess.spawn(self.cmd, cwd=cwd, env=_env, dimensions=size)
@@ -207,9 +247,10 @@ class Console():
 
         return (nb_rows, nb_columns)
 
-    def _have_resized(self):
+    @responsive_condition(period=1, default=False)
+    def _was_resized(self):
         size = self.view_size()
-        return self._cached_size[0] != size[0] or self._cached_size[1] != size[1]
+        return self.screen.lines != size[0] or self.screen.columns != size[1]
 
     def _need_to_render(self):
         flag = False
@@ -231,9 +272,11 @@ class Console():
     def _start_rendering(self):
         lock = threading.Lock()
         data = [b""]
+        console_is_alive = responsive_condition(period=1, default=True)(
+            lambda: self.process.isalive() and self.view.window() is not None)
 
         def reader():
-            while self.process.isalive() and self.view.window():
+            while console_is_alive():
                 try:
                     temp = self.process.read(1024)
                 except EOFError:
@@ -244,20 +287,27 @@ class Console():
         threading.Thread(target=reader).start()
 
         def renderer():
-            while self.process.isalive() and self.view.window():
-                startt = time.time()
-                with lock:
-                    if len(data[0]) > 0:
-                        logger.debug("receieved: {}".format(data[0]))
-                        self.stream.feed(data[0])
-                        data[0] = b""
-                if self._have_resized():
-                    self.handle_resize()
-                if self._need_to_render():
-                    self.view.run_command("console_render")
-                deltat = time.time() - startt
-                if deltat < 0.02:
-                    time.sleep(0.02 - deltat)
+            # import cProfile, pstats
+            # pr = cProfile.Profile()
+            # pr.enable()
+            while console_is_alive():
+                with intermission(period=0.03):
+                    with lock:
+                        if len(data[0]) > 0:
+                            logger.debug("receieved: {}".format(data[0]))
+                            self.stream.feed(data[0])
+                            data[0] = b""
+
+                    if self._was_resized():
+                        self.handle_resize()
+
+                    if self._need_to_render():
+                        self.view.run_command("console_render")
+
+            # pr.disable()
+            # ps = pstats.Stats(pr).sort_stats('time')
+            # ps.print_stats(10)
+
         threading.Thread(target=renderer).start()
 
     def close(self):
@@ -269,9 +319,7 @@ class Console():
     def handle_resize(self):
         size = self.view_size()
         logger.debug("handle resize {} {} -> {} {}".format(
-            self._cached_size[0], self._cached_size[1], size[0], size[1]))
-        self._cached_size[0] = size[0]
-        self._cached_size[1] = size[1]
+            self.screen.lines, self.screen.columns, size[0], size[1]))
         self.process.setwinsize(*size)
         self.screen.resize(*size)
 
