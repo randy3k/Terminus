@@ -319,8 +319,8 @@ class Console():
     def set_title(self, title):
         self.view.set_name(title)
 
-    def send_key(self, **kwargs):
-        self.send_string(get_key_code(**kwargs))
+    def send_key(self, *args, **kwargs):
+        self.send_string(get_key_code(*args, **kwargs))
 
     def send_string(self, string):
         logger.debug("sent {}".format(string))
@@ -511,14 +511,14 @@ class ConsolePaste(sublime_plugin.TextCommand):
 
         bracketed = bracketed or console.bracketed_paste_mode_enabled()
         if bracketed:
-            console.send_string("\x1b[200~")
+            console.send_key("bracketed_paste_mode_start")
 
         copied = sublime.get_clipboard()
         for char in copied:
             console.send_string(char)
 
         if bracketed:
-            console.send_string("\x1b[201~")
+            console.send_key("bracketed_paste_mode_end")
 
 
 class ConsoleEventHandler(sublime_plugin.ViewEventListener):
