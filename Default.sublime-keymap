@@ -175,6 +175,12 @@
     {"keys": ["ctrl+down"], "command": "console_keypress", "args": {"key": "down", "ctrl": true}, "context": [{"key": "setting.console_view"}]},
     {"keys": ["ctrl+right"], "command": "console_keypress", "args": {"key": "right", "ctrl": true}, "context": [{"key": "setting.console_view"}]},
     {"keys": ["ctrl+up"], "command": "console_keypress", "args": {"key": "up", "ctrl": true}, "context": [{"key": "setting.console_view"}]},
-    {"keys": ["ctrl+left"], "command": "console_keypress", "args": {"key": "left", "ctrl": true}, "context": [{"key": "setting.console_view"}]}
+    {"keys": ["ctrl+left"], "command": "console_keypress", "args": {"key": "left", "ctrl": true}, "context": [{"key": "setting.console_view"}]},
 
+    // Shift keys
+    {"keys": ["shift+tab"], "command": "console_keypress", "args": {"key": "tab", "shift": true}, "context": [{"key": "setting.console_view"}]},
+    {"keys": ["shift+down"], "command": "console_keypress", "args": {"key": "down", "shift": true}, "context": [{"key": "setting.console_view"}]},
+    {"keys": ["shift+right"], "command": "console_keypress", "args": {"key": "right", "shift": true}, "context": [{"key": "setting.console_view"}]},
+    {"keys": ["shift+up"], "command": "console_keypress", "args": {"key": "up", "shift": true}, "context": [{"key": "setting.console_view"}]},
+    {"keys": ["shift+left"], "command": "console_keypress", "args": {"key": "left", "shift": true}, "context": [{"key": "setting.console_view"}]}
 ]

@@ -64,6 +64,14 @@ _ALT_KEY_MAP = {
     "left": "\x1b[1;3D",
 }
 
+_SHIFT_KEY_MAP = {
+    "up": "\x1b[1;2A",
+    "down": "\x1b[1;2B",
+    "right": "\x1b[1;2C",
+    "left": "\x1b[1;2D",
+    "tab": "\x1b[Z"
+}
+
 
 def _get_ctrl_combination_key_code(key):
     key = key.lower()
@@ -88,6 +96,15 @@ def _get_alt_combination_key_code(key):
     return "\x1b" + code
 
 
+def _get_shift_combination_key_code(key):
+    key = key.lower()
+    if key in _SHIFT_KEY_MAP:
+        return _SHIFT_KEY_MAP[key]
+
+    code = _get_key_code(key)
+    return code
+
+
 # def _get_app_key_code(key):
 #     if key in _APP_KEY_MAP:
 #         return _APP_KEY_MAP[key]
@@ -108,6 +125,8 @@ def get_key_code(key, ctrl=False, alt=False, shift=False):
         keycode = _get_ctrl_combination_key_code(key)
     elif alt:
         keycode = _get_alt_combination_key_code(key)
+    elif shift:
+        keycode = _get_shift_combination_key_code(key)
     else:
         keycode = _get_key_code(key)
 
