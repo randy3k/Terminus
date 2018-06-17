@@ -170,6 +170,7 @@
     {"keys": ["alt+x"], "command": "console_keypress", "args": {"key": "x", "alt": true}, "context": [{"key": "setting.console_view"}]},
     {"keys": ["alt+y"], "command": "console_keypress", "args": {"key": "y", "alt": true}, "context": [{"key": "setting.console_view"}]},
     {"keys": ["alt+z"], "command": "console_keypress", "args": {"key": "z", "alt": true}, "context": [{"key": "setting.console_view"}]},
+    {"keys": ["alt+backspace"], "command": "console_keypress", "args": {"key": "backspace", "alt": true}, "context": [{"key": "setting.console_view"}]},
 
     // Ctrl+arrow keys
     {"keys": ["ctrl+down"], "command": "console_keypress", "args": {"key": "down", "ctrl": true}, "context": [{"key": "setting.console_view"}]},
