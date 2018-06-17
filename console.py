@@ -38,19 +38,6 @@ def which_char(text, cursor_position):
     return i
 
 
-def render_line(buffer_line):
-    is_wide_char = False
-    text = ""
-    for i in buffer_line:
-        if is_wide_char:
-            is_wide_char = False
-            continue
-        data = buffer_line[i].data
-        is_wide_char = wcwidth(data) == 2
-        text += data
-    return text
-
-
 def segment_buffer_line(buffer_line):
     """
     segment a buffer line based on bg and fg colors
@@ -119,12 +106,23 @@ def intermission(period=0.1):
         time.sleep(period - deltat)
 
 
-def cached(f):
-    _cache = {}
+def view_size(view):
+    pixel_width, pixel_height = view.viewport_extent()
+    pixel_per_line = view.line_height()
+    pixel_per_char = view.em_width()
 
-    @wraps(f)
-    def _(self, *args, **kwargs):
-        return f(self, _cache, *args, **kwargs)
+    if pixel_per_line == 0 or pixel_per_char == 0:
+        return (0, 0)
+
+    nb_columns = int(pixel_width / pixel_per_char) - 3
+    if nb_columns < 1:
+        nb_columns = 1
+
+    nb_rows = int(pixel_height / pixel_per_line)
+    if nb_rows < 1:
+        nb_rows = 1
+
+    return (nb_rows, nb_columns)
 
 
 class ConsolePtyProcess(PtyProcess):
@@ -167,7 +165,7 @@ class ConsoleScreen(pyte.HistoryScreen):
             # find the first non-empty line from the botton
             found = -1
             for nz_line in reversed(range(self.lines)):
-                text = render_line(self.buffer[nz_line])
+                text = "".join([c.data for c in self.buffer[nz_line].values()])
                 if len(text.strip()) > 0:
                     found = nz_line
                     break
@@ -210,46 +208,9 @@ class Console():
             return None
         return cls._consoles[vid]
 
-    def open(self, cmd, cwd=None, env=None, title=None):
-        self.cmd = cmd
-        self.cwd = cwd
-        self.env = env
-        self.title = title
-        self.set_title(title)
-
-        _env = os.environ.copy()
-        _env.update(env)
-        size = self.view_size()
-        logger.debug("view size: {}".format(str(size)))
-
-        self.process = ConsolePtyProcess.spawn(self.cmd, cwd=cwd, env=_env, dimensions=size)
-        self.screen = ConsoleScreen(size[1], size[0], process=self.process, history=10000)
-        self.alt_screen = ConsoleScreen(size[1], size[0], process=self.process, history=10000)
-        self.stream = ConsoleByteStream(self.screen)
-        self._start_rendering()
-
-    def view_size(self):
-        view = self.view
-        pixel_width, pixel_height = view.viewport_extent()
-        pixel_per_line = view.line_height()
-        pixel_per_char = view.em_width()
-
-        if pixel_per_line == 0 or pixel_per_char == 0:
-            return (0, 0)
-
-        nb_columns = int(pixel_width / pixel_per_char) - 3
-        if nb_columns < 1:
-            nb_columns = 1
-
-        nb_rows = int(pixel_height / pixel_per_line)
-        if nb_rows < 1:
-            nb_rows = 1
-
-        return (nb_rows, nb_columns)
-
     @responsive_condition(period=1, default=False)
     def _was_resized(self):
-        size = self.view_size()
+        size = view_size(self.view)
         return self.screen.lines != size[0] or self.screen.columns != size[1]
 
     def _need_to_render(self):
@@ -272,11 +233,14 @@ class Console():
     def _start_rendering(self):
         lock = threading.Lock()
         data = [b""]
+
+        view_is_attached = responsive_condition(period=0.001, default=True)(self.view.window)
         console_is_alive = responsive_condition(period=1, default=True)(
-            lambda: self.process.isalive() and self.view.window() is not None)
+            lambda: self.process.isalive() and view_is_attached())
 
         def reader():
-            while console_is_alive():
+            # run self.view.windows() via `view_is_attached` periodically to refresh gui
+            while console_is_alive() and view_is_attached():
                 try:
                     temp = self.process.read(1024)
                 except EOFError:
@@ -284,12 +248,10 @@ class Console():
                     break
                 with lock:
                     data[0] += temp
+
         threading.Thread(target=reader).start()
 
         def renderer():
-            # import cProfile, pstats
-            # pr = cProfile.Profile()
-            # pr.enable()
             while console_is_alive():
                 with intermission(period=0.03):
                     with lock:
@@ -304,11 +266,27 @@ class Console():
                     if self._need_to_render():
                         self.view.run_command("console_render")
 
-            # pr.disable()
-            # ps = pstats.Stats(pr).sort_stats('time')
-            # ps.print_stats(10)
+            sublime.set_timeout(lambda: self.handle_process_termination())
 
         threading.Thread(target=renderer).start()
+
+    def open(self, cmd, cwd=None, env=None, title=None):
+        self.cmd = cmd
+        self.cwd = cwd
+        self.env = env
+        self.title = title
+        self.set_title(title)
+
+        _env = os.environ.copy()
+        _env.update(env)
+        size = view_size(self.view)
+        logger.debug("view size: {}".format(str(size)))
+
+        self.process = ConsolePtyProcess.spawn(self.cmd, cwd=cwd, env=_env, dimensions=size)
+        self.screen = ConsoleScreen(size[1], size[0], process=self.process, history=10000)
+        self.alt_screen = ConsoleScreen(size[1], size[0], process=self.process, history=10000)
+        self.stream = ConsoleByteStream(self.screen)
+        self._start_rendering()
 
     def close(self):
         vid = self.view.id()
@@ -316,8 +294,23 @@ class Console():
             del self._consoles[vid]
         self.process.terminate()
 
+    def handle_process_termination(self):
+        # process ended
+        if self.process.exitstatus == 0:
+            window = self.view.window()
+            if window:
+                window.focus_view(self.view)
+                window.run_command("close")
+        else:
+            self.view.run_command(
+                "append",
+                {"characters": "\nprocess terminated with return code {}.".format(
+                    self.process.exitstatus
+                 )}),
+            self.view.set_read_only(True)
+
     def handle_resize(self):
-        size = self.view_size()
+        size = view_size(self.view)
         logger.debug("handle resize {} {} -> {} {}".format(
             self.screen.lines, self.screen.columns, size[0], size[1]))
         self.process.setwinsize(*size)
@@ -339,6 +332,11 @@ class Console():
     def __del__(self):
         # make sure the process is terminated
         self.process.terminate(force=True)
+
+        if self.process.isalive():
+            logger.debug("process becomes orphaned")
+        else:
+            logger.debug("process has terminated")
 
 
 def _get_incremental_key():
@@ -487,6 +485,8 @@ class ConsoleKeypress(sublime_plugin.TextCommand):
 
     def run(self, _, **kwargs):
         console = Console.from_id(self.view.id())
+        if not console or not console.process.isalive():
+            return
         console.send_key(**kwargs)
         self.view.run_command("console_render")
 
@@ -495,6 +495,8 @@ class ConsoleSendString(sublime_plugin.TextCommand):
 
     def run(self, _, string):
         console = Console.from_id(self.view.id())
+        if not console or not console.process.isalive():
+            return
         console.send_string(string)
         self.view.run_command("console_render")
 
@@ -534,6 +536,9 @@ class ConsoleEventHandler(sublime_plugin.ViewEventListener):
     def on_modified(self):
         # to catch unicode input
         view = self.view
+        console = Console.from_id(view.id())
+        if not console or not console.process.isalive():
+            return
         command, args, _ = view.command_history(0)
         if command == "console_render":
             return
