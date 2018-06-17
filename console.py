@@ -73,7 +73,7 @@ def segment_buffer_line(buffer_line):
     yield text, start, counter, fg, bg
 
 
-def responsive_condition(period=0.1, default=True):
+def responsive(period=0.1, default=True):
     """
     make a condition checker more responsive
     """
@@ -208,7 +208,7 @@ class Console():
             return None
         return cls._consoles[vid]
 
-    @responsive_condition(period=1, default=False)
+    @responsive(period=1, default=False)
     def _was_resized(self):
         size = view_size(self.view)
         return self.screen.lines != size[0] or self.screen.columns != size[1]
@@ -234,8 +234,8 @@ class Console():
         lock = threading.Lock()
         data = [b""]
 
-        view_is_attached = responsive_condition(period=0.001, default=True)(self.view.window)
-        console_is_alive = responsive_condition(period=1, default=True)(
+        view_is_attached = responsive(period=0.001, default=True)(self.view.window)
+        console_is_alive = responsive(period=1, default=True)(
             lambda: self.process.isalive() and view_is_attached())
 
         def reader():
