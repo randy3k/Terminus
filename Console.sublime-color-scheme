@@ -1,11 +1,11 @@
 {
     "name": "Console",
     "variables": {
-        "background": "#262627",
-        "foreground": "#ffffff",
+        "background": "#262626",
+        "foreground": "#fffffe",
         "caret": "white",
-        "selection": "#444444",
-        "selection_foreground": "#ffffff",
+        "selection": "#444443",
+        "selection_foreground": "#fffffe",
         "black": "#000000",
         "red": "#cd0000",
         "green": "#00cd00",
@@ -24,7 +24,7 @@
         "light_white": "#ffffff"
     },
     "globals": {
-        "background": "#262626",
+        "background": "#262625",
         "foreground": "var(foreground)",
         "caret": "var(caret)",
         "selection": "var(selection)",

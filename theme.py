@@ -48,7 +48,7 @@ class ConsoleSelectTheme(sublime_plugin.WindowCommand):
 
 
 class ConsoleGenerateTheme(sublime_plugin.WindowCommand):
-    def run(self, theme=None, remove=False):
+    def run(self, theme=None, remove=False, force=False):
         settings = sublime.load_settings("Console.sublime-settings")
 
         if not theme:
@@ -77,14 +77,31 @@ class ConsoleGenerateTheme(sublime_plugin.WindowCommand):
             "Console",
             "Console.sublime-color-scheme"
         )
+
+        path256 = os.path.join(
+            sublime.packages_path(),
+            "User",
+            "Console.sublime-color-scheme"
+        )
+
         if remove:
             if os.path.isfile(path):
                 os.unlink(path)
-            print("Theme removed: {}".format(path))
+                print("Theme removed: {}".format(path))
+            if os.path.isfile(path256):
+                os.unlink(path256)
+                print("Theme removed: {}".format(path256))
             sublime.status_message("Theme {} removed".format(theme))
         else:
-            generate_theme_file(path, variables=variables, ansi_scopes=False)
+            if settings.get("256color", False):
+                if force or not os.path.isfile(path256):
+                    generate_theme_file(
+                        path256, ansi_scopes=True, color256_scopes=True, pretty=False)
+                    print("Theme {} generated: {}".format(theme, path256))
+
+            generate_theme_file(path, variables=variables, ansi_scopes=False, color256_scopes=False)
             print("Theme {} generated: {}".format(theme, path))
+
             sublime.status_message("Theme generated")
 
 

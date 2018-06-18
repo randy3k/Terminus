@@ -7,20 +7,25 @@ from collections import OrderedDict
 TEMPLATE = OrderedDict(
     name="Console",
     variables=OrderedDict(),
-    globals=OrderedDict(),
-    rules=[]
+    globals=OrderedDict()
 )
 
 
-def next_color(color_text):
+def next_color(color_text, forward=True):
     """
     Given a color string "#xxxxxy", returns its next color "#xxxxx{y+1}".
     """
     hex_value = int(color_text[1:], 16)
-    if hex_value == 16777215:  # #ffffff
-        return "#fffffe"
+    if forward:
+        if hex_value == 16777215:  # #ffffff
+            return "#fffffe"
+        else:
+            return "#{:6x}".format(hex_value+1).replace(" ", "0")
     else:
-        return "#{:6x}".format(hex_value+1).replace(" ", "0")
+        if hex_value == 0:  # #000000
+            return "#010101"
+        else:
+            return "#{:6x}".format(hex_value-1).replace(" ", "0")
 
 
 ANSI_COLORS = [
@@ -44,12 +49,17 @@ ANSI_COLORS = [
 
 
 def generate_theme_file(
-        path, variables={}, globals={}, ansi_scopes=True, color256_scopes=False):
+        path, variables={}, globals={}, ansi_scopes=True, color256_scopes=False, pretty=True):
     COLOR_SCHEME = deepcopy(TEMPLATE)
 
     _colors16 = OrderedDict()
     for i in range(16):
         _colors16[ANSI_COLORS[i]] = "#{}".format(pyte.graphics.FG_BG_256[i])
+
+    # There is a bug/feature of add_regions
+    # if the background of a scope is exactly the same as the background of the theme.
+    # The foregound and background colors would be inverted. check
+    # https://github.com/SublimeTextIssues/Core/issues/817
 
     if variables:
         if "caret" not in variables and "foreground" in variables:
@@ -57,14 +67,15 @@ def generate_theme_file(
 
         COLOR_SCHEME["variables"].update(variables)
         COLOR_SCHEME["variables"].update(_colors16)
+
+        for key, value in variables.items():
+            if value.startswith("#") and value[1:].lower() in pyte.graphics.FG_BG_256:
+                variables[key] = next_color(value, forward=False)
+
         COLOR_SCHEME["variables"].update(variables)
 
     if globals:
         COLOR_SCHEME["globals"].update(globals)
-
-    # There is a bug/feature of add_regions: if the background of a scope is exactly the same as the
-    # background of the theme. The foregound and background colors would be inverted. check
-    # https://github.com/SublimeTextIssues/Core/issues/817
 
     if "background" in COLOR_SCHEME["variables"]:
         background = COLOR_SCHEME["variables"]["background"]
@@ -80,6 +91,9 @@ def generate_theme_file(
     if color256_scopes:
         for i, rgb in enumerate(pyte.graphics.FG_BG_256):
             colors[rgb] = "#{}".format(rgb)
+
+    if colors:
+        COLOR_SCHEME["rules"] = []
 
     for u, ucolor in colors.items():
         for v, vcolor in colors.items():
@@ -99,7 +113,10 @@ def generate_theme_file(
 
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w") as f:
-        f.write(json.dumps(COLOR_SCHEME, indent=4))
+        if pretty:
+            f.write(json.dumps(COLOR_SCHEME, indent=4))
+        else:
+            f.write(json.dumps(COLOR_SCHEME))
 
 
 if __name__ == "__main__":

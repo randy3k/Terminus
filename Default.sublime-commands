@@ -9,7 +9,8 @@
     },
     {
         "caption": "Console Utilities: Generate User Theme",
-        "command": "console_generate_theme"
+        "command": "console_generate_theme",
+        "args": {"force": true}
     },
     {
         "caption": "Console Utilities: Remove User Theme",

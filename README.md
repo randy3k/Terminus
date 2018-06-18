@@ -27,7 +27,7 @@ This package is heavily inspired by [TerminalView](https://github.com/Wramberg/T
 - Continuous history
 - Easily Customizable Themes
 - Unicode support
-- 256 colors support (in progress)
+- 256 colors support
 
 ### Installation
 

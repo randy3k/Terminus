@@ -544,7 +544,7 @@ class ConsoleEventHandler(sublime_plugin.ViewEventListener):
             return
         elif command == "insert" and "characters" in args:
             chars = args["characters"]
-            logger.debug("char {} detecated".format(chars))
+            logger.debug("char {} detected".format(chars))
             console = Console.from_id(view.id())
             if console:
                 console.send_string(chars)
@@ -569,7 +569,7 @@ class ConsoleOpen(sublime_plugin.WindowCommand):
             if sys.platform.startswith("win"):
                 env = {}
             else:
-                env = {"TERM": "linux", "LANG": "en_US.UTF-8"}
+                env = {"TERM": "xterm-256color", "LANG": "en_US.UTF-8"}
 
         if not cwd:
             if self.window.folders():
