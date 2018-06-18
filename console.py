@@ -555,7 +555,7 @@ class ConsoleEventHandler(sublime_plugin.ViewEventListener):
 
 class ConsoleOpen(sublime_plugin.WindowCommand):
 
-    def run(self, cmd=None, cwd=None, env=None, title="Console"):
+    def run(self, cmd=None, cwd=None, env={}, title="Console"):
         if not cmd:
             if sys.platform.startswith("win"):
                 cmd = "C:\\Windows\\System32\\cmd.exe"
@@ -565,11 +565,18 @@ class ConsoleOpen(sublime_plugin.WindowCommand):
                 else:
                     cmd = ["/bin/bash", "-i", "-l"]
 
-        if not env:
-            if sys.platform.startswith("win"):
-                env = {}
-            else:
-                env = {"TERM": "xterm-256color", "LANG": "en_US.UTF-8"}
+        settings = sublime.load_settings("Console.sublime-settings")
+        use_256color = settings.get("256color", False)
+
+        if sys.platform.startswith("win"):
+            _env = {}
+            _env.update(env)
+        else:
+            _env = {
+                "TERM": "xterm-256color" if use_256color else "linux",
+                "LANG": "en_US.UTF-8"
+            }
+            _env.update(env)
 
         if not cwd:
             if self.window.folders():
@@ -580,7 +587,7 @@ class ConsoleOpen(sublime_plugin.WindowCommand):
             {
                 "cmd": cmd,
                 "cwd": cwd,
-                "env": env,
+                "env": _env,
                 "title": title
             })
 
