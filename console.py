@@ -48,7 +48,13 @@ def segment_buffer_line(buffer_line):
     counter = 0
     fg = "default"
     bg = "default"
-    for i in buffer_line:
+
+    if buffer_line:
+        last_index = max(buffer_line.keys()) + 1
+    else:
+        last_index = 0
+
+    for i in range(last_index):
         if is_wide_char:
             is_wide_char = False
             continue
