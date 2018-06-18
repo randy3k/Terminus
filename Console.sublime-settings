@@ -3,7 +3,7 @@
     "debug": false,
     // the TERM variable of unix system, you might set it to "xterm-256color"
     // however, some features of xterm might not be supported here
-    "term": "linux",
+    "unix_term": "linux",
 
     // the name of the theme
     // change it to "user" if you want to user customized theme

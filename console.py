@@ -598,7 +598,7 @@ class ConsoleOpen(sublime_plugin.WindowCommand):
             _env.update(env)
         else:
             _env = {
-                "TERM": settings.get("term", "linux"),
+                "TERM": settings.get("unix_term", "linux"),
                 "LANG": "en_US.UTF-8"
             }
             _env.update(env)
