@@ -7,6 +7,7 @@ import time
 import threading
 import logging
 from functools import wraps
+from copy import deepcopy
 from contextlib import contextmanager
 
 import pyte
@@ -160,6 +161,16 @@ class ConsoleScreen(pyte.HistoryScreen):
     def write_process_input(self, data):
         self._process.write(data.encode("utf-8"))
 
+    def set_margins(self, top=None, bottom=None):
+        if (top is None or top == 0) and bottom is None:
+            # https://github.com/selectel/pyte/commit/676610b43954b644c05823371df6daf87caafdad
+            self.margins = None
+        else:
+            super().set_margins(top, bottom)
+
+    def alt_screen(self):
+        return 1049 << 5 in self.mode
+
     def index(self):
         if self.cursor.y == self.lines - 1:
             self.offset += 1
@@ -175,15 +186,24 @@ class ConsoleScreen(pyte.HistoryScreen):
                 if len(text.strip()) > 0:
                     found = nz_line
                     break
-            self.history.top.extend(self.buffer[y].copy() for y in range(found + 1))
+            self.history.top.extend(deepcopy(self.buffer[y]) for y in range(found + 1))
             self.offset += found + 1
 
         super().erase_in_display(how)
 
+    def scroll_up(self, n):
+        logger.debug("scoll_up {}".format(n))
+
+    def scroll_down(self, n):
+        logger.debug("scoll_down {}".format(n))
+
 
 class ConsoleByteStream(pyte.ByteStream):
 
-    pass
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.csi["S"] = "scroll_up"
+        self.csi["T"] = "scroll_down"
 
 
 class Console():
