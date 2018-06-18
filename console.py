@@ -566,14 +566,13 @@ class ConsoleOpen(sublime_plugin.WindowCommand):
                     cmd = ["/bin/bash", "-i", "-l"]
 
         settings = sublime.load_settings("Console.sublime-settings")
-        use_256color = settings.get("256color", False)
 
         if sys.platform.startswith("win"):
             _env = {}
             _env.update(env)
         else:
             _env = {
-                "TERM": "xterm-256color" if use_256color else "linux",
+                "TERM": settings.get("term", "linux"),
                 "LANG": "en_US.UTF-8"
             }
             _env.update(env)
