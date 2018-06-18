@@ -9,8 +9,10 @@ import logging
 from functools import wraps
 from copy import deepcopy
 from contextlib import contextmanager
+from collections import defaultdict, deque
 
 import pyte
+from pyte.screens import StaticDefaultDict, History, Cursor
 from wcwidth import wcwidth
 
 from .key import get_key_code
@@ -151,6 +153,8 @@ class ConsolePtyProcess(PtyProcess):
 
 class ConsoleScreen(pyte.HistoryScreen):
     offset = 0
+    _alt_screen_mode = False
+    _primary_buffer = {}
 
     def __init__(self, *args, **kwargs):
         if "process" in kwargs:
@@ -170,17 +174,45 @@ class ConsoleScreen(pyte.HistoryScreen):
         else:
             super().set_margins(top, bottom)
 
-    def alt_screen(self):
-        return 1049 << 5 in self.mode
+    def set_mode(self, *modes, **kwargs):
+        super().set_mode(*modes, **kwargs)
+        if 1049 << 5 in self.mode and not self._alt_screen_mode:
+            self._alt_screen_mode = True
+            self.switch_to_screen(alt=True)
+
+    def reset_mode(self, *modes, **kwargs):
+        super().reset_mode(*modes, **kwargs)
+        if 1049 << 5 not in self.mode and self._alt_screen_mode:
+            self._alt_screen_mode = False
+            self.switch_to_screen(alt=False)
+
+    def switch_to_screen(self, alt=False):
+        if alt:
+            self._primary_buffer["buffer"] = self.buffer
+            self._primary_buffer["history"] = self.history
+            self._primary_buffer["cursor"] = self.cursor
+            self.buffer = defaultdict(lambda: StaticDefaultDict(self.default_char))
+            self.history = History(deque(maxlen=0), deque(maxlen=0), 0.5, 0, 0)
+            self.cursor = Cursor(0, 0)
+        else:
+            self.buffer = self._primary_buffer["buffer"]
+            self.history = self._primary_buffer["history"]
+            self.cursor = self._primary_buffer["cursor"]
+
+        self.dirty.update(range(self.lines))
+
+    def alt_screen_mode(self):
+        return self._alt_screen_mode
 
     def index(self):
-        if self.cursor.y == self.lines - 1:
+        if not self.alt_screen_mode() and self.cursor.y == self.lines - 1:
             self.offset += 1
         super().index()
 
     def erase_in_display(self, how=0):
-        # dump to screen to history
-        if (how == 0 and self.cursor.x == 0 and self.cursor.y == 0) or how == 2:
+        # dump the screen to history
+        if not self.alt_screen_mode() and \
+                (how == 2 or (how == 0 and self.cursor.x == 0 and self.cursor.y == 0)):
             # find the first non-empty line from the botton
             found = -1
             for nz_line in reversed(range(self.lines)):
@@ -312,7 +344,6 @@ class Console():
 
         self.process = ConsolePtyProcess.spawn(self.cmd, cwd=cwd, env=_env, dimensions=size)
         self.screen = ConsoleScreen(size[1], size[0], process=self.process, history=10000)
-        self.alt_screen = ConsoleScreen(size[1], size[0], process=self.process, history=10000)
         self.stream = ConsoleByteStream(self.screen)
         self._start_rendering()
 
