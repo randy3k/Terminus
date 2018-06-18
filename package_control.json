@@ -15,6 +15,20 @@
     ],
     "dependencies": [
         {
+            "name": "gateone-terminal",
+            "load_order": "50",
+            "description": "GateOne terminal",
+            "author": "randy3k",
+            "issues": "https://github.com/packagecontrol/gateone-terminal/issues",
+            "releases": [
+                {
+                    "sublime_text": ">=3000",
+                    "base": "https://github.com/packagecontrol/gateone-terminal",
+                    "tags": true
+                }
+            ]
+        },
+        {
             "name": "ptyprocess",
             "load_order": "40",
             "description": "Python ptyprocess module",
