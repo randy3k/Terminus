@@ -5,6 +5,7 @@ import os
 import json
 
 from .tools.theme_generator import generate_theme_file, ANSI_COLORS
+from .utils import settings_on_change
 
 
 THEMES = os.path.join(os.path.dirname(__file__), "themes")
@@ -120,27 +121,6 @@ def plugin_loaded():
         if not os.path.isfile(path):
             sublime.active_window().run_command("console_generate_theme")
 
-    _cached = {
-        "256color": settings.get("256color", False),
-        "theme": settings.get("theme", "default"),
-        "user_theme_colors": settings.get("user_theme_colors", {}).copy()
-    }
-
-    def on_change():
-        use_256color = settings.get("256color", False)
-        theme = settings.get("theme", "default")
-        user_theme_colors = settings.get("user_theme_colors", {}).copy()
-        if use_256color != _cached["256color"] or \
-                theme != _cached["theme"] or \
-                user_theme_colors != _cached["user_theme_colors"]:
-            sublime.active_window().run_command("console_generate_theme")
-            _cached["256color"] = use_256color
-            _cached["theme"] = theme
-            _cached["user_theme_colors"] = user_theme_colors
-
-    settings.clear_on_change("256color")
-    settings.add_on_change("256color", on_change)
-    settings.clear_on_change("theme")
-    settings.add_on_change("theme", on_change)
-    settings.clear_on_change("user_theme_colors")
-    settings.add_on_change("user_theme_colors", on_change)
+    settings_on_change(settings, ["256color", "user_theme_colors", "theme"])(
+        lambda _: sublime.active_window().run_command("console_generate_theme")
+    )

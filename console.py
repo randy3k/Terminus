@@ -14,6 +14,8 @@ import pyte
 from wcwidth import wcwidth
 
 from .key import get_key_code
+from .utils import settings_on_change
+
 
 if sys.platform.startswith("win"):
     from winpty import PtyProcess
@@ -630,21 +632,12 @@ class ConsoleActivate(sublime_plugin.TextCommand):
 
 def plugin_loaded():
     settings = sublime.load_settings("Console.sublime-settings")
-    if settings.get("debug", False):
-        logger.setLevel(logging.DEBUG)
-    else:
-        logger.setLevel(logging.WARNING)
 
-    _cached = {"debug": settings.get("debug", False)}
+    def on_change(debug):
+        if debug:
+            logger.setLevel(logging.DEBUG)
+        else:
+            logger.setLevel(logging.WARNING)
 
-    def on_change():
-        debug = settings.get("debug", False)
-        if debug != _cached["debug"]:
-            if debug:
-                logger.setLevel(logging.DEBUG)
-            else:
-                logger.setLevel(logging.WARNING)
-            _cached["debug"] = debug
-
-    settings.clear_on_change("debug")
-    settings.add_on_change("debug", on_change)
+    on_change(settings.get("debug", False))
+    settings_on_change(settings, "debug")(on_change)
