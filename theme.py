@@ -121,18 +121,25 @@ def plugin_loaded():
             sublime.active_window().run_command("console_generate_theme")
 
     _cached = {
+        "256color": settings.get("256color", False),
         "theme": settings.get("theme", "default"),
         "user_theme_colors": settings.get("user_theme_colors", {}).copy()
     }
 
     def on_change():
+        use_256color = settings.get("256color", False)
         theme = settings.get("theme", "default")
         user_theme_colors = settings.get("user_theme_colors", {}).copy()
-        if theme != _cached["theme"] or user_theme_colors != _cached["user_theme_colors"]:
+        if use_256color != _cached["256color"] or \
+                theme != _cached["theme"] or \
+                user_theme_colors != _cached["user_theme_colors"]:
             sublime.active_window().run_command("console_generate_theme")
+            _cached["256color"] = use_256color
             _cached["theme"] = theme
             _cached["user_theme_colors"] = user_theme_colors
 
+    settings.clear_on_change("256color")
+    settings.add_on_change("256color", on_change)
     settings.clear_on_change("theme")
     settings.add_on_change("theme", on_change)
     settings.clear_on_change("user_theme_colors")
