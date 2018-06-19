@@ -696,9 +696,23 @@ class ConsoleOpen(sublime_plugin.WindowCommand):
             if title is "Console":
                 title = config["name"]
 
-        if "TERM" in _env and _env["TERM"] not in [
-                "linux", "xterm", "xterm-16color", "xterm-256color"]:
-            raise Exception("{} is not supported.".format(_env["TERM"]))
+        settings = sublime.load_settings("Console.sublime-settings")
+        if sys.platform.startswith("win"):
+            pass
+
+        else:
+            if "TERM" not in _env:
+                _env["TERM"] = settings.get("unix_term", "linux")
+
+            if "LANG" not in _env:
+                if "LANG" in os.environ:
+                    _env["LANG"] = os.environ["LANG"]
+                else:
+                    _env["LANG"] = "en_US.UTF-8"
+
+            if "TERM" in _env and _env["TERM"] not in [
+                    "linux", "xterm", "xterm-16color", "xterm-256color"]:
+                raise Exception("{} is not supported.".format(_env["TERM"]))
 
         if not cwd:
             if self.window.folders():
@@ -746,7 +760,9 @@ class ConsoleOpen(sublime_plugin.WindowCommand):
             self.run(cmd=config["cmd"], env=env, title=config["name"])
 
         self.window.show_quick_panel(
-            [config["name"] for config in ok_configs],
+            [[config["name"],
+              config["cmd"] if isinstance(config["cmd"], str) else config["cmd"][0]]
+             for config in ok_configs],
             on_done
         )
 
@@ -766,8 +782,6 @@ class ConsoleOpen(sublime_plugin.WindowCommand):
         return self._default_config()
 
     def _default_config(self):
-        settings = sublime.load_settings("Console.sublime-settings")
-
         if sys.platform.startswith("win"):
             return {
                 "name": "Command Prompt",
@@ -783,10 +797,7 @@ class ConsoleOpen(sublime_plugin.WindowCommand):
             return {
                 "name": "Login Shell",
                 "cmd": cmd,
-                "env": {
-                    "TERM": settings.get("unix_term", "linux"),
-                    "LANG": "en_US.UTF-8"
-                }
+                "env": {}
             }
 
 

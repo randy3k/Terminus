@@ -8,21 +8,15 @@
         {
             "name": "Bash",
             "cmd": ["/bin/bash", "-i", "-l"],
-            "env": {
-                "TERM": "linux",
-                "LANG": "en_US.UTF-8"
-            },
+            "env": {},
             "enable": true,
             "default": false,
             "platforms": ["linux", "osx"]
         },
         {
-            "name": "Bash (256color)",
-            "cmd": ["/bin/bash", "-i", "-l"],
-            "env": {
-                "TERM": "xterm-256color",
-                "LANG": "en_US.UTF-8"
-            },
+            "name": "Zsh",
+            "cmd": ["/bin/zsh", "-i", "-l"],
+            "env": {},
             "enable": true,
             "default": false,
             "platforms": ["linux", "osx"]
