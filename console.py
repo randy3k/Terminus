@@ -138,16 +138,17 @@ def view_size(view):
 
 class ConsolePtyProcess(PtyProcess):
 
-    def read(self, nbytes):
-        if sys.platform.startswith("win"):
+    if sys.platform.startswith("win"):
+        def read(self, nbytes):
             return super(ConsolePtyProcess, self).read(nbytes).encode("utf-8")
-        else:
+
+        def write(self, data):
+            super(ConsolePtyProcess, self).write(data.decode("utf-8"))
+    else:
+        def read(self, nbytes):
             return super(ConsolePtyProcess, self).read(nbytes)
 
-    def write(self, data):
-        if sys.platform.startswith("win"):
-            super(ConsolePtyProcess, self).write(data.decode("utf-8"))
-        else:
+        def write(self, data):
             super(ConsolePtyProcess, self).write(data)
 
 
