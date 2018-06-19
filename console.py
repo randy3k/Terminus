@@ -693,6 +693,8 @@ class ConsoleOpen(sublime_plugin.WindowCommand):
             cmd = config["cmd"]
             if "env" in config:
                 _env = config["env"]
+            if title is "Console":
+                title = config["name"]
 
         if "TERM" in _env and _env["TERM"] not in [
                 "linux", "xterm", "xterm-16color", "xterm-256color"]:
