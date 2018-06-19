@@ -316,11 +316,6 @@ class Console():
             return None
         return cls._consoles[vid]
 
-    @responsive(period=1, default=False)
-    def _was_resized(self):
-        size = view_size(self.view)
-        return self.screen.lines != size[0] or self.screen.columns != size[1]
-
     def _need_to_render(self):
         flag = False
         if self.screen.dirty:
@@ -346,6 +341,11 @@ class Console():
         console_is_alive = responsive(period=1, default=True)(
             lambda: self.process.isalive() and view_is_attached())
 
+        @responsive(period=1, default=False)
+        def was_resized():
+            size = view_size(self.view)
+            return self.screen.lines != size[0] or self.screen.columns != size[1]
+
         def reader():
             # run self.view.windows() via `view_is_attached` periodically to refresh gui
             while console_is_alive() and view_is_attached():
@@ -368,7 +368,7 @@ class Console():
                             self.stream.feed(data[0])
                             data[0] = ""
 
-                    if self._was_resized():
+                    if was_resized():
                         self.handle_resize()
 
                     if self._need_to_render():
