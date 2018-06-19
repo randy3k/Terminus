@@ -700,6 +700,9 @@ class ConsoleOpen(sublime_plugin.WindowCommand):
             }
             _env.update(env)
 
+            if _env["TERM"] not in ["linux", "xterm", "xterm-16color", "xterm-256color"]:
+                raise Exception("{} is not support.".format(_env["TERM"]))
+
         if not cwd:
             if self.window.folders():
                 cwd = self.window.folders()[0]
