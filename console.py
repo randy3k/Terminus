@@ -151,7 +151,6 @@ class ConsolePtyProcess(PtyProcess):
 class ConsoleScreen(pyte.HistoryScreen):
     offset = 0
     _alt_screen_mode = False
-    _primary_buffer = {}
 
     def __init__(self, *args, **kwargs):
         if "process" in kwargs:
@@ -159,6 +158,7 @@ class ConsoleScreen(pyte.HistoryScreen):
             del kwargs["process"]
         else:
             raise Exception("missing process")
+        self._primary_buffer = {}
         super(ConsoleScreen, self).__init__(*args, **kwargs)
 
     def write_process_input(self, data):
@@ -293,11 +293,12 @@ class ConsoleStream(pyte.Stream):
 
 class Console():
     _consoles = {}
-    _cached_cursor = [0, 0]
-    _cached_cursor_is_hidden = [True]
 
     def __init__(self, view):
         self._consoles[view.id()] = self
+        self._cached_cursor = [0, 0]
+        self._cached_cursor_is_hidden = [True]
+
         self.view = view
         self.view.set_scratch(True)
         # self.view.set_read_only(True)
