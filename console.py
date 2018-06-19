@@ -12,7 +12,7 @@ from contextlib import contextmanager
 from collections import defaultdict, deque
 
 import pyte
-from pyte.screens import StaticDefaultDict, History, Cursor
+from pyte.screens import StaticDefaultDict, History, Cursor, Margins
 from wcwidth import wcwidth
 
 from .key import get_key_code
@@ -211,25 +211,45 @@ class ConsoleScreen(pyte.HistoryScreen):
 
     def erase_in_display(self, how=0):
         # dump the screen to history
+        logger.debug("erase_in_display: %s", how)
         if not self.alt_screen_mode() and \
                 (how == 2 or (how == 0 and self.cursor.x == 0 and self.cursor.y == 0)):
-            # find the first non-empty line from the botton
-            found = -1
-            for nz_line in reversed(range(self.lines)):
-                text = "".join([c.data for c in self.buffer[nz_line].values()])
-                if len(text.strip()) > 0:
-                    found = nz_line
-                    break
-            self.history.top.extend(deepcopy(self.buffer[y]) for y in range(found + 1))
-            self.offset += found + 1
+            self.scroll_screen_into_history()
 
         super().erase_in_display(how)
 
+    def scroll_screen_into_history(self):
+        # find the first non-empty line from the botton
+        found = -1
+        for nz_line in reversed(range(self.lines)):
+            text = "".join([c.data for c in self.buffer[nz_line].values()])
+            if len(text.strip()) > 0:
+                found = nz_line
+                break
+        self.history.top.extend(deepcopy(self.buffer[y]) for y in range(found + 1))
+        self.offset += found + 1
+
     def scroll_up(self, n):
-        logger.debug("scoll_up {}".format(n))
+        logger.debug("scroll_up {}".format(n))
+        top, bottom = self.margins or Margins(0, self.lines - 1)
+        for y in range(top, bottom + 1):
+            if y + n > bottom:
+                for j in range(self.columns):
+                    self.buffer[y][j] = self.cursor.attrs
+            else:
+                self.buffer[y] = deepcopy(self.buffer[y+n])
+        self.dirty.update(range(self.lines))
 
     def scroll_down(self, n):
         logger.debug("scoll_down {}".format(n))
+        top, bottom = self.margins or Margins(0, self.lines - 1)
+        for y in reversed(range(top, bottom + 1)):
+            if y - n < top:
+                for j in range(self.columns):
+                    self.buffer[y][j] = self.cursor.attrs
+            else:
+                self.buffer[y] = deepcopy(self.buffer[y-n])
+        self.dirty.update(range(self.lines))
 
 
 class ConsoleByteStream(pyte.ByteStream):
@@ -538,6 +558,14 @@ class ConsoleRender(sublime_plugin.TextCommand):
             top_region = sublime.Region(0, view.line(view.text_point(m - 1, 0)).end() + 1)
             view.erase(edit, top_region)
             screen.offset -= m
+            lastrow -= m
+
+        if lastrow > screen.offset + screen.lines:
+            tail_region = sublime.Region(
+                view.text_point(screen.offset + screen.lines, 0),
+                view.size()
+            )
+            view.erase(edit, tail_region)
 
 
 class ConsoleKeypress(sublime_plugin.TextCommand):
