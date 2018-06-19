@@ -469,7 +469,6 @@ class ConsoleRender(sublime_plugin.TextCommand):
         screen = console.screen
         self.update_lines(edit, screen)
         self.update_cursor(edit, screen)
-        self.show_offset_at_top(screen)
         self.trim_trailing_spaces(edit, screen)
         self.trim_history(edit, screen)
         logger.debug("updating lines takes {}s".format(str(time.time() - startt)))
@@ -485,6 +484,12 @@ class ConsoleRender(sublime_plugin.TextCommand):
         view = self.view
         cursor = screen.cursor
         offset = screen.offset
+
+        if view.sel() and view.sel()[0].empty():
+            row, col = view.rowcol(view.sel()[0].end())
+            if row == offset + cursor.y and col == cursor.x:
+                return
+
         # make sure the view has enough lines
         self.ensure_position(edit, cursor.y + offset)
 
@@ -499,6 +504,7 @@ class ConsoleRender(sublime_plugin.TextCommand):
         sel.clear()
         if not screen.cursor.hidden:
             sel.add(sublime.Region(pt, pt))
+            self.show_offset_at_top(screen)
 
     def update_lines(self, edit, screen):
         # cursor = screen.cursor
