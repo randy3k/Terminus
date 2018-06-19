@@ -250,7 +250,7 @@ class ConsoleScreen(pyte.HistoryScreen):
         found = -1
         for nz_line in reversed(range(self.lines)):
             text = "".join([c.data for c in self.buffer[nz_line].values()])
-            if len(text.strip()) > 0:
+            if text and not text.isspace():
                 found = nz_line
                 break
         return found
