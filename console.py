@@ -40,7 +40,10 @@ def which_char(text, cursor_position):
         w += wcwidth(c)
         if w >= cursor_position:
             break
-    return i
+    if w >= cursor_position:
+        return i
+    else:
+        return i + cursor_position - w
 
 
 def segment_buffer_line(buffer_line):
@@ -495,11 +498,11 @@ class ConsoleRender(sublime_plugin.TextCommand):
 
         line_region = view.line(view.text_point(cursor.y + offset, 0))
         text = view.substr(line_region)
+        col = which_char(text, cursor.x) + 1
 
-        pt = view.text_point(cursor.y + offset, which_char(text, cursor.x) + 1)
-        if view.rowcol(pt)[0] > cursor.y + offset:
-            # it may happen if the line is empty
-            pt = pt - 1
+        self.ensure_position(edit, cursor.y + offset, col)
+        pt = view.text_point(cursor.y + offset, col)
+
         sel = view.sel()
         sel.clear()
         if not screen.cursor.hidden:
