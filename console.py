@@ -667,9 +667,7 @@ class ConsoleEventHandler(sublime_plugin.ViewEventListener):
         elif command == "insert" and "characters" in args:
             chars = args["characters"]
             logger.debug("char {} detected".format(chars))
-            console = Console.from_id(view.id())
-            if console:
-                console.send_string(chars)
+            console.send_string(chars)
         else:
             logger.debug("undo {}".format(command))
             view.run_command("soft_undo")
@@ -700,7 +698,7 @@ class ConsoleOpen(sublime_plugin.WindowCommand):
             _env.update(env)
 
             if _env["TERM"] not in ["linux", "xterm", "xterm-16color", "xterm-256color"]:
-                raise Exception("{} is not support.".format(_env["TERM"]))
+                raise Exception("{} is not supported.".format(_env["TERM"]))
 
         if not cwd:
             if self.window.folders():
