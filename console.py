@@ -7,7 +7,7 @@ import time
 import threading
 import logging
 from functools import wraps
-from copy import deepcopy
+from copy import copy
 from contextlib import contextmanager
 from collections import defaultdict, deque
 
@@ -168,6 +168,33 @@ class ConsoleScreen(pyte.HistoryScreen):
     def write_process_input(self, data):
         self._process.write(data.encode("utf-8"))
 
+    def resize(self, lines=None, columns=None):
+        lines = lines or self.lines
+        columns = columns or self.columns
+
+        if lines == self.lines and columns == self.columns:
+            return  # No changes.
+
+        self.dirty.update(range(lines))
+
+        line_diff = self.lines - lines
+        if line_diff > 0:
+            bottom = self.first_non_empty_line_from_bottom()
+            num_empty_lines = self.lines - 1 - bottom
+            if line_diff > num_empty_lines:
+                line_diff = line_diff - num_empty_lines
+                self.push_screen_into_history(line_diff)
+                self.scroll_up(line_diff)
+                self.cursor.y -= line_diff
+
+        if columns < self.columns:
+            for line in self.buffer.values():
+                for x in range(columns, self.columns):
+                    line.pop(x, None)
+
+        self.lines, self.columns = lines, columns
+        self.set_margins()
+
     def set_margins(self, top=None, bottom=None):
         if (top is None or top == 0) and bottom is None:
             # https://github.com/selectel/pyte/commit/676610b43954b644c05823371df6daf87caafdad
@@ -215,20 +242,27 @@ class ConsoleScreen(pyte.HistoryScreen):
         logger.debug("erase_in_display: %s", how)
         if not self.alt_screen_mode() and \
                 (how == 2 or (how == 0 and self.cursor.x == 0 and self.cursor.y == 0)):
-            self.scroll_screen_into_history()
+            self.push_screen_into_history()
 
         super().erase_in_display(how)
 
-    def scroll_screen_into_history(self):
-        # find the first non-empty line from the botton
+    def first_non_empty_line_from_bottom(self):
         found = -1
         for nz_line in reversed(range(self.lines)):
             text = "".join([c.data for c in self.buffer[nz_line].values()])
             if len(text.strip()) > 0:
                 found = nz_line
                 break
-        self.history.top.extend(deepcopy(self.buffer[y]) for y in range(found + 1))
-        self.offset += found + 1
+        return found
+
+    def push_screen_into_history(self, lines=None):
+        if self.alt_screen_mode():
+            return
+        if lines is None:
+            # find the first non-empty line from the botton
+            lines = self.first_non_empty_line_from_bottom() + 1
+        self.history.top.extend(copy(self.buffer[y]) for y in range(lines))
+        self.offset += lines
 
     def scroll_up(self, n):
         logger.debug("scroll_up {}".format(n))
@@ -238,7 +272,7 @@ class ConsoleScreen(pyte.HistoryScreen):
                 for j in range(self.columns):
                     self.buffer[y][j] = self.cursor.attrs
             else:
-                self.buffer[y] = deepcopy(self.buffer[y+n])
+                self.buffer[y] = copy(self.buffer[y+n])
         self.dirty.update(range(self.lines))
 
     def scroll_down(self, n):
@@ -249,7 +283,7 @@ class ConsoleScreen(pyte.HistoryScreen):
                 for j in range(self.columns):
                     self.buffer[y][j] = self.cursor.attrs
             else:
-                self.buffer[y] = deepcopy(self.buffer[y-n])
+                self.buffer[y] = copy(self.buffer[y-n])
         self.dirty.update(range(self.lines))
 
 
@@ -446,7 +480,8 @@ class ConsoleRender(sublime_plugin.TextCommand):
         self.trim_trailing_spaces(edit, screen)
         self.trim_history(edit, screen)
         logger.debug("updating lines takes {}s".format(str(time.time() - startt)))
-        logger.debug("mode: {}".format([m >> 5 for m in screen.mode]))
+        logger.debug("mode: {}, cursor: {}.{}".format(
+            [m >> 5 for m in screen.mode], screen.cursor.x, screen.cursor.y))
 
     def show_offset_at_top(self, screen):
         view = self.view
