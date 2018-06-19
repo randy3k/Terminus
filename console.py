@@ -706,6 +706,8 @@ class ConsoleOpen(sublime_plugin.WindowCommand):
         if not cwd:
             if self.window.folders():
                 cwd = self.window.folders()[0]
+            else:
+                cwd = os.path.expanduser("~")
 
         self.window.new_file().run_command(
             "console_activate",
