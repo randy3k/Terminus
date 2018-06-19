@@ -22,7 +22,7 @@ from .utils import settings_on_change
 if sys.platform.startswith("win"):
     from winpty import PtyProcess
 else:
-    from ptyprocess import PtyProcess
+    from ptyprocess import PtyProcessUnicode as PtyProcess
 
 
 logger = logging.getLogger('Console')
@@ -138,18 +138,11 @@ def view_size(view):
 
 class ConsolePtyProcess(PtyProcess):
 
-    if sys.platform.startswith("win"):
-        def read(self, nbytes):
-            return super(ConsolePtyProcess, self).read(nbytes).encode("utf-8")
+    def read(self, nbytes):
+        return super(ConsolePtyProcess, self).read(nbytes)
 
-        def write(self, data):
-            super(ConsolePtyProcess, self).write(data.decode("utf-8"))
-    else:
-        def read(self, nbytes):
-            return super(ConsolePtyProcess, self).read(nbytes)
-
-        def write(self, data):
-            super(ConsolePtyProcess, self).write(data)
+    def write(self, data):
+        super(ConsolePtyProcess, self).write(data)
 
 
 class ConsoleScreen(pyte.HistoryScreen):
@@ -166,7 +159,7 @@ class ConsoleScreen(pyte.HistoryScreen):
         super(ConsoleScreen, self).__init__(*args, **kwargs)
 
     def write_process_input(self, data):
-        self._process.write(data.encode("utf-8"))
+        self._process.write(data)
 
     def resize(self, lines=None, columns=None):
         lines = lines or self.lines
@@ -287,7 +280,7 @@ class ConsoleScreen(pyte.HistoryScreen):
         self.dirty.update(range(self.lines))
 
 
-class ConsoleByteStream(pyte.ByteStream):
+class ConsoleStream(pyte.Stream):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -347,7 +340,7 @@ class Console():
 
     def _start_rendering(self):
         lock = threading.Lock()
-        data = [b""]
+        data = [""]
 
         view_is_attached = responsive(period=0.001, default=True)(self.view.window)
         console_is_alive = responsive(period=1, default=True)(
@@ -359,7 +352,7 @@ class Console():
                 try:
                     temp = self.process.read(1024)
                 except EOFError:
-                    data[0] = b""
+                    data[0] = ""
                     break
                 with lock:
                     data[0] += temp
@@ -373,7 +366,7 @@ class Console():
                         if len(data[0]) > 0:
                             logger.debug("receieved: {}".format(data[0]))
                             self.stream.feed(data[0])
-                            data[0] = b""
+                            data[0] = ""
 
                     if self._was_resized():
                         self.handle_resize()
@@ -399,7 +392,7 @@ class Console():
 
         self.process = ConsolePtyProcess.spawn(self.cmd, cwd=cwd, env=_env, dimensions=size)
         self.screen = ConsoleScreen(size[1], size[0], process=self.process, history=10000)
-        self.stream = ConsoleByteStream(self.screen)
+        self.stream = ConsoleStream(self.screen)
         self._start_rendering()
 
     def close(self):
@@ -438,7 +431,7 @@ class Console():
 
     def send_string(self, string):
         logger.debug("sent {}".format(string))
-        self.process.write(string.encode("utf-8"))
+        self.process.write(string)
 
     def bracketed_paste_mode_enabled(self):
         return (2004 << 5) in self.screen.mode
