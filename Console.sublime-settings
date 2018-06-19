@@ -1,7 +1,43 @@
 {
     "256color": false,
     "debug": false,
-    // the TERM variable of unix system, you might set it to "xterm-256color"
+
+    // a list of available shells to execute
+    // the shell marked as "default" will the default shell
+    "shell_configs": [
+        {
+            "name": "Bash",
+            "cmd": ["/bin/bash", "-i", "-l"],
+            "env": {
+                "TERM": "linux",
+                "LANG": "en_US.UTF-8"
+            },
+            "enable": true,
+            "default": false,
+            "platforms": ["linux", "osx"]
+        },
+        {
+            "name": "Bash (256color)",
+            "cmd": ["/bin/bash", "-i", "-l"],
+            "env": {
+                "TERM": "xterm-256color",
+                "LANG": "en_US.UTF-8"
+            },
+            "enable": true,
+            "default": false,
+            "platforms": ["linux", "osx"]
+        },
+        {
+            "name": "Power Shell",
+            "cmd": "powershell.exe",
+            "env": {},
+            "enable": true,
+            "default": false,
+            "platforms": ["windows"]
+        }
+    ],
+
+    // the default TERM variable of unix system, you might set it to "xterm-256color"
     // however, some features of xterm might not be supported here
     "unix_term": "linux",
 

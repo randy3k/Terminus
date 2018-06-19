@@ -683,35 +683,24 @@ class ConsoleEventHandler(sublime_plugin.ViewEventListener):
 class ConsoleOpen(sublime_plugin.WindowCommand):
 
     def run(self, cmd=None, cwd=None, env={}, title="Console"):
+        _env = {}
         if not cmd:
-            if sys.platform.startswith("win"):
-                cmd = "C:\\Windows\\System32\\cmd.exe"
-            else:
-                if "SHELL" in os.environ:
-                    cmd = [os.environ["SHELL"], "-i", "-l"]
-                else:
-                    cmd = ["/bin/bash", "-i", "-l"]
+            config = self.default_config()
+            cmd = config["cmd"]
+            if "env" in config:
+                _env = config["env"]
 
-        settings = sublime.load_settings("Console.sublime-settings")
-
-        if sys.platform.startswith("win"):
-            _env = {}
-            _env.update(env)
-        else:
-            _env = {
-                "TERM": settings.get("unix_term", "linux"),
-                "LANG": "en_US.UTF-8"
-            }
-            _env.update(env)
-
-            if _env["TERM"] not in ["linux", "xterm", "xterm-16color", "xterm-256color"]:
-                raise Exception("{} is not supported.".format(_env["TERM"]))
+        if "TERM" in _env and _env["TERM"] not in [
+                "linux", "xterm", "xterm-16color", "xterm-256color"]:
+            raise Exception("{} is not supported.".format(_env["TERM"]))
 
         if not cwd:
             if self.window.folders():
                 cwd = self.window.folders()[0]
             else:
                 cwd = os.path.expanduser("~")
+
+        _env.update(env)
 
         self.window.new_file().run_command(
             "console_activate",
@@ -721,6 +710,45 @@ class ConsoleOpen(sublime_plugin.WindowCommand):
                 "env": _env,
                 "title": title
             })
+
+    def default_config(self):
+        settings = sublime.load_settings("Console.sublime-settings")
+        configs = settings.get("shell_configs", [])
+
+        platform = sublime.platform()
+        for config in configs:
+            if "enable" in config and not config["enable"]:
+                continue
+            if "platforms" in config and platform not in config["platforms"]:
+                continue
+            if "default" in config and config["default"]:
+                return config
+
+        return self._default_config()
+
+    def _default_config(self):
+        settings = sublime.load_settings("Console.sublime-settings")
+
+        if sys.platform.startswith("win"):
+            return {
+                "name": "Default",
+                "cmd": "C:\\Windows\\System32\\cmd.exe",
+                "env": {}
+            }
+        else:
+            if "SHELL" in os.environ:
+                cmd = [os.environ["SHELL"], "-i", "-l"]
+            else:
+                cmd = ["/bin/bash", "-i", "-l"]
+
+            return {
+                "name": "Default",
+                "cmd": cmd,
+                "env": {
+                    "TERM": settings.get("unix_term", "linux"),
+                    "LANG": "en_US.UTF-8"
+                }
+            }
 
 
 class ConsoleActivate(sublime_plugin.TextCommand):
