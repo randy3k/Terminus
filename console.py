@@ -682,7 +682,11 @@ class ConsoleEventHandler(sublime_plugin.ViewEventListener):
 
 class ConsoleOpen(sublime_plugin.WindowCommand):
 
-    def run(self, cmd=None, cwd=None, env={}, title="Console"):
+    def run(self, cmd=None, cwd=None, env={}, title="Console", popup=False):
+        if popup:
+            self.show_popup()
+            return
+
         _env = {}
         if not cmd:
             config = self.default_config()
@@ -711,6 +715,39 @@ class ConsoleOpen(sublime_plugin.WindowCommand):
                 "title": title
             })
 
+    def show_popup(self):
+        settings = sublime.load_settings("Console.sublime-settings")
+        configs = settings.get("shell_configs", [])
+
+        ok_configs = []
+        has_default = False
+        platform = sublime.platform()
+        for config in configs:
+            if "enable" in config and not config["enable"]:
+                continue
+            if "platforms" in config and platform not in config["platforms"]:
+                continue
+            if "default" in config and config["default"] and not has_default:
+                has_default = True
+                ok_configs = [config] + ok_configs
+            else:
+                ok_configs.append(config)
+
+        if not has_default:
+            ok_configs = [self._default_config()] + ok_configs
+
+        def on_done(index):
+            if index < 0:
+                return
+            config = ok_configs[index]
+            env = config["env"] if "env" in config else {}
+            self.run(cmd=config["cmd"], env=env, title=config["name"])
+
+        self.window.show_quick_panel(
+            [config["name"] for config in ok_configs],
+            on_done
+        )
+
     def default_config(self):
         settings = sublime.load_settings("Console.sublime-settings")
         configs = settings.get("shell_configs", [])
@@ -731,7 +768,7 @@ class ConsoleOpen(sublime_plugin.WindowCommand):
 
         if sys.platform.startswith("win"):
             return {
-                "name": "Default",
+                "name": "Command Prompt",
                 "cmd": "C:\\Windows\\System32\\cmd.exe",
                 "env": {}
             }
@@ -742,7 +779,7 @@ class ConsoleOpen(sublime_plugin.WindowCommand):
                 cmd = ["/bin/bash", "-i", "-l"]
 
             return {
-                "name": "Default",
+                "name": "Login Shell",
                 "cmd": cmd,
                 "env": {
                     "TERM": settings.get("unix_term", "linux"),

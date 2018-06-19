@@ -1,7 +1,12 @@
 [
     {
-        "caption": "Console: Default Shell",
+        "caption": "Console: Open Default Shell",
         "command": "console_open"
+    },
+    {
+        "caption": "Console: Open Available Shell",
+        "command": "console_open",
+        "args": {"popup": true}
     },
     {
         "caption": "Console Utilities: Select Theme",
