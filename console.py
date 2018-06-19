@@ -485,10 +485,17 @@ class ConsoleRender(sublime_plugin.TextCommand):
 
     def update_cursor(self, edit, screen):
         view = self.view
+
+        sel = view.sel()
+        sel.clear()
+
+        if screen.cursor.hidden:
+            return
+
         cursor = screen.cursor
         offset = screen.offset
 
-        if view.sel() and view.sel()[0].empty():
+        if len(view.sel()) > 0 and view.sel()[0].empty():
             row, col = view.rowcol(view.sel()[0].end())
             if row == offset + cursor.y and col == cursor.x:
                 return
@@ -503,11 +510,8 @@ class ConsoleRender(sublime_plugin.TextCommand):
         self.ensure_position(edit, cursor.y + offset, col)
         pt = view.text_point(cursor.y + offset, col)
 
-        sel = view.sel()
-        sel.clear()
-        if not screen.cursor.hidden:
-            sel.add(sublime.Region(pt, pt))
-            self.show_offset_at_top(screen)
+        sel.add(sublime.Region(pt, pt))
+        self.show_offset_at_top(screen)
 
     def update_lines(self, edit, screen):
         # cursor = screen.cursor
