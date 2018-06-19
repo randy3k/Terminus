@@ -24,24 +24,25 @@ It is a cross platform terminal for Sublime Text which works on Windows, macOS a
 This package is heavily inspired by [TerminalView](https://github.com/Wramberg/TerminalView). Compare with TerminalView, this has
 
 - Windows support
-- Continuous history
-- Easily Customizable Themes
-- Unicode support
+- continuous history
+- easily customizable themes
+- unicode support
 - 256 colors support
+- better xterm support
 
 ### Installation
 
 This package is not yet available via Package Control default channel, you have to add the following repository manually.
 
-- Run `Package Control: Add Repository`
-- Paste
+- run `Package Control: Add Repository`
+- paste
 
     ```
     https://raw.githubusercontent.com/randy3k/Console/master/package_control.json
     ```
     and hit enter
 
-- Run `Package Control: Install Package` and search for `Console`
+- run `Package Control: Install Package` and search for `Console`
 
 
 ### Acknowledgments
