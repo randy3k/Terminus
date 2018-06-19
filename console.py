@@ -305,7 +305,7 @@ class Console():
         self.view.settings().set("highlight_line", False)
         self.view.settings().set("auto_complete_commit_on_tab", False)
         self.view.settings().set("draw_centered", False)
-        self.view.settings().set("word_wrap", True)
+        self.view.settings().set("word_wrap", False)
         self.view.settings().set("auto_complete", False)
         self.view.settings().set("draw_white_space", "none")
         self.view.settings().set("draw_indent_guides", False)
