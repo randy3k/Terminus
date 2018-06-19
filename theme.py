@@ -99,6 +99,9 @@ class ConsoleGenerateTheme(sublime_plugin.WindowCommand):
                     generate_theme_file(
                         path256, ansi_scopes=True, color256_scopes=True, pretty=False)
                     print("Theme {} generated: {}".format(theme, path256))
+            else:
+                if os.path.isfile(path256):
+                    os.unlink(path256)
 
             generate_theme_file(path, variables=variables, ansi_scopes=False, color256_scopes=False)
             print("Theme {} generated: {}".format(theme, path))
