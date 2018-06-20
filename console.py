@@ -289,24 +289,10 @@ class Console():
     _consoles = {}
 
     def __init__(self, view):
+        self.view = view
         self._consoles[view.id()] = self
         self._cached_cursor = [0, 0]
         self._cached_cursor_is_hidden = [True]
-
-        self.view = view
-        self.view.set_scratch(True)
-        # self.view.set_read_only(True)
-        self.view.settings().set("gutter", False)
-        self.view.settings().set("highlight_line", False)
-        self.view.settings().set("auto_complete_commit_on_tab", False)
-        self.view.settings().set("draw_centered", False)
-        self.view.settings().set("word_wrap", False)
-        self.view.settings().set("auto_complete", False)
-        self.view.settings().set("draw_white_space", "none")
-        self.view.settings().set("draw_indent_guides", False)
-        self.view.settings().set("caret_style", "blink")
-        self.view.settings().set("scroll_past_end", True)
-        self.view.settings().set("color_scheme", "Console.sublime-color-scheme")
 
     @classmethod
     def from_id(cls, vid):
@@ -376,20 +362,15 @@ class Console():
 
         threading.Thread(target=renderer).start()
 
-    def open(self, cmd, cwd=None, env=None, title=None):
-        self.cmd = cmd
-        self.cwd = cwd
-        self.env = env
-        self.title = title
+    def open(self, cmd, cwd=None, env=None, title=None, offset=0):
         self.set_title(title)
-
         _env = os.environ.copy()
         _env.update(env)
         size = view_size(self.view)
         logger.debug("view size: {}".format(str(size)))
-
-        self.process = ConsolePtyProcess.spawn(self.cmd, cwd=cwd, env=_env, dimensions=size)
+        self.process = ConsolePtyProcess.spawn(cmd, cwd=cwd, env=_env, dimensions=size)
         self.screen = ConsoleScreen(size[1], size[0], process=self.process, history=10000)
+        self.screen.offset = offset
         self.stream = ConsoleStream(self.screen)
         self._start_rendering()
 
@@ -476,7 +457,7 @@ class ConsoleRender(sublime_plugin.TextCommand):
     def show_offset_at_top(self, screen):
         view = self.view
         layout = view.text_to_layout(view.text_point(screen.offset, 0))
-        view.set_viewport_position(layout, False)
+        view.set_viewport_position(layout, True)
 
     def update_cursor(self, edit, screen):
         view = self.view
@@ -674,6 +655,17 @@ class ConsoleEventHandler(sublime_plugin.ViewEventListener):
             logger.debug("undo {}".format(command))
             view.run_command("soft_undo")
 
+    def on_load(self):
+        view = self.view
+        console = Console.from_id(view.id())
+        settings = view.settings()
+        if not console and settings.has("console_view_args"):
+            kwargs = settings.get("console_view_args")
+            if "cmd" in kwargs:
+                # pass offset so the previous output will not be erased
+                kwargs["offset"] = view.rowcol(view.size())[0] + 1
+                self.view.run_command("console_activate", kwargs)
+
 
 class ConsoleOpen(sublime_plugin.WindowCommand):
 
@@ -799,7 +791,23 @@ class ConsoleOpen(sublime_plugin.WindowCommand):
 class ConsoleActivate(sublime_plugin.TextCommand):
 
     def run(self, _, **kwargs):
-        self.view.settings().set("console_view", True)
+        view = self.view
+        settings = view.settings()
+        settings.set("console_view", True)
+        settings.set("console_view_args", kwargs)
+        view.set_scratch(True)
+        view.set_read_only(False)
+        settings.set("gutter", False)
+        settings.set("highlight_line", False)
+        settings.set("auto_complete_commit_on_tab", False)
+        settings.set("draw_centered", False)
+        settings.set("word_wrap", False)
+        settings.set("auto_complete", False)
+        settings.set("draw_white_space", "none")
+        settings.set("draw_indent_guides", False)
+        settings.set("caret_style", "blink")
+        settings.set("scroll_past_end", True)
+        settings.set("color_scheme", "Console.sublime-color-scheme")
         sublime.set_timeout_async(lambda: self.run_async(**kwargs))
 
     def run_async(self, **kwargs):
