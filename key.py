@@ -103,8 +103,9 @@ def _get_shift_combination_key_code(key):
     if key in _SHIFT_KEY_MAP:
         return _SHIFT_KEY_MAP[key]
 
-    code = _get_key_code(key)
-    return code
+    if key in _KEY_MAP:
+        return _KEY_MAP[key]
+    return key.upper()
 
 
 # def _get_app_key_code(key):
