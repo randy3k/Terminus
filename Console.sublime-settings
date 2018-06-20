@@ -43,6 +43,9 @@
     // however, some features of xterm might not be supported here
     "unix_term": "linux",
 
+    // use ctrl+c and ctrl+v to copy and paste on Windows and Linux
+    "smart_clipboard": true,
+
     // the name of the theme
     // change it to "user" if you want to user customized theme
     "theme": "default",

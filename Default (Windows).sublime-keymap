@@ -1,6 +1,19 @@
 [
     {"keys": ["ctrl+shift+c"], "command": "copy", "context": [{"key": "setting.console_view"}]},
     {"keys": ["ctrl+shift+v"], "command": "console_paste", "context": [{"key": "setting.console_view"}]},
+    {"keys": ["ctrl+c"], "command": "copy",
+        "context": [
+            {"key": "setting.console_view"},
+            {"key": "setting.console_view.smart_clipboard"},
+            {"key": "selection_empty", "operator": "equal", "operand": false, "match_all": true},
+        ]
+    },
+    {"keys": ["ctrl+v"], "command": "console_paste",
+        "context": [
+            {"key": "setting.console_view"},
+            {"key": "setting.console_view.smart_clipboard"}
+        ]
+    },
 
     {"keys": ["ctrl+backspace"], "command": "console_delete_word", "args": {"forward": false}, "context": [{"key": "setting.console_view"}]},
     {"keys": ["ctrl+delete"], "command": "console_delete_word", "args": {"forward": true}, "context": [{"key": "setting.console_view"}]}

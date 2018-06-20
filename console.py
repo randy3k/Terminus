@@ -703,8 +703,8 @@ class ConsoleEventHandler(sublime_plugin.ViewEventListener):
         view = self.view
         console = Console.from_id(view.id())
         settings = view.settings()
-        if not console and settings.has("console_view_args"):
-            kwargs = settings.get("console_view_args")
+        if not console and settings.has("console_view.args"):
+            kwargs = settings.get("console_view.args")
             if "cmd" in kwargs:
                 # pass offset so the previous output will not be erased
                 kwargs["offset"] = view.rowcol(view.size())[0] + 1
@@ -835,10 +835,14 @@ class ConsoleOpen(sublime_plugin.WindowCommand):
 class ConsoleActivate(sublime_plugin.TextCommand):
 
     def run(self, _, **kwargs):
+        console_settings = sublime.load_settings("Console.sublime-settings")
+
         view = self.view
         settings = view.settings()
         settings.set("console_view", True)
-        settings.set("console_view_args", kwargs)
+        settings.set("console_view", True)
+        settings.set("console_view.args", kwargs)
+        settings.set("console_view.smart_clipboard", console_settings.get("smart_clipboard", True))
         view.set_scratch(True)
         view.set_read_only(False)
         settings.set("gutter", False)
