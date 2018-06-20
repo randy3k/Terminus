@@ -43,7 +43,7 @@ _CTRL_KEY_MAP = {
     "down": "\x1b[1;5B",
     "right": "\x1b[1;5C",
     "left": "\x1b[1;5D",
-    "backspace": "\x1b[3;5~",
+    "delete": "\x1b[3;5~",
     "@": "\x00",
     "`": "\x00",
     "[": "\x1b",
@@ -71,7 +71,7 @@ _SHIFT_KEY_MAP = {
     "right": "\x1b[1;2C",
     "left": "\x1b[1;2D",
     "tab": "\x1b[Z",
-    "backspace": "\x1b[3;2~"
+    "delete": "\x1b[3;2~"
 }
 
 
