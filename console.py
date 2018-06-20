@@ -2,6 +2,7 @@ import sublime
 import sublime_plugin
 
 import os
+import re
 import sys
 import time
 import threading
@@ -624,6 +625,49 @@ class ConsolePaste(sublime_plugin.TextCommand):
 
         if bracketed:
             console.send_key("bracketed_paste_mode_end")
+
+
+class ConsoleDeleteWord(sublime_plugin.TextCommand):
+    """
+    On Windows, ctrl+backspace and ctrl+delete are used to delete words
+    However, there is no standard key to delete word with ctrl+backspace
+    a workaround is to repeatedly apply backspace to delete word
+    """
+
+    def run(self, edit, forward=False):
+        view = self.view
+        console = Console.from_id(view.id())
+        if not console:
+            return
+
+        if len(view.sel()) != 1 or not view.sel()[0].empty():
+            return
+
+        if forward:
+            pt = view.sel()[0].end()
+            line = view.line(pt)
+            text = view.substr(sublime.Region(pt, line.end()))
+            match = re.search(r"(?<=\w)\b", text)
+            if not match:
+                return
+            n = match.span()[0]
+            if n > 0:
+                delete_code = get_key_code("delete")
+                console.send_string(delete_code * n)
+
+        else:
+            pt = view.sel()[0].end()
+            line = view.line(pt)
+            text = view.substr(sublime.Region(line.begin(), pt))
+            matches = re.finditer(r"\b(?=\w)", text)
+            if not matches:
+                return
+            for match in matches:
+                pass
+            n = view.rowcol(pt)[1] - match.span()[0]
+            if n > 0:
+                delete_code = get_key_code("backspace")
+                console.send_string(delete_code * n)
 
 
 class ConsoleEventHandler(sublime_plugin.ViewEventListener):
