@@ -1,10 +1,6 @@
 [
     {"keys": ["super+v"], "command": "console_paste", "context": [{"key": "setting.console_view"}]},
 
-    {"keys": ["alt+delete"], "command": "console_keypress", "args": {"key": "d", "alt": true}, "context": [{"key": "setting.console_view"}]},
-    {"keys": ["alt+left"], "command": "console_keypress", "args": {"key": "b", "alt": true}, "context": [{"key": "setting.console_view"}]},
-    {"keys": ["alt+right"], "command": "console_keypress", "args": {"key": "f", "alt": true}, "context": [{"key": "setting.console_view"}] },
-
     {"keys": ["super+left"], "command": "console_keypress", "args": {"key": "a", "ctrl": true}, "context": [{"key": "setting.console_view"}]},
     {"keys": ["super+right"], "command": "console_keypress", "args": {"key": "e", "ctrl": true}, "context": [{"key": "setting.console_view"}]}
 ]
