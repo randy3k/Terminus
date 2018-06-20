@@ -751,7 +751,8 @@ class ConsoleOpen(sublime_plugin.WindowCommand):
                 ok_configs.append(config)
 
         if not has_default:
-            ok_configs = [self._default_config()] + ok_configs
+            default_config = self._default_config()
+            ok_configs = [default_config] + ok_configs
 
         def on_done(index):
             if index < 0:
@@ -786,7 +787,7 @@ class ConsoleOpen(sublime_plugin.WindowCommand):
         if sys.platform.startswith("win"):
             return {
                 "name": "Command Prompt",
-                "cmd": "C:\\Windows\\System32\\cmd.exe",
+                "cmd": "cmd.exe",
                 "env": {}
             }
         else:

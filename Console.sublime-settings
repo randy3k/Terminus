@@ -22,6 +22,14 @@
             "platforms": ["linux", "osx"]
         },
         {
+            "name": "Command Prompt",
+            "cmd": "cmd.exe",
+            "env": {},
+            "enable": true,
+            "default": true,
+            "platforms": ["windows"]
+        },
+        {
             "name": "Power Shell",
             "cmd": "powershell.exe",
             "env": {},
