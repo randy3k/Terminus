@@ -43,6 +43,7 @@ _CTRL_KEY_MAP = {
     "down": "\x1b[1;5B",
     "right": "\x1b[1;5C",
     "left": "\x1b[1;5D",
+    "backspace": "\x1b[3;5~",
     "@": "\x00",
     "`": "\x00",
     "[": "\x1b",
@@ -61,7 +62,7 @@ _ALT_KEY_MAP = {
     "up": "\x1b[1;3A",
     "down": "\x1b[1;3B",
     "right": "\x1b[1;3C",
-    "left": "\x1b[1;3D",
+    "left": "\x1b[1;3D"
 }
 
 _SHIFT_KEY_MAP = {
@@ -69,7 +70,8 @@ _SHIFT_KEY_MAP = {
     "down": "\x1b[1;2B",
     "right": "\x1b[1;2C",
     "left": "\x1b[1;2D",
-    "tab": "\x1b[Z"
+    "tab": "\x1b[Z",
+    "backspace": "\x1b[3;2~"
 }
 
 
