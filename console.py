@@ -265,8 +265,7 @@ class ConsoleScreen(pyte.HistoryScreen):
         top, bottom = self.margins or Margins(0, self.lines - 1)
         for y in range(top, bottom + 1):
             if y + n > bottom:
-                for j in range(self.columns):
-                    self.buffer[y][j] = self.cursor.attrs
+                self.buffer[y].clear()
             else:
                 self.buffer[y] = copy(self.buffer[y+n])
         self.dirty.update(range(self.lines))
@@ -276,8 +275,7 @@ class ConsoleScreen(pyte.HistoryScreen):
         top, bottom = self.margins or Margins(0, self.lines - 1)
         for y in reversed(range(top, bottom + 1)):
             if y - n < top:
-                for j in range(self.columns):
-                    self.buffer[y][j] = self.cursor.attrs
+                self.buffer[y].clear()
             else:
                 self.buffer[y] = copy(self.buffer[y-n])
         self.dirty.update(range(self.lines))
@@ -705,15 +703,14 @@ class ConsoleOpen(sublime_plugin.WindowCommand):
             if "TERM" not in _env:
                 _env["TERM"] = settings.get("unix_term", "linux")
 
+            if _env["TERM"] not in ["linux", "xterm", "xterm-16color", "xterm-256color"]:
+                raise Exception("{} is not supported.".format(_env["TERM"]))
+
             if "LANG" not in _env:
                 if "LANG" in os.environ:
                     _env["LANG"] = os.environ["LANG"]
                 else:
                     _env["LANG"] = "en_US.UTF-8"
-
-            if "TERM" in _env and _env["TERM"] not in [
-                    "linux", "xterm", "xterm-16color", "xterm-256color"]:
-                raise Exception("{} is not supported.".format(_env["TERM"]))
 
         if not cwd:
             if self.window.folders():
