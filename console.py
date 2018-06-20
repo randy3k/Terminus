@@ -263,7 +263,7 @@ class ConsoleScreen(pyte.HistoryScreen):
             if y + n > bottom:
                 self.buffer[y].clear()
             else:
-                self.buffer[y] = copy(self.buffer[y+n])
+                self.buffer[y] = copy(self.buffer[y + n])
         self.dirty.update(range(self.lines))
 
     def scroll_down(self, n):
@@ -273,7 +273,7 @@ class ConsoleScreen(pyte.HistoryScreen):
             if y - n < top:
                 self.buffer[y].clear()
             else:
-                self.buffer[y] = copy(self.buffer[y-n])
+                self.buffer[y] = copy(self.buffer[y - n])
         self.dirty.update(range(self.lines))
 
 
