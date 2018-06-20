@@ -141,11 +141,7 @@ def view_size(view):
 
 class ConsolePtyProcess(PtyProcess):
 
-    def read(self, nbytes):
-        return super(ConsolePtyProcess, self).read(nbytes)
-
-    def write(self, data):
-        super(ConsolePtyProcess, self).write(data)
+    pass
 
 
 class ConsoleScreen(pyte.HistoryScreen):
