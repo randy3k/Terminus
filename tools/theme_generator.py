@@ -11,21 +11,15 @@ TEMPLATE = OrderedDict(
 )
 
 
-def next_color(color_text, forward=True):
+def next_color(color_text):
     """
-    Given a color string "#xxxxxy", returns its next color "#xxxxx{y+1}".
+    Given a color string "#xxxxxy", returns its next color "#xxxx{xy+1}".
     """
-    hex_value = int(color_text[1:], 16)
-    if forward:
-        if hex_value == 16777215:  # #ffffff
-            return "#fffffe"
-        else:
-            return "#{:6x}".format(hex_value+1).replace(" ", "0")
+    hex_value = int(color_text[5:], 16)
+    if hex_value == 255:  # ff
+        return color_text[:5] + "fe"
     else:
-        if hex_value == 0:  # #000000
-            return "#010101"
-        else:
-            return "#{:6x}".format(hex_value-1).replace(" ", "0")
+        return color_text[:5] + "{:2x}".format(hex_value+1).replace(" ", "0")
 
 
 ANSI_COLORS = [
@@ -56,26 +50,22 @@ def generate_theme_file(
     for i in range(16):
         _colors16[ANSI_COLORS[i]] = "#{}".format(pyte.graphics.FG_BG_256[i])
 
-    # There is a bug/feature of add_regions
-    # if the background of a scope is exactly the same as the background of the theme.
-    # The foregound and background colors would be inverted. check
-    # https://github.com/SublimeTextIssues/Core/issues/817
-
     if variables:
         if "caret" not in variables and "foreground" in variables:
             variables["caret"] = variables["foreground"]
 
+        # make sure the variables are in order
         COLOR_SCHEME["variables"].update(variables)
         COLOR_SCHEME["variables"].update(_colors16)
-
-        for key, value in variables.items():
-            if value.startswith("#") and value[1:].lower() in pyte.graphics.FG_BG_256:
-                variables[key] = next_color(value, forward=False)
-
         COLOR_SCHEME["variables"].update(variables)
 
     if globals:
         COLOR_SCHEME["globals"].update(globals)
+
+    # There is a bug/feature of add_regions
+    # if the background of a scope is exactly the same as the background of the theme.
+    # The foregound and background colors would be inverted. check
+    # https://github.com/SublimeTextIssues/Core/issues/817
 
     if "background" in COLOR_SCHEME["variables"]:
         background = COLOR_SCHEME["variables"]["background"]
@@ -83,6 +73,12 @@ def generate_theme_file(
         COLOR_SCHEME["globals"]["background"] = background
     else:
         background = None
+
+    for key, value in COLOR_SCHEME["variables"].items():
+        if key == "background":
+            continue
+        if value == background:
+            COLOR_SCHEME["variables"][key] = next_color(value)
 
     colors = OrderedDict()
     if ansi_scopes:
