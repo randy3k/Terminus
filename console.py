@@ -301,6 +301,13 @@ class Console():
             return None
         return cls._consoles[vid]
 
+    @classmethod
+    def from_tag(cls, tag):
+        for console in cls._consoles.values():
+            if console.tag == tag:
+                return console
+        return None
+
     def _need_to_render(self):
         flag = False
         if self.screen.dirty:
@@ -372,8 +379,9 @@ class Console():
 
         threading.Thread(target=renderer).start()
 
-    def open(self, cmd, cwd=None, env=None, title=None, offset=0, panel_name=None):
+    def open(self, cmd, cwd=None, env=None, title=None, offset=0, panel_name=None, tag=None):
         self.panel_name = panel_name
+        self.tag = tag
         self.set_title(title)
         _env = os.environ.copy()
         _env.update(env)
@@ -606,129 +614,6 @@ class ConsoleRender(sublime_plugin.TextCommand):
             view.erase(edit, tail_region)
 
 
-class ConsoleKeypress(sublime_plugin.TextCommand):
-
-    def run(self, _, **kwargs):
-        console = Console.from_id(self.view.id())
-        if not console or not console.process.isalive():
-            return
-        console.send_key(**kwargs)
-        self.view.run_command("console_render")
-
-
-class ConsoleSendString(sublime_plugin.TextCommand):
-
-    def run(self, _, string):
-        console = Console.from_id(self.view.id())
-        if not console or not console.process.isalive():
-            return
-        console.send_string(string)
-        self.view.run_command("console_render")
-
-
-class ConsolePaste(sublime_plugin.TextCommand):
-
-    def run(self, edit, bracketed=False):
-        view = self.view
-        console = Console.from_id(view.id())
-        if not console:
-            return
-
-        bracketed = bracketed or console.bracketed_paste_mode_enabled()
-        if bracketed:
-            console.send_key("bracketed_paste_mode_start")
-
-        copied = sublime.get_clipboard()
-        for char in copied:
-            console.send_string(char)
-
-        if bracketed:
-            console.send_key("bracketed_paste_mode_end")
-
-
-class ConsoleDeleteWord(sublime_plugin.TextCommand):
-    """
-    On Windows, ctrl+backspace and ctrl+delete are used to delete words
-    However, there is no standard key to delete word with ctrl+backspace
-    a workaround is to repeatedly apply backspace to delete word
-    """
-
-    def run(self, edit, forward=False):
-        view = self.view
-        console = Console.from_id(view.id())
-        if not console:
-            return
-
-        if len(view.sel()) != 1 or not view.sel()[0].empty():
-            return
-
-        if forward:
-            pt = view.sel()[0].end()
-            line = view.line(pt)
-            text = view.substr(sublime.Region(pt, line.end()))
-            match = re.search(r"(?<=\w)\b", text)
-            if not match:
-                return
-            n = match.span()[0]
-            if n > 0:
-                delete_code = get_key_code("delete")
-                console.send_string(delete_code * n)
-
-        else:
-            pt = view.sel()[0].end()
-            line = view.line(pt)
-            text = view.substr(sublime.Region(line.begin(), pt))
-            matches = re.finditer(r"\b(?=\w)", text)
-            if not matches:
-                return
-            for match in matches:
-                pass
-            n = view.rowcol(pt)[1] - match.span()[0]
-            if n > 0:
-                delete_code = get_key_code("backspace")
-                console.send_string(delete_code * n)
-
-
-class ConsoleEventHandler(sublime_plugin.EventListener):
-
-    def on_pre_close(self, view):
-        console = Console.from_id(view.id())
-        if console:
-            console.close()
-
-    def on_modified(self, view):
-        # to catch unicode input
-        console = Console.from_id(view.id())
-        if not console or not console.process.isalive():
-            return
-        command, args, _ = view.command_history(0)
-        if command == "console_render":
-            return
-        elif command == "insert" and "characters" in args:
-            chars = args["characters"]
-            logger.debug("char {} detected".format(chars))
-            console.send_string(chars)
-        else:
-            logger.debug("undo {}".format(command))
-            view.run_command("soft_undo")
-
-    def on_activated(self, view):
-        console = Console.from_id(view.id())
-        if console:
-            return
-        settings = view.settings()
-        if not settings.has("console_view.args"):
-            return
-
-        kwargs = settings.get("console_view.args")
-        if "cmd" not in kwargs:
-            return
-
-        # pass offset so the previous output will not be erased
-        kwargs["offset"] = view.rowcol(view.size())[0] + 1
-        view.run_command("console_activate", kwargs)
-
-
 class ConsoleOpen(sublime_plugin.WindowCommand):
 
     def run(
@@ -738,7 +623,8 @@ class ConsoleOpen(sublime_plugin.WindowCommand):
             cwd=None,
             env={},
             title=None,
-            panel_name=None
+            panel_name=None,
+            tag=None
             ):
         config = None
         if cmd:
@@ -926,6 +812,129 @@ class ConsoleActivate(sublime_plugin.TextCommand):
 
         console = Console(self.view)
         console.open(**kwargs)
+
+
+class ConsoleEventHandler(sublime_plugin.EventListener):
+
+    def on_pre_close(self, view):
+        console = Console.from_id(view.id())
+        if console:
+            console.close()
+
+    def on_modified(self, view):
+        # to catch unicode input
+        console = Console.from_id(view.id())
+        if not console or not console.process.isalive():
+            return
+        command, args, _ = view.command_history(0)
+        if command == "console_render":
+            return
+        elif command == "insert" and "characters" in args:
+            chars = args["characters"]
+            logger.debug("char {} detected".format(chars))
+            console.send_string(chars)
+        else:
+            logger.debug("undo {}".format(command))
+            view.run_command("soft_undo")
+
+    def on_activated(self, view):
+        console = Console.from_id(view.id())
+        if console:
+            return
+        settings = view.settings()
+        if not settings.has("console_view.args"):
+            return
+
+        kwargs = settings.get("console_view.args")
+        if "cmd" not in kwargs:
+            return
+
+        # pass offset so the previous output will not be erased
+        kwargs["offset"] = view.rowcol(view.size())[0] + 1
+        view.run_command("console_activate", kwargs)
+
+
+class ConsoleKeypress(sublime_plugin.TextCommand):
+
+    def run(self, _, **kwargs):
+        console = Console.from_id(self.view.id())
+        if not console or not console.process.isalive():
+            return
+        console.send_key(**kwargs)
+        self.view.run_command("console_render")
+
+
+class ConsoleSendString(sublime_plugin.TextCommand):
+
+    def run(self, _, string):
+        console = Console.from_id(self.view.id())
+        if not console or not console.process.isalive():
+            return
+        console.send_string(string)
+        self.view.run_command("console_render")
+
+
+class ConsolePaste(sublime_plugin.TextCommand):
+
+    def run(self, edit, bracketed=False):
+        view = self.view
+        console = Console.from_id(view.id())
+        if not console:
+            return
+
+        bracketed = bracketed or console.bracketed_paste_mode_enabled()
+        if bracketed:
+            console.send_key("bracketed_paste_mode_start")
+
+        copied = sublime.get_clipboard()
+        for char in copied:
+            console.send_string(char)
+
+        if bracketed:
+            console.send_key("bracketed_paste_mode_end")
+
+
+class ConsoleDeleteWord(sublime_plugin.TextCommand):
+    """
+    On Windows, ctrl+backspace and ctrl+delete are used to delete words
+    However, there is no standard key to delete word with ctrl+backspace
+    a workaround is to repeatedly apply backspace to delete word
+    """
+
+    def run(self, edit, forward=False):
+        view = self.view
+        console = Console.from_id(view.id())
+        if not console:
+            return
+
+        if len(view.sel()) != 1 or not view.sel()[0].empty():
+            return
+
+        if forward:
+            pt = view.sel()[0].end()
+            line = view.line(pt)
+            text = view.substr(sublime.Region(pt, line.end()))
+            match = re.search(r"(?<=\w)\b", text)
+            if not match:
+                return
+            n = match.span()[0]
+            if n > 0:
+                delete_code = get_key_code("delete")
+                console.send_string(delete_code * n)
+
+        else:
+            pt = view.sel()[0].end()
+            line = view.line(pt)
+            text = view.substr(sublime.Region(line.begin(), pt))
+            matches = re.finditer(r"\b(?=\w)", text)
+            if not matches:
+                return
+            for match in matches:
+                pass
+            n = view.rowcol(pt)[1] - match.span()[0]
+            if n > 0:
+                delete_code = get_key_code("backspace")
+                console.send_string(delete_code * n)
 
 
 def plugin_loaded():
