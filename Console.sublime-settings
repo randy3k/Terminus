@@ -47,9 +47,8 @@
     "nature_clipboard": true,
 
     // the name of the theme
-    // change it to "user" if you want to user customized theme
+    // change it to "user" if you want to use customized theme
     "theme": "default",
-    // put the user theme colors here
     // see https://www.sublimetext.com/docs/3/color_schemes.html#colors for the
     // available colors
     "user_theme_colors": {
