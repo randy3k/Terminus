@@ -2,7 +2,7 @@
     {
         "caption": "Console: Open Default Shell in View",
         "command": "console_open",
-        "args": {"name": "default"}
+        "args": {"config_name": "Default"}
     },
     {
         "caption": "Console: Open Available Shell in View",
@@ -11,7 +11,7 @@
     {
         "caption": "Console: Open Default Shell in Panel",
         "command": "console_open",
-        "args": {"name": "default", "panel": true}
+        "args": {"config_name": "Default", "panel_name": "Console"}
     },
     {
         "caption": "Console Utilities: Select Theme",

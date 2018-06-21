@@ -325,9 +325,9 @@ class Console():
 
         @responsive(period=0.001, default=True)
         def view_is_attached():
-            if self.panel:
+            if self.panel_name:
                 window = self.view.window() or parent_window
-                console_view = window.find_output_panel("Console")
+                console_view = window.find_output_panel(self.panel_name)
                 return console_view.id() == self.view.id()
             else:
                 return self.view.window()
@@ -372,8 +372,8 @@ class Console():
 
         threading.Thread(target=renderer).start()
 
-    def open(self, cmd, cwd=None, env=None, title=None, offset=0, panel=False):
-        self.panel = panel
+    def open(self, cmd, cwd=None, env=None, title=None, offset=0, panel_name=None):
+        self.panel_name = panel_name
         self.set_title(title)
         _env = os.environ.copy()
         _env.update(env)
@@ -397,10 +397,10 @@ class Console():
         self.close()
 
         if self.process.exitstatus == 0:
-            if self.panel:
+            if self.panel_name:
                 window = self.view.window()
                 if window:
-                    window.destroy_output_panel("Console")
+                    window.destroy_output_panel(self.panel_name)
             else:
                 window = self.view.window()
                 if window:
@@ -437,7 +437,7 @@ class Console():
     def __del__(self):
         # make sure the process is terminated
         self.process.terminate(force=True)
-        print("del")
+
         if self.process.isalive():
             logger.debug("process becomes orphaned")
         else:
@@ -689,21 +689,15 @@ class ConsoleDeleteWord(sublime_plugin.TextCommand):
                 console.send_string(delete_code * n)
 
 
-class ConsoleEventHandler(sublime_plugin.ViewEventListener):
+class ConsoleEventHandler(sublime_plugin.EventListener):
 
-    @classmethod
-    def is_applicable(cls, settings):
-        return settings.get("console_view", False)
-
-    def on_pre_close(self):
-        view = self.view
+    def on_pre_close(self, view):
         console = Console.from_id(view.id())
         if console:
             console.close()
 
-    def on_modified(self):
+    def on_modified(self, view):
         # to catch unicode input
-        view = self.view
         console = Console.from_id(view.id())
         if not console or not console.process.isalive():
             return
@@ -718,8 +712,7 @@ class ConsoleEventHandler(sublime_plugin.ViewEventListener):
             logger.debug("undo {}".format(command))
             view.run_command("soft_undo")
 
-    def on_activated(self):
-        view = self.view
+    def on_activated(self, view):
         console = Console.from_id(view.id())
         if console:
             return
@@ -733,13 +726,20 @@ class ConsoleEventHandler(sublime_plugin.ViewEventListener):
 
         # pass offset so the previous output will not be erased
         kwargs["offset"] = view.rowcol(view.size())[0] + 1
-        self.view.run_command("console_activate", kwargs)
+        view.run_command("console_activate", kwargs)
 
 
 class ConsoleOpen(sublime_plugin.WindowCommand):
 
-    def run(self, name=None, cmd=None, cwd=None, env={}, title="Console", panel=False):
-
+    def run(
+            self,
+            config_name=None,
+            cmd=None,
+            cwd=None,
+            env={},
+            title=None,
+            panel_name=None
+            ):
         config = None
         if cmd:
             config = {
@@ -748,9 +748,9 @@ class ConsoleOpen(sublime_plugin.WindowCommand):
                 "env": env,
                 "title": title
             }
-        elif name:
-            config = self.config_by_name(name)
-        elif name is None:
+        elif config_name:
+            config = self.get_config_by_name(config_name)
+        elif config_name is None:
             self.show_configs()
             return
 
@@ -758,7 +758,8 @@ class ConsoleOpen(sublime_plugin.WindowCommand):
         cmd = config["cmd"]
         if "env" in config:
             _env = config["env"]
-        if title == "Console":
+
+        if not title:
             title = config["name"]
 
         settings = sublime.load_settings("Console.sublime-settings")
@@ -786,9 +787,9 @@ class ConsoleOpen(sublime_plugin.WindowCommand):
 
         _env.update(env)
 
-        if panel:
-            self.window.destroy_output_panel("Console")  # do not reuse
-            console_view = self.window.create_output_panel("Console")
+        if panel_name:
+            self.window.destroy_output_panel(panel_name)  # do not reuse
+            console_view = self.window.get_output_panel(panel_name)
             console_view.settings().set("console_view.panel", True)
         else:
             console_view = self.window.new_file()
@@ -800,11 +801,11 @@ class ConsoleOpen(sublime_plugin.WindowCommand):
                 "cwd": cwd,
                 "env": _env,
                 "title": title,
-                "panel": panel
+                "panel_name": panel_name
             })
 
-        if panel:
-            self.window.run_command("show_panel", {"panel": "output.Console"})
+        if panel_name:
+            self.window.run_command("show_panel", {"panel": "output.{}".format(panel_name)})
 
     def show_configs(self):
         settings = sublime.load_settings("Console.sublime-settings")
@@ -832,7 +833,7 @@ class ConsoleOpen(sublime_plugin.WindowCommand):
             if index < 0:
                 return
             config = ok_configs[index]
-            self.run(name=config["name"])
+            self.run(config_name=config["name"])
 
         self.window.show_quick_panel(
             [[config["name"],
@@ -841,9 +842,9 @@ class ConsoleOpen(sublime_plugin.WindowCommand):
             on_done
         )
 
-    def config_by_name(self, name):
+    def get_config_by_name(self, name):
         default_config = self.default_config()
-        if name == "default":
+        if name == "Default":
             return default_config
 
         settings = sublime.load_settings("Console.sublime-settings")
