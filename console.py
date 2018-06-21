@@ -321,8 +321,17 @@ class Console():
     def _start_rendering(self):
         lock = threading.Lock()
         data = [""]
+        parent_window = self.view.window() or sublime.active_window()
 
-        view_is_attached = responsive(period=0.001, default=True)(self.view.window)
+        @responsive(period=0.001, default=True)
+        def view_is_attached():
+            if self.panel:
+                window = self.view.window() or parent_window
+                console_view = window.find_output_panel("Console")
+                return console_view.id() == self.view.id()
+            else:
+                return self.view.window()
+
         console_is_alive = responsive(period=1, default=True)(
             lambda: self.process.isalive() and view_is_attached())
 
@@ -359,11 +368,12 @@ class Console():
                     if self._need_to_render():
                         self.view.run_command("console_render")
 
-            sublime.set_timeout(lambda: self.handle_process_termination())
+            sublime.set_timeout(lambda: self.handle_end_loop())
 
         threading.Thread(target=renderer).start()
 
-    def open(self, cmd, cwd=None, env=None, title=None, offset=0):
+    def open(self, cmd, cwd=None, env=None, title=None, offset=0, panel=False):
+        self.panel = panel
         self.set_title(title)
         _env = os.environ.copy()
         _env.update(env)
@@ -381,13 +391,21 @@ class Console():
             del self._consoles[vid]
         self.process.terminate()
 
-    def handle_process_termination(self):
-        # process ended
+    def handle_end_loop(self):
+        # process might be still alive but view has detached
+        # make sure the process is terminated
+        self.close()
+
         if self.process.exitstatus == 0:
-            window = self.view.window()
-            if window:
-                window.focus_view(self.view)
-                window.run_command("close")
+            if self.panel:
+                window = self.view.window()
+                if window:
+                    window.destroy_output_panel("Console")
+            else:
+                window = self.view.window()
+                if window:
+                    window.focus_view(self.view)
+                    window.run_command("close")
         else:
             self.view.run_command(
                 "append",
@@ -419,7 +437,7 @@ class Console():
     def __del__(self):
         # make sure the process is terminated
         self.process.terminate(force=True)
-
+        print("del")
         if self.process.isalive():
             logger.debug("process becomes orphaned")
         else:
@@ -439,7 +457,8 @@ get_incremental_key = _get_incremental_key()
 
 
 class ConsoleRender(sublime_plugin.TextCommand):
-    def run(self, edit):
+    def run(self, edit, force=False):
+        self.force = force
         view = self.view
         startt = time.time()
         console = Console.from_id(view.id())
@@ -472,7 +491,7 @@ class ConsoleRender(sublime_plugin.TextCommand):
         cursor = screen.cursor
         offset = screen.offset
 
-        if len(view.sel()) > 0 and view.sel()[0].empty():
+        if not self.force and len(view.sel()) > 0 and view.sel()[0].empty():
             row, col = view.rowcol(view.sel()[0].end())
             if row == offset + cursor.y and col == cursor.x:
                 return
@@ -719,19 +738,28 @@ class ConsoleEventHandler(sublime_plugin.ViewEventListener):
 
 class ConsoleOpen(sublime_plugin.WindowCommand):
 
-    def run(self, cmd=None, cwd=None, env={}, title="Console", popup=False):
-        if popup:
-            self.show_popup()
+    def run(self, name=None, cmd=None, cwd=None, env={}, title="Console", panel=False):
+
+        config = None
+        if cmd:
+            config = {
+                "name": "Console",
+                "cmd": cmd,
+                "env": env,
+                "title": title
+            }
+        elif name:
+            config = self.config_by_name(name)
+        elif name is None:
+            self.show_configs()
             return
 
         _env = {}
-        if not cmd:
-            config = self.default_config()
-            cmd = config["cmd"]
-            if "env" in config:
-                _env = config["env"]
-            if title is "Console":
-                title = config["name"]
+        cmd = config["cmd"]
+        if "env" in config:
+            _env = config["env"]
+        if title == "Console":
+            title = config["name"]
 
         settings = sublime.load_settings("Console.sublime-settings")
         if sys.platform.startswith("win"):
@@ -758,16 +786,27 @@ class ConsoleOpen(sublime_plugin.WindowCommand):
 
         _env.update(env)
 
-        self.window.new_file().run_command(
+        if panel:
+            self.window.destroy_output_panel("Console")  # do not reuse
+            console_view = self.window.create_output_panel("Console")
+            console_view.settings().set("console_view.panel", True)
+        else:
+            console_view = self.window.new_file()
+
+        console_view.run_command(
             "console_activate",
             {
                 "cmd": cmd,
                 "cwd": cwd,
                 "env": _env,
-                "title": title
+                "title": title,
+                "panel": panel
             })
 
-    def show_popup(self):
+        if panel:
+            self.window.run_command("show_panel", {"panel": "output.Console"})
+
+    def show_configs(self):
         settings = sublime.load_settings("Console.sublime-settings")
         configs = settings.get("shell_configs", [])
 
@@ -793,8 +832,7 @@ class ConsoleOpen(sublime_plugin.WindowCommand):
             if index < 0:
                 return
             config = ok_configs[index]
-            env = config["env"] if "env" in config else {}
-            self.run(cmd=config["cmd"], env=env, title=config["name"])
+            self.run(name=config["name"])
 
         self.window.show_quick_panel(
             [[config["name"],
@@ -802,6 +840,27 @@ class ConsoleOpen(sublime_plugin.WindowCommand):
              for config in ok_configs],
             on_done
         )
+
+    def config_by_name(self, name):
+        default_config = self.default_config()
+        if name == "default":
+            return default_config
+
+        settings = sublime.load_settings("Console.sublime-settings")
+        configs = settings.get("shell_configs", [])
+
+        platform = sublime.platform()
+        for config in configs:
+            if "enable" in config and not config["enable"]:
+                continue
+            if "platforms" in config and platform not in config["platforms"]:
+                continue
+            if name == config["name"]:
+                return config
+
+        if name == default_config["name"]:
+            return default_config
+        raise Exception("Config {} not found".format(name))
 
     def default_config(self):
         settings = sublime.load_settings("Console.sublime-settings")
@@ -848,7 +907,8 @@ class ConsoleActivate(sublime_plugin.TextCommand):
         settings.set("console_view", True)
         settings.set("console_view", True)
         settings.set("console_view.args", kwargs)
-        settings.set("console_view.nature_clipboard", console_settings.get("nature_clipboard", True))
+        settings.set(
+            "console_view.nature_clipboard", console_settings.get("nature_clipboard", True))
         view.set_scratch(True)
         view.set_read_only(False)
         settings.set("gutter", False)

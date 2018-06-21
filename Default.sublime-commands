@@ -1,12 +1,17 @@
 [
     {
-        "caption": "Console: Open Default Shell",
+        "caption": "Console: Open Default Shell in View",
+        "command": "console_open",
+        "args": {"name": "default"}
+    },
+    {
+        "caption": "Console: Open Available Shell in View",
         "command": "console_open"
     },
     {
-        "caption": "Console: Open Available Shell",
+        "caption": "Console: Open Default Shell in Panel",
         "command": "console_open",
-        "args": {"popup": true}
+        "args": {"name": "default", "panel": true}
     },
     {
         "caption": "Console Utilities: Select Theme",
