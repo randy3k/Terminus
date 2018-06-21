@@ -344,9 +344,6 @@ class Console():
         @responsive(period=1, default=False)
         def was_resized():
             size = view_size(self.view)
-            if size[0] == 0 or size[1] == 0:
-                # it may happen to console panel?
-                return False
             return self.screen.lines != size[0] or self.screen.columns != size[1]
 
         def reader():
@@ -388,6 +385,8 @@ class Console():
         _env = os.environ.copy()
         _env.update(env)
         size = view_size(self.view)
+        if size == (1, 1):
+            size = (24, 80)
         logger.debug("view size: {}".format(str(size)))
         self.process = ConsolePtyProcess.spawn(cmd, cwd=cwd, env=_env, dimensions=size)
         self.screen = ConsoleScreen(size[1], size[0], process=self.process, history=10000)
