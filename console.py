@@ -813,7 +813,6 @@ class ConsoleActivate(sublime_plugin.TextCommand):
         view = self.view
         settings = view.settings()
         settings.set("console_view", True)
-        settings.set("console_view", True)
         settings.set("console_view.args", kwargs)
         settings.set(
             "console_view.nature_clipboard", console_settings.get("nature_clipboard", True))
