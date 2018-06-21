@@ -695,7 +695,8 @@ class ConsoleOpen(sublime_plugin.WindowCommand):
                 "cwd": cwd,
                 "env": _env,
                 "title": title,
-                "panel_name": panel_name
+                "panel_name": panel_name,
+                "tag": tag
             })
 
         if panel_name:
@@ -1012,5 +1013,5 @@ def plugin_unloaded():
         w.destroy_output_panel("Console")
         for view in w.views():
             if view.settings().get("console_view"):
-                w.focus(view)
+                w.focus_view(view)
                 w.run_command("close")
