@@ -699,16 +699,22 @@ class ConsoleEventHandler(sublime_plugin.ViewEventListener):
             logger.debug("undo {}".format(command))
             view.run_command("soft_undo")
 
-    def on_load(self):
+    def on_activated(self):
         view = self.view
         console = Console.from_id(view.id())
+        if console:
+            return
         settings = view.settings()
-        if not console and settings.has("console_view.args"):
-            kwargs = settings.get("console_view.args")
-            if "cmd" in kwargs:
-                # pass offset so the previous output will not be erased
-                kwargs["offset"] = view.rowcol(view.size())[0] + 1
-                self.view.run_command("console_activate", kwargs)
+        if not settings.has("console_view.args"):
+            return
+
+        kwargs = settings.get("console_view.args")
+        if "cmd" not in kwargs:
+            return
+
+        # pass offset so the previous output will not be erased
+        kwargs["offset"] = view.rowcol(view.size())[0] + 1
+        self.view.run_command("console_activate", kwargs)
 
 
 class ConsoleOpen(sublime_plugin.WindowCommand):
@@ -856,9 +862,7 @@ class ConsoleActivate(sublime_plugin.TextCommand):
         settings.set("caret_style", "blink")
         settings.set("scroll_past_end", True)
         settings.set("color_scheme", "Console.sublime-color-scheme")
-        sublime.set_timeout_async(lambda: self.run_async(**kwargs))
 
-    def run_async(self, **kwargs):
         console = Console(self.view)
         console.open(**kwargs)
 
