@@ -110,6 +110,8 @@ window.run_command(
     }
 )
 ```
+If `tag` is not provided, the text will be sent to the first console found in the current window.
+
 
 ### Acknowledgments
 
