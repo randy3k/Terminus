@@ -948,7 +948,7 @@ class ConsoleDeleteWord(sublime_plugin.TextCommand):
                 console.send_string(delete_code * n)
 
 
-class ShowConsolePanel(sublime_plugin.WindowCommand):
+class ToggleConsolePanel(sublime_plugin.WindowCommand):
 
     def run(self, **kwargs):
         window = self.window

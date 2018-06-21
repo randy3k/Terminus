@@ -45,6 +45,19 @@ This package is not yet available via Package Control default channel, you have 
 - run `Package Control: Install Package` and search for `Console`
 
 
+## Keybind to toggle Console Panel
+
+- run `Perferences: Console Key Bindings`
+- add the following
+
+```js
+    { 
+        "keys": ["ctrl+escape"], 
+        "command": "toggle_console_panel", 
+        "args": {"config_name": "Default", "panel_name": "Console"}
+    }
+```
+
 ### Acknowledgments
 
 This package won't be possible without [pyte](https://github.com/selectel/pyte), [pywinpty](https://github.com/spyder-ide/pywinpty) and [ptyprocess](https://github.com/pexpect/ptyprocess).

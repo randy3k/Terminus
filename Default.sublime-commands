@@ -35,5 +35,14 @@
             "base_file": "${packages}/Console/Console.sublime-settings",
             "default": "{\n\t$0\n}\n"
         }
+    },
+    {
+        "caption": "Preferences: Console Key Bindings",
+        "command": "console_edit_settings",
+        "args":
+        {
+            "base_file": "${packages}/Console/Default (${platform}).sublime-keymap",
+            "default": "[\n\t$0\n]\n"
+        }
     }
 ]
