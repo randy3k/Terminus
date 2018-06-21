@@ -29,7 +29,7 @@
     },
     {
         "caption": "Preferences: Console Settings",
-        "command": "edit_settings",
+        "command": "console_edit_settings",
         "args":
         {
             "base_file": "${packages}/Console/Console.sublime-settings",

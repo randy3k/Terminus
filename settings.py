@@ -2,12 +2,12 @@ import sublime
 import sublime_plugin
 
 
-class ConsoleEditKeybindingsListener(sublime_plugin.EventListener):
+class ConsoleEditSettingsListener(sublime_plugin.EventListener):
     def on_post_window_command(self, window, command, args):
         if command == "edit_settings":
             base = args.get("base_file", "")
+            w = sublime.active_window()
             if base.endswith("sublime-keymap") and "/Console/Default" in base:
-                w = sublime.active_window()
                 user_view = w.active_view()
                 user_view.settings().erase("edit_settings_view")
                 user_view.settings().set("console_edit_keybindings_view", 'user')
@@ -15,10 +15,19 @@ class ConsoleEditKeybindingsListener(sublime_plugin.EventListener):
                 base_platform_view = w.active_view()
                 base_platform_view.settings().erase("edit_settings_view")
                 base_platform_view.settings().set("console_edit_keybindings_view", 'base')
-                w.run_command("open_file", {"file": "${packages}/Console/Default.sublime-keymap"})
+                base_platform_view.set_read_only(True)
+                w.run_command(
+                    "open_file", {"file": "${packages}/Console/Default.sublime-keymap"})
                 base_view = w.active_view()
                 base_view.settings().set("console_edit_keybindings_view", 'base')
+                base_view.set_read_only(True)
                 w.focus_group(1)
+
+            elif base.endswith("Console.sublime-settings"):
+                w.focus_group(0)
+                base_view = w.active_view()
+                base_view.set_read_only(True)
+                w.focus.group(1)
 
     def on_pre_close(self, view):
         """
