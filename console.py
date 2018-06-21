@@ -683,7 +683,6 @@ class ConsoleOpen(sublime_plugin.WindowCommand):
         if panel_name:
             self.window.destroy_output_panel(panel_name)  # do not reuse
             console_view = self.window.get_output_panel(panel_name)
-            console_view.settings().set("console_view.panel", True)
         else:
             console_view = self.window.new_file()
 
@@ -813,6 +812,8 @@ class ConsoleActivate(sublime_plugin.TextCommand):
         view = self.view
         settings = view.settings()
         settings.set("console_view", True)
+        if "panel_name" in kwargs:
+            settings.set("console_view.panel_name", kwargs["panel_name"])
         settings.set("console_view.args", kwargs)
         settings.set(
             "console_view.nature_clipboard", console_settings.get("nature_clipboard", True))
