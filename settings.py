@@ -66,20 +66,15 @@ class ConsoleEditSettingsListener(sublime_plugin.EventListener):
         views = window.views()
         for other in views:
             if other.settings().get("console_edit_keybindings_view"):
-                def _close():
+                def close_view():
                     window.focus_view(other)
-                    # Prevent the handler from running on the other view
-                    other.settings().erase('edit_settings_view')
                     window.run_command("close")
+                    if len(window.views()) == 0 and len(window.folders()) < 1:
+                        if window.id() == sublime.active_window().id():
+                            window.run_command("close_window")
 
                 # Run after timeout so the UI doesn't block with the view half closed
-                sublime.set_timeout(_close)
-
-        if len(window.views()) == 0 and len(window.folders()) < 1:
-            def close_window():
-                if window.id() == sublime.active_window().id():
-                    window.run_command("close_window")
-            sublime.set_timeout(close_window, 50)
+                sublime.set_timeout(close_view, 10)
 
 
 class ConsoleEditSettingsCommand(sublime_plugin.WindowCommand):
