@@ -715,18 +715,30 @@ class ConsoleOpen(sublime_plugin.WindowCommand):
             default_config = self._default_config()
             ok_configs = [default_config] + ok_configs
 
-        def on_done(index):
-            if index < 0:
-                return
-            config = ok_configs[index]
-            self.run(config_name=config["name"])
-
         self.window.show_quick_panel(
             [[config["name"],
               config["cmd"] if isinstance(config["cmd"], str) else config["cmd"][0]]
              for config in ok_configs],
-            on_done
+            lambda x: on_selection_shell(x)
         )
+
+        def on_selection_shell(index):
+            if index < 0:
+                return
+            config = ok_configs[index]
+            config_name = config["name"]
+            sublime.set_timeout(
+                lambda: self.window.show_quick_panel(
+                    ["Open in View", "Open in Panel"],
+                    lambda x: on_selection_method(x, config_name)
+                )
+            )
+
+        def on_selection_method(index, config_name):
+            if index == 0:
+                self.run(config_name)
+            elif index == 1:
+                self.run(config_name, panel_name="Console")
 
     def get_config_by_name(self, name):
         default_config = self.default_config()
@@ -840,6 +852,7 @@ class ConsoleEventHandler(sublime_plugin.EventListener):
     def on_activated(self, view):
         console = Console.from_id(view.id())
         if console:
+            sublime.set_timeout(lambda: view.run_command("console_render", {"force": True}), 100)
             return
         settings = view.settings()
         if not settings.has("console_view.args"):

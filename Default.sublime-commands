@@ -5,13 +5,13 @@
         "args": {"config_name": "Default"}
     },
     {
-        "caption": "Console: Open Available Shell in View",
-        "command": "console_open"
-    },
-    {
         "caption": "Console: Open Default Shell in Panel",
         "command": "console_open",
         "args": {"config_name": "Default", "panel_name": "Console"}
+    },
+    {
+        "caption": "Console: List Shells",
+        "command": "console_open"
     },
     {
         "caption": "Console Utilities: Select Theme",
