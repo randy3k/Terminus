@@ -955,26 +955,28 @@ class ConsoleDeleteWord(sublime_plugin.TextCommand):
             line = view.line(pt)
             text = view.substr(sublime.Region(pt, line.end()))
             match = re.search(r"(?<=\w)\b", text)
-            if not match:
-                return
-            n = match.span()[0]
-            if n > 0:
-                delete_code = get_key_code("delete")
-                console.send_string(delete_code * n)
+            if match:
+                n = match.span()[0]
+                n = n if n > 0 else 1
+            else:
+                n = 1
+            delete_code = get_key_code("delete")
 
         else:
             pt = view.sel()[0].end()
             line = view.line(pt)
             text = view.substr(sublime.Region(line.begin(), pt))
-            matches = re.finditer(r"\b(?=\w)", text)
-            if not matches:
-                return
-            for match in matches:
-                pass
-            n = view.rowcol(pt)[1] - match.span()[0]
-            if n > 0:
-                delete_code = get_key_code("backspace")
-                console.send_string(delete_code * n)
+            matches = list(re.finditer(r"\b(?=\w)", text))
+            if matches:
+                for match in matches:
+                    pass
+                n = view.rowcol(pt)[1] - match.span()[0]
+                n if n > 0 else 1
+            else:
+                n = 1
+            delete_code = get_key_code("backspace")
+
+        console.send_string(delete_code * n)
 
 
 class ToggleConsolePanel(sublime_plugin.WindowCommand):
