@@ -1,4 +1,4 @@
-# A Real Terminal for Sublime Text
+# Bring a real terminal to Sublime Text
 
 It is a cross platform terminal for Sublime Text which works on Windows, macOS and Linux.
 
