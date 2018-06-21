@@ -42,10 +42,10 @@ This package is not yet available via Package Control default channel, you have 
     ```
     and hit enter
 
-- run `Package Control: Install Package` and search for `Console`
+- then you could install it as usual - `Package Control: Install Package` and search for `Console`
 
 
-## Keybind to toggle Console Panel
+### Keybind to toggle Console Panel
 
 - run `Perferences: Console Key Bindings`
 - add the following
