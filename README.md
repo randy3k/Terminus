@@ -19,6 +19,19 @@ It is a cross platform terminal for Sublime Text which works on Windows, macOS a
             </a>
         </td>
     </tr>
+    <tr>
+        <th>Console in panel</th>
+        <th></th>
+    </tr>
+    <tr>
+        <td width="50%">
+            <a href="https://user-images.githubusercontent.com/1690993/41727462-69fe7ec2-7542-11e8-9c42-64796c1fb023.png">
+                <img src="https://user-images.githubusercontent.com/1690993/41727462-69fe7ec2-7542-11e8-9c42-64796c1fb023.png" width="100%">
+            </a>
+        </td>
+        <td width="50%">
+        </td>
+    </tr>
 </table>
 
 This package is heavily inspired by [TerminalView](https://github.com/Wramberg/TerminalView). Compare with TerminalView, this has
