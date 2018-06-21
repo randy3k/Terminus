@@ -345,6 +345,9 @@ class Console():
         @responsive(period=1, default=False)
         def was_resized():
             size = view_size(self.view)
+            if size[0] == 0 or size[1] == 0:
+                # it may happen to console panel?
+                return False
             return self.screen.lines != size[0] or self.screen.columns != size[1]
 
         def reader():
