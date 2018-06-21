@@ -645,20 +645,18 @@ class ConsoleOpen(sublime_plugin.WindowCommand):
             return
 
         cmd = config["cmd"]
+
         if "env" in config:
             _env = config["env"]
         else:
             _env = {}
 
-        if not title:
-            title = config["name"]
-
-        settings = sublime.load_settings("Console.sublime-settings")
         if sys.platform.startswith("win"):
             pass
 
         else:
             if "TERM" not in _env:
+                settings = sublime.load_settings("Console.sublime-settings")
                 _env["TERM"] = settings.get("unix_term", "linux")
 
             if _env["TERM"] not in ["linux", "xterm", "xterm-16color", "xterm-256color"]:
@@ -670,6 +668,8 @@ class ConsoleOpen(sublime_plugin.WindowCommand):
                 else:
                     _env["LANG"] = "en_US.UTF-8"
 
+        _env.update(env)
+
         if cwd:
             pass
         else:
@@ -678,7 +678,8 @@ class ConsoleOpen(sublime_plugin.WindowCommand):
             else:
                 cwd = os.path.expanduser("~")
 
-        _env.update(env)
+        if not title:
+            title = config["name"]
 
         if panel_name:
             self.window.destroy_output_panel(panel_name)  # do not reuse
