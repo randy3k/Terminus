@@ -842,7 +842,7 @@ class ConsoleActivate(sublime_plugin.TextCommand):
         settings.set("console_view", True)
         settings.set("console_view", True)
         settings.set("console_view.args", kwargs)
-        settings.set("console_view.smart_clipboard", console_settings.get("smart_clipboard", True))
+        settings.set("console_view.nature_clipboard", console_settings.get("nature_clipboard", True))
         view.set_scratch(True)
         view.set_read_only(False)
         settings.set("gutter", False)

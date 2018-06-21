@@ -4,14 +4,14 @@
     {"keys": ["ctrl+c"], "command": "copy",
         "context": [
             {"key": "setting.console_view"},
-            {"key": "setting.console_view.smart_clipboard"},
+            {"key": "setting.console_view.nature_clipboard"},
             {"key": "selection_empty", "operator": "equal", "operand": false, "match_all": true},
         ]
     },
     {"keys": ["ctrl+v"], "command": "console_paste",
         "context": [
             {"key": "setting.console_view"},
-            {"key": "setting.console_view.smart_clipboard"}
+            {"key": "setting.console_view.nature_clipboard"}
         ]
     },
 
