@@ -696,6 +696,7 @@ class ConsoleOpen(sublime_plugin.WindowCommand):
 
         if panel_name:
             self.window.run_command("show_panel", {"panel": "output.{}".format(panel_name)})
+            self.window.focus_view(console_view)
 
     def show_configs(self):
         settings = sublime.load_settings("Console.sublime-settings")
