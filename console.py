@@ -335,7 +335,7 @@ class Console():
             if self.panel_name:
                 window = self.view.window() or parent_window
                 console_view = window.find_output_panel(self.panel_name)
-                return console_view.id() == self.view.id()
+                return console_view and console_view.id() == self.view.id()
             else:
                 return self.view.window()
 
@@ -625,6 +625,7 @@ class ConsoleOpen(sublime_plugin.WindowCommand):
             panel_name=None,
             tag=None):
         config = None
+
         if cmd:
             config = {
                 "name": "Console",
@@ -663,7 +664,9 @@ class ConsoleOpen(sublime_plugin.WindowCommand):
                 else:
                     _env["LANG"] = "en_US.UTF-8"
 
-        if not cwd:
+        if cwd:
+            pass
+        else:
             if self.window.folders():
                 cwd = self.window.folders()[0]
             else:
