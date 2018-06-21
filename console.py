@@ -438,6 +438,9 @@ class Console():
 
     def send_string(self, string):
         logger.debug("sent {}".format(string))
+        # process does not recognize "\n"
+        string = string.replace("\n\r", "\r")
+        string = string.replace("\n", "\r")
         self.process.write(string)
 
     def bracketed_paste_mode_enabled(self):
@@ -628,23 +631,24 @@ class ConsoleOpen(sublime_plugin.WindowCommand):
             tag=None):
         config = None
 
-        if cmd:
+        if config_name:
+            config = self.get_config_by_name(config_name)
+        elif cmd:
             config = {
                 "name": "Console",
                 "cmd": cmd,
                 "env": env,
                 "title": title
             }
-        elif config_name:
-            config = self.get_config_by_name(config_name)
-        elif config_name is None:
+        else:
             self.show_configs()
             return
 
-        _env = {}
         cmd = config["cmd"]
         if "env" in config:
             _env = config["env"]
+        else:
+            _env = {}
 
         if not title:
             title = config["name"]
@@ -881,14 +885,33 @@ class ConsoleKeypress(sublime_plugin.TextCommand):
         self.view.run_command("console_render")
 
 
-class ConsoleSendString(sublime_plugin.TextCommand):
+class ConsoleSendString(sublime_plugin.WindowCommand):
+    """
+    Send string to a (tagged) console
+    """
 
-    def run(self, _, string):
-        console = Console.from_id(self.view.id())
+    def run(self, string, tag=None):
+        if tag:
+            console = Console.from_tag(tag)
+        else:
+            # check the active panel
+            window = self.window
+            panel_view = window.find_output_panel(window.active_panel().replace("output.", ""))
+            if panel_view:
+                console = Console.from_id(panel_view.id())
+            else:
+                console = None
+            if not console:
+                # search over all views in this windows
+                for v in window.views():
+                    console = Console.from_id(v.id())
+                    if console:
+                        break
+
         if not console or not console.process.isalive():
             return
         console.send_string(string)
-        self.view.run_command("console_render")
+        console.view.run_command("console_render")
 
 
 class ConsolePaste(sublime_plugin.TextCommand):

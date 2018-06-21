@@ -83,6 +83,34 @@ If your console panel has weired background color, try playing with the setting 
 }
 ```
 
+### Note to other package developers
+
+A console could be opened using the command `console_open` with
+```py
+window.run_command(
+    "console_open", {
+        config_name=None,  # the shell config name, the default config is "Default"
+        cmd=None,          # the cmd to execuate if config_name is None
+        cwd=None,          # the working directory
+        env={},            # extra environmental variables
+        title=None,        # title of the view
+        panel_name=None,   # the name of the panel if console should be opened in panel
+        tag=None           # a tag to identify the console
+    }
+)
+```
+
+Text can be sent to the console with
+```py
+window.run_command(
+    "console_send_string", 
+    {
+        "string": "ls\n",
+        "tag": None        # or the tag which is passed to "console_open"
+    }
+)
+```
+
 ### Acknowledgments
 
 This package won't be possible without [pyte](https://github.com/selectel/pyte), [pywinpty](https://github.com/spyder-ide/pywinpty) and [ptyprocess](https://github.com/pexpect/ptyprocess).
