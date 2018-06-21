@@ -418,8 +418,7 @@ class Console():
             self.view.run_command(
                 "append",
                 {"characters": "\nprocess terminated with return code {}.".format(
-                    self.process.exitstatus
-                 )}),
+                    self.process.exitstatus)}),
             self.view.set_read_only(True)
 
     def handle_resize(self):
@@ -624,8 +623,7 @@ class ConsoleOpen(sublime_plugin.WindowCommand):
             env={},
             title=None,
             panel_name=None,
-            tag=None
-            ):
+            tag=None):
         config = None
         if cmd:
             config = {
@@ -948,6 +946,22 @@ class ConsoleDeleteWord(sublime_plugin.TextCommand):
             if n > 0:
                 delete_code = get_key_code("backspace")
                 console.send_string(delete_code * n)
+
+
+class ShowConsolePanel(sublime_plugin.WindowCommand):
+
+    def run(self, **kwargs):
+        window = self.window
+        panel_name = kwargs["panel_name"]
+        console_view = window.find_output_panel(panel_name)
+        if console_view:
+            if window.active_panel() == "output.{}".format(panel_name):
+                window.run_command("hide_panel", {"panel": "output.{}".format(panel_name)})
+            else:
+                window.run_command("show_panel", {"panel": "output.{}".format(panel_name)})
+                window.focus_view(console_view)
+        else:
+            window.run_command("console_open", kwargs)
 
 
 def plugin_loaded():

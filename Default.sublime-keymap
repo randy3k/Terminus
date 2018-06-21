@@ -1,4 +1,7 @@
 [
+    // Open/hide the default shell in panel
+    {"keys": ["ctrl+escape"], "command": "show_console_panel", "args": {"panel_name": "Console"}},
+
     // Basic keys
     {"keys": ["up"], "command": "console_keypress", "args": {"key": "up"}, "context": [{"key": "setting.console_view"}]},
     {"keys": ["down"], "command": "console_keypress", "args": {"key": "down"}, "context": [{"key": "setting.console_view"}]},
