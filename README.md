@@ -64,11 +64,23 @@ This package is not yet available via Package Control default channel, you have 
 - add the following
 
 ```js
-    { 
-        "keys": ["ctrl+escape"], 
-        "command": "toggle_console_panel", 
-        "args": {"config_name": "Default", "panel_name": "Console"}
-    }
+{ 
+    "keys": ["ctrl+escape"], 
+    "command": "toggle_console_panel", 
+    "args": {"config_name": "Default", "panel_name": "Console"}
+}
+```
+
+### Console Panel issue with DA UI
+
+If your console panel has weired background color, try playing with the setting `panel_background_color` in `DA UI: Theme Settings`.
+
+<img src="https://user-images.githubusercontent.com/1690993/41728204-31a9a2a2-7544-11e8-9fb6-a37b59da852a.png" width="50%" />
+
+```js
+{
+    "panel_background_color": "$background_color"
+}
 ```
 
 ### Acknowledgments
