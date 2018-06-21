@@ -322,7 +322,6 @@ class Console():
             self._cached_cursor[0] = self.screen.cursor.x
             self._cached_cursor[1] = self.screen.cursor.y
             self._cached_cursor_is_hidden[0] = self.screen.cursor.hidden
-
         return flag
 
     def _start_rendering(self):
@@ -982,3 +981,13 @@ def plugin_loaded():
 
     on_change(settings.get("debug", False))
     settings_on_change(settings, "debug")(on_change)
+
+
+def plugin_unloaded():
+    # close all consoles
+    for w in sublime.windows():
+        w.destroy_output_panel("Console")
+        for view in w.views():
+            if view.settings().get("console_view"):
+                w.focus(view)
+                w.run_command("close")
