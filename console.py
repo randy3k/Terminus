@@ -401,7 +401,7 @@ class Console():
         self.process.terminate()
 
     def handle_end_loop(self):
-        # process might be still alive but view has detached
+        # process might be still alive but view was detached
         # make sure the process is terminated
         self.close()
 
@@ -418,7 +418,7 @@ class Console():
         else:
             self.view.run_command(
                 "append",
-                {"characters": "\nprocess terminated with return code {}.".format(
+                {"characters": "\nprocess is terminated with return code {}.".format(
                     self.process.exitstatus)}),
             self.view.set_read_only(True)
 
@@ -452,7 +452,7 @@ class Console():
         if self.process.isalive():
             logger.debug("process becomes orphaned")
         else:
-            logger.debug("process has terminated")
+            logger.debug("process is terminated")
 
 
 def _get_incremental_key():
@@ -897,9 +897,13 @@ class ConsoleSendString(sublime_plugin.WindowCommand):
         else:
             # check the active panel
             window = self.window
-            panel_view = window.find_output_panel(window.active_panel().replace("output.", ""))
-            if panel_view:
-                console = Console.from_id(panel_view.id())
+            for panel in window.panels():
+                panel_view = window.find_output_panel(panel.replace("output.", ""))
+                if panel_view:
+                    console = Console.from_id(panel_view.id())
+                    if console:
+                        window.run_command("show_panel", {"panel": panel})
+                        break
             else:
                 console = None
             if not console:
@@ -909,8 +913,10 @@ class ConsoleSendString(sublime_plugin.WindowCommand):
                     if console:
                         break
 
-        if not console or not console.process.isalive():
-            return
+        if not console:
+            raise Exception("no console found")
+        elif not console.process.isalive():
+            raise Exception("process is terminated")
         console.send_string(string)
         console.view.run_command("console_render")
 
