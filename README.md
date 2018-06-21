@@ -65,7 +65,7 @@ This package is not yet available via Package Control default channel, you have 
 
 ```js
 { 
-    "keys": ["ctrl+escape"], 
+    "keys": ["alt+`"], 
     "command": "toggle_console_panel", 
     "args": {"config_name": "Default", "panel_name": "Console"}
 }
