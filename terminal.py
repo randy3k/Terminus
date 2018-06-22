@@ -980,15 +980,17 @@ class SlyTermSendString(sublime_plugin.WindowCommand):
                 self.bring_view_to_topmost(terminal.view)
         else:
             view = self.get_sly_term_panel()
+            terminal = None
             if view:
                 self.window.run_command("show_panel", {"panel": "output.{}".format(
                     view.settings().get("sly_term_view.panel_name")
                 )})
+                terminal = Terminal.from_id(view.id())
             else:
                 view = self.get_sly_term_view()
                 if view:
                     self.bring_view_to_topmost(view)
-            terminal = Terminal.from_id(view.id())
+                    terminal = Terminal.from_id(view.id())
 
         if not terminal:
             raise Exception("no terminal found")
