@@ -42,6 +42,7 @@ This package is heavily inspired by [TerminalView](https://github.com/Wramberg/T
 - unicode support
 - 256 colors support
 - better xterm support
+- terminal panel
 
 ### Installation
 
