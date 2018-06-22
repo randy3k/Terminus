@@ -27,7 +27,7 @@ class SubtermEditSettingsListener(sublime_plugin.EventListener):
                 w.focus_group(0)
                 base_view = w.active_view()
                 base_view.set_read_only(True)
-                w.focus.group(1)
+                w.focus_group(1)
 
     def on_pre_close(self, view):
         """
