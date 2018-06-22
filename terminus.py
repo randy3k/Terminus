@@ -357,6 +357,8 @@ class Terminal():
                 with lock:
                     data[0] += temp
 
+            sublime.set_timeout(lambda: self.handle_end_loop())
+
         threading.Thread(target=reader).start()
 
         def renderer():
@@ -373,8 +375,6 @@ class Terminal():
 
                     if self._need_to_render():
                         self.view.run_command("terminus_render")
-
-            sublime.set_timeout(lambda: self.handle_end_loop())
 
         threading.Thread(target=renderer).start()
 
