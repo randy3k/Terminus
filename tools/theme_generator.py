@@ -102,7 +102,7 @@ def generate_theme_file(
             elif vcolor == "#default" or vcolor == background:
                 vcolor = "var(background)"
             rule = {}
-            rule["scope"] = "sterm.{}.{}".format(u, v)
+            rule["scope"] = "sly_term.{}.{}".format(u, v)
             rule["foreground"] = ucolor
             rule["background"] = vcolor
             COLOR_SCHEME["rules"].append(rule)

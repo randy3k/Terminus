@@ -1,35 +1,35 @@
 [
     {
         "caption": "Sublimely Terminal: Open Default Shell in View",
-        "command": "sterm_open",
+        "command": "sly_term_open",
         "args": {"config_name": "Default"}
     },
     {
         "caption": "Sublimely Terminal: Open Default Shell in Panel",
-        "command": "sterm_open",
+        "command": "sly_term_open",
         "args": {"config_name": "Default", "panel_name": "Terminal"}
     },
     {
         "caption": "Sublimely Terminal: List Shells",
-        "command": "sterm_open"
+        "command": "sly_term_open"
     },
     {
         "caption": "Sublimely Terminal Utilities: Select Theme",
-        "command": "sterm_select_theme"
+        "command": "sly_term_select_theme"
     },
     {
         "caption": "Sublimely Terminal Utilities: Generate User Theme",
-        "command": "sterm_generate_theme",
+        "command": "sly_term_generate_theme",
         "args": {"force": true}
     },
     {
         "caption": "Sublimely Terminal Utilities: Remove User Theme",
-        "command": "sterm_generate_theme",
+        "command": "sly_term_generate_theme",
         "args": {"remove": true}
     },
     {
         "caption": "Preferences: Sublimely Terminal Settings",
-        "command": "sterm_edit_settings",
+        "command": "sly_term_edit_settings",
         "args":
         {
             "base_file": "${packages}/SublimelyTerminal/SublimelyTerminal.sublime-settings",
@@ -38,7 +38,7 @@
     },
     {
         "caption": "Preferences: Sublimely Terminal Key Bindings",
-        "command": "sterm_edit_settings",
+        "command": "sly_term_edit_settings",
         "args":
         {
             "base_file": "${packages}/SublimelyTerminal/Default (${platform}).sublime-keymap",

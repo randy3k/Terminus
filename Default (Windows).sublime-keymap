@@ -1,22 +1,22 @@
 [
-    { "keys": ["ctrl+shift+c"], "command": "copy", "context": [{"key": "setting.sterm_view"}] },
-    { "keys": ["ctrl+shift+v"], "command": "sterm_paste", "context": [{"key": "setting.sterm_view"}] },
+    { "keys": ["ctrl+shift+c"], "command": "copy", "context": [{"key": "setting.sly_term_view"}] },
+    { "keys": ["ctrl+shift+v"], "command": "sly_term_paste", "context": [{"key": "setting.sly_term_view"}] },
     { "keys": ["ctrl+c"], "command": "copy",
         "context":
         [
-            { "key": "setting.sterm_view" },
-            { "key": "setting.sterm_view.nature_clipboard" },
+            { "key": "setting.sly_term_view" },
+            { "key": "setting.sly_term_view.nature_clipboard" },
             { "key": "selection_empty", "operator": "equal", "operand": false, "match_all": true },
         ]
     },
-    { "keys": ["ctrl+v"], "command": "sterm_paste",
+    { "keys": ["ctrl+v"], "command": "sly_term_paste",
         "context":
         [
-            { "key": "setting.sterm_view" },
-            { "key": "setting.sterm_view.nature_clipboard" }
+            { "key": "setting.sly_term_view" },
+            { "key": "setting.sly_term_view.nature_clipboard" }
         ]
     },
 
-    { "keys": ["ctrl+backspace"], "command": "sterm_delete_word", "args": {"forward": false}, "context": [{"key": "setting.sterm_view"}] },
-    { "keys": ["ctrl+delete"], "command": "sterm_delete_word", "args": {"forward": true}, "context": [{"key": "setting.sterm_view"}] }
+    { "keys": ["ctrl+backspace"], "command": "sly_term_delete_word", "args": {"forward": false}, "context": [{"key": "setting.sly_term_view"}] },
+    { "keys": ["ctrl+delete"], "command": "sly_term_delete_word", "args": {"forward": true}, "context": [{"key": "setting.sly_term_view"}] }
 ]

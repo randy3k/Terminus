@@ -2,7 +2,7 @@ import sublime
 import sublime_plugin
 
 
-class StermEditSettingsListener(sublime_plugin.EventListener):
+class SlyTermEditSettingsListener(sublime_plugin.EventListener):
     def on_post_window_command(self, window, command, args):
         if command == "edit_settings":
             base = args.get("base_file", "")
@@ -10,16 +10,16 @@ class StermEditSettingsListener(sublime_plugin.EventListener):
             if base.endswith("sublime-keymap") and "/SublimelyTerminal/Default" in base:
                 user_view = w.active_view()
                 user_view.settings().erase("edit_settings_view")
-                user_view.settings().set("sterm_edit_keybindings_view", 'user')
+                user_view.settings().set("sly_term_edit_keybindings_view", 'user')
                 w.focus_group(0)
                 base_platform_view = w.active_view()
                 base_platform_view.settings().erase("edit_settings_view")
-                base_platform_view.settings().set("sterm_edit_keybindings_view", 'base')
+                base_platform_view.settings().set("sly_term_edit_keybindings_view", 'base')
                 base_platform_view.set_read_only(True)
                 w.run_command(
                     "open_file", {"file": "${packages}/SublimelyTerminal/Default.sublime-keymap"})
                 base_view = w.active_view()
-                base_view.settings().set("sterm_edit_keybindings_view", 'base')
+                base_view.settings().set("sly_term_edit_keybindings_view", 'base')
                 base_view.set_read_only(True)
                 w.focus_group(1)
 
@@ -35,7 +35,7 @@ class StermEditSettingsListener(sublime_plugin.EventListener):
         """
         view_settings = view.settings()
 
-        if view_settings.get('sterm_edit_keybindings_view') is None:
+        if view_settings.get('sly_term_edit_keybindings_view') is None:
             return
 
         if view.window() is None:
@@ -50,7 +50,7 @@ class StermEditSettingsListener(sublime_plugin.EventListener):
 
         view_settings = view.settings()
 
-        if view_settings.get('sterm_edit_keybindings_view') is None:
+        if view_settings.get('sly_term_edit_keybindings_view') is None:
             return
 
         window_id = view_settings.get('window_id')
@@ -65,7 +65,7 @@ class StermEditSettingsListener(sublime_plugin.EventListener):
 
         views = window.views()
         for other in views:
-            if other.settings().get("sterm_edit_keybindings_view"):
+            if other.settings().get("sly_term_edit_keybindings_view"):
                 def close_view():
                     window.focus_view(other)
                     window.run_command("close")
@@ -77,7 +77,7 @@ class StermEditSettingsListener(sublime_plugin.EventListener):
                 sublime.set_timeout(close_view, 10)
 
 
-class StermEditSettingsCommand(sublime_plugin.WindowCommand):
+class SlyTermEditSettingsCommand(sublime_plugin.WindowCommand):
     """
     For some reasons, the command palette doesn't trigger `on_post_window_command` for
     dev version of Sublime Text. The command palette would call `gs_edit_settings` and

@@ -34,1447 +34,1447 @@
     },
     "rules": [
         {
-            "scope": "sterm.black.black",
+            "scope": "sly_term.black.black",
             "foreground": "var(black)",
             "background": "var(black)"
         },
         {
-            "scope": "sterm.black.red",
+            "scope": "sly_term.black.red",
             "foreground": "var(black)",
             "background": "var(red)"
         },
         {
-            "scope": "sterm.black.green",
+            "scope": "sly_term.black.green",
             "foreground": "var(black)",
             "background": "var(green)"
         },
         {
-            "scope": "sterm.black.brown",
+            "scope": "sly_term.black.brown",
             "foreground": "var(black)",
             "background": "var(brown)"
         },
         {
-            "scope": "sterm.black.blue",
+            "scope": "sly_term.black.blue",
             "foreground": "var(black)",
             "background": "var(blue)"
         },
         {
-            "scope": "sterm.black.magenta",
+            "scope": "sly_term.black.magenta",
             "foreground": "var(black)",
             "background": "var(magenta)"
         },
         {
-            "scope": "sterm.black.cyan",
+            "scope": "sly_term.black.cyan",
             "foreground": "var(black)",
             "background": "var(cyan)"
         },
         {
-            "scope": "sterm.black.white",
+            "scope": "sly_term.black.white",
             "foreground": "var(black)",
             "background": "var(white)"
         },
         {
-            "scope": "sterm.black.light_black",
+            "scope": "sly_term.black.light_black",
             "foreground": "var(black)",
             "background": "var(light_black)"
         },
         {
-            "scope": "sterm.black.light_red",
+            "scope": "sly_term.black.light_red",
             "foreground": "var(black)",
             "background": "var(light_red)"
         },
         {
-            "scope": "sterm.black.light_green",
+            "scope": "sly_term.black.light_green",
             "foreground": "var(black)",
             "background": "var(light_green)"
         },
         {
-            "scope": "sterm.black.light_brown",
+            "scope": "sly_term.black.light_brown",
             "foreground": "var(black)",
             "background": "var(light_brown)"
         },
         {
-            "scope": "sterm.black.light_blue",
+            "scope": "sly_term.black.light_blue",
             "foreground": "var(black)",
             "background": "var(light_blue)"
         },
         {
-            "scope": "sterm.black.light_magenta",
+            "scope": "sly_term.black.light_magenta",
             "foreground": "var(black)",
             "background": "var(light_magenta)"
         },
         {
-            "scope": "sterm.black.light_cyan",
+            "scope": "sly_term.black.light_cyan",
             "foreground": "var(black)",
             "background": "var(light_cyan)"
         },
         {
-            "scope": "sterm.black.light_white",
+            "scope": "sly_term.black.light_white",
             "foreground": "var(black)",
             "background": "var(light_white)"
         },
         {
-            "scope": "sterm.black.default",
+            "scope": "sly_term.black.default",
             "foreground": "var(black)",
             "background": "var(background)"
         },
         {
-            "scope": "sterm.red.black",
+            "scope": "sly_term.red.black",
             "foreground": "var(red)",
             "background": "var(black)"
         },
         {
-            "scope": "sterm.red.red",
+            "scope": "sly_term.red.red",
             "foreground": "var(red)",
             "background": "var(red)"
         },
         {
-            "scope": "sterm.red.green",
+            "scope": "sly_term.red.green",
             "foreground": "var(red)",
             "background": "var(green)"
         },
         {
-            "scope": "sterm.red.brown",
+            "scope": "sly_term.red.brown",
             "foreground": "var(red)",
             "background": "var(brown)"
         },
         {
-            "scope": "sterm.red.blue",
+            "scope": "sly_term.red.blue",
             "foreground": "var(red)",
             "background": "var(blue)"
         },
         {
-            "scope": "sterm.red.magenta",
+            "scope": "sly_term.red.magenta",
             "foreground": "var(red)",
             "background": "var(magenta)"
         },
         {
-            "scope": "sterm.red.cyan",
+            "scope": "sly_term.red.cyan",
             "foreground": "var(red)",
             "background": "var(cyan)"
         },
         {
-            "scope": "sterm.red.white",
+            "scope": "sly_term.red.white",
             "foreground": "var(red)",
             "background": "var(white)"
         },
         {
-            "scope": "sterm.red.light_black",
+            "scope": "sly_term.red.light_black",
             "foreground": "var(red)",
             "background": "var(light_black)"
         },
         {
-            "scope": "sterm.red.light_red",
+            "scope": "sly_term.red.light_red",
             "foreground": "var(red)",
             "background": "var(light_red)"
         },
         {
-            "scope": "sterm.red.light_green",
+            "scope": "sly_term.red.light_green",
             "foreground": "var(red)",
             "background": "var(light_green)"
         },
         {
-            "scope": "sterm.red.light_brown",
+            "scope": "sly_term.red.light_brown",
             "foreground": "var(red)",
             "background": "var(light_brown)"
         },
         {
-            "scope": "sterm.red.light_blue",
+            "scope": "sly_term.red.light_blue",
             "foreground": "var(red)",
             "background": "var(light_blue)"
         },
         {
-            "scope": "sterm.red.light_magenta",
+            "scope": "sly_term.red.light_magenta",
             "foreground": "var(red)",
             "background": "var(light_magenta)"
         },
         {
-            "scope": "sterm.red.light_cyan",
+            "scope": "sly_term.red.light_cyan",
             "foreground": "var(red)",
             "background": "var(light_cyan)"
         },
         {
-            "scope": "sterm.red.light_white",
+            "scope": "sly_term.red.light_white",
             "foreground": "var(red)",
             "background": "var(light_white)"
         },
         {
-            "scope": "sterm.red.default",
+            "scope": "sly_term.red.default",
             "foreground": "var(red)",
             "background": "var(background)"
         },
         {
-            "scope": "sterm.green.black",
+            "scope": "sly_term.green.black",
             "foreground": "var(green)",
             "background": "var(black)"
         },
         {
-            "scope": "sterm.green.red",
+            "scope": "sly_term.green.red",
             "foreground": "var(green)",
             "background": "var(red)"
         },
         {
-            "scope": "sterm.green.green",
+            "scope": "sly_term.green.green",
             "foreground": "var(green)",
             "background": "var(green)"
         },
         {
-            "scope": "sterm.green.brown",
+            "scope": "sly_term.green.brown",
             "foreground": "var(green)",
             "background": "var(brown)"
         },
         {
-            "scope": "sterm.green.blue",
+            "scope": "sly_term.green.blue",
             "foreground": "var(green)",
             "background": "var(blue)"
         },
         {
-            "scope": "sterm.green.magenta",
+            "scope": "sly_term.green.magenta",
             "foreground": "var(green)",
             "background": "var(magenta)"
         },
         {
-            "scope": "sterm.green.cyan",
+            "scope": "sly_term.green.cyan",
             "foreground": "var(green)",
             "background": "var(cyan)"
         },
         {
-            "scope": "sterm.green.white",
+            "scope": "sly_term.green.white",
             "foreground": "var(green)",
             "background": "var(white)"
         },
         {
-            "scope": "sterm.green.light_black",
+            "scope": "sly_term.green.light_black",
             "foreground": "var(green)",
             "background": "var(light_black)"
         },
         {
-            "scope": "sterm.green.light_red",
+            "scope": "sly_term.green.light_red",
             "foreground": "var(green)",
             "background": "var(light_red)"
         },
         {
-            "scope": "sterm.green.light_green",
+            "scope": "sly_term.green.light_green",
             "foreground": "var(green)",
             "background": "var(light_green)"
         },
         {
-            "scope": "sterm.green.light_brown",
+            "scope": "sly_term.green.light_brown",
             "foreground": "var(green)",
             "background": "var(light_brown)"
         },
         {
-            "scope": "sterm.green.light_blue",
+            "scope": "sly_term.green.light_blue",
             "foreground": "var(green)",
             "background": "var(light_blue)"
         },
         {
-            "scope": "sterm.green.light_magenta",
+            "scope": "sly_term.green.light_magenta",
             "foreground": "var(green)",
             "background": "var(light_magenta)"
         },
         {
-            "scope": "sterm.green.light_cyan",
+            "scope": "sly_term.green.light_cyan",
             "foreground": "var(green)",
             "background": "var(light_cyan)"
         },
         {
-            "scope": "sterm.green.light_white",
+            "scope": "sly_term.green.light_white",
             "foreground": "var(green)",
             "background": "var(light_white)"
         },
         {
-            "scope": "sterm.green.default",
+            "scope": "sly_term.green.default",
             "foreground": "var(green)",
             "background": "var(background)"
         },
         {
-            "scope": "sterm.brown.black",
+            "scope": "sly_term.brown.black",
             "foreground": "var(brown)",
             "background": "var(black)"
         },
         {
-            "scope": "sterm.brown.red",
+            "scope": "sly_term.brown.red",
             "foreground": "var(brown)",
             "background": "var(red)"
         },
         {
-            "scope": "sterm.brown.green",
+            "scope": "sly_term.brown.green",
             "foreground": "var(brown)",
             "background": "var(green)"
         },
         {
-            "scope": "sterm.brown.brown",
+            "scope": "sly_term.brown.brown",
             "foreground": "var(brown)",
             "background": "var(brown)"
         },
         {
-            "scope": "sterm.brown.blue",
+            "scope": "sly_term.brown.blue",
             "foreground": "var(brown)",
             "background": "var(blue)"
         },
         {
-            "scope": "sterm.brown.magenta",
+            "scope": "sly_term.brown.magenta",
             "foreground": "var(brown)",
             "background": "var(magenta)"
         },
         {
-            "scope": "sterm.brown.cyan",
+            "scope": "sly_term.brown.cyan",
             "foreground": "var(brown)",
             "background": "var(cyan)"
         },
         {
-            "scope": "sterm.brown.white",
+            "scope": "sly_term.brown.white",
             "foreground": "var(brown)",
             "background": "var(white)"
         },
         {
-            "scope": "sterm.brown.light_black",
+            "scope": "sly_term.brown.light_black",
             "foreground": "var(brown)",
             "background": "var(light_black)"
         },
         {
-            "scope": "sterm.brown.light_red",
+            "scope": "sly_term.brown.light_red",
             "foreground": "var(brown)",
             "background": "var(light_red)"
         },
         {
-            "scope": "sterm.brown.light_green",
+            "scope": "sly_term.brown.light_green",
             "foreground": "var(brown)",
             "background": "var(light_green)"
         },
         {
-            "scope": "sterm.brown.light_brown",
+            "scope": "sly_term.brown.light_brown",
             "foreground": "var(brown)",
             "background": "var(light_brown)"
         },
         {
-            "scope": "sterm.brown.light_blue",
+            "scope": "sly_term.brown.light_blue",
             "foreground": "var(brown)",
             "background": "var(light_blue)"
         },
         {
-            "scope": "sterm.brown.light_magenta",
+            "scope": "sly_term.brown.light_magenta",
             "foreground": "var(brown)",
             "background": "var(light_magenta)"
         },
         {
-            "scope": "sterm.brown.light_cyan",
+            "scope": "sly_term.brown.light_cyan",
             "foreground": "var(brown)",
             "background": "var(light_cyan)"
         },
         {
-            "scope": "sterm.brown.light_white",
+            "scope": "sly_term.brown.light_white",
             "foreground": "var(brown)",
             "background": "var(light_white)"
         },
         {
-            "scope": "sterm.brown.default",
+            "scope": "sly_term.brown.default",
             "foreground": "var(brown)",
             "background": "var(background)"
         },
         {
-            "scope": "sterm.blue.black",
+            "scope": "sly_term.blue.black",
             "foreground": "var(blue)",
             "background": "var(black)"
         },
         {
-            "scope": "sterm.blue.red",
+            "scope": "sly_term.blue.red",
             "foreground": "var(blue)",
             "background": "var(red)"
         },
         {
-            "scope": "sterm.blue.green",
+            "scope": "sly_term.blue.green",
             "foreground": "var(blue)",
             "background": "var(green)"
         },
         {
-            "scope": "sterm.blue.brown",
+            "scope": "sly_term.blue.brown",
             "foreground": "var(blue)",
             "background": "var(brown)"
         },
         {
-            "scope": "sterm.blue.blue",
+            "scope": "sly_term.blue.blue",
             "foreground": "var(blue)",
             "background": "var(blue)"
         },
         {
-            "scope": "sterm.blue.magenta",
+            "scope": "sly_term.blue.magenta",
             "foreground": "var(blue)",
             "background": "var(magenta)"
         },
         {
-            "scope": "sterm.blue.cyan",
+            "scope": "sly_term.blue.cyan",
             "foreground": "var(blue)",
             "background": "var(cyan)"
         },
         {
-            "scope": "sterm.blue.white",
+            "scope": "sly_term.blue.white",
             "foreground": "var(blue)",
             "background": "var(white)"
         },
         {
-            "scope": "sterm.blue.light_black",
+            "scope": "sly_term.blue.light_black",
             "foreground": "var(blue)",
             "background": "var(light_black)"
         },
         {
-            "scope": "sterm.blue.light_red",
+            "scope": "sly_term.blue.light_red",
             "foreground": "var(blue)",
             "background": "var(light_red)"
         },
         {
-            "scope": "sterm.blue.light_green",
+            "scope": "sly_term.blue.light_green",
             "foreground": "var(blue)",
             "background": "var(light_green)"
         },
         {
-            "scope": "sterm.blue.light_brown",
+            "scope": "sly_term.blue.light_brown",
             "foreground": "var(blue)",
             "background": "var(light_brown)"
         },
         {
-            "scope": "sterm.blue.light_blue",
+            "scope": "sly_term.blue.light_blue",
             "foreground": "var(blue)",
             "background": "var(light_blue)"
         },
         {
-            "scope": "sterm.blue.light_magenta",
+            "scope": "sly_term.blue.light_magenta",
             "foreground": "var(blue)",
             "background": "var(light_magenta)"
         },
         {
-            "scope": "sterm.blue.light_cyan",
+            "scope": "sly_term.blue.light_cyan",
             "foreground": "var(blue)",
             "background": "var(light_cyan)"
         },
         {
-            "scope": "sterm.blue.light_white",
+            "scope": "sly_term.blue.light_white",
             "foreground": "var(blue)",
             "background": "var(light_white)"
         },
         {
-            "scope": "sterm.blue.default",
+            "scope": "sly_term.blue.default",
             "foreground": "var(blue)",
             "background": "var(background)"
         },
         {
-            "scope": "sterm.magenta.black",
+            "scope": "sly_term.magenta.black",
             "foreground": "var(magenta)",
             "background": "var(black)"
         },
         {
-            "scope": "sterm.magenta.red",
+            "scope": "sly_term.magenta.red",
             "foreground": "var(magenta)",
             "background": "var(red)"
         },
         {
-            "scope": "sterm.magenta.green",
+            "scope": "sly_term.magenta.green",
             "foreground": "var(magenta)",
             "background": "var(green)"
         },
         {
-            "scope": "sterm.magenta.brown",
+            "scope": "sly_term.magenta.brown",
             "foreground": "var(magenta)",
             "background": "var(brown)"
         },
         {
-            "scope": "sterm.magenta.blue",
+            "scope": "sly_term.magenta.blue",
             "foreground": "var(magenta)",
             "background": "var(blue)"
         },
         {
-            "scope": "sterm.magenta.magenta",
+            "scope": "sly_term.magenta.magenta",
             "foreground": "var(magenta)",
             "background": "var(magenta)"
         },
         {
-            "scope": "sterm.magenta.cyan",
+            "scope": "sly_term.magenta.cyan",
             "foreground": "var(magenta)",
             "background": "var(cyan)"
         },
         {
-            "scope": "sterm.magenta.white",
+            "scope": "sly_term.magenta.white",
             "foreground": "var(magenta)",
             "background": "var(white)"
         },
         {
-            "scope": "sterm.magenta.light_black",
+            "scope": "sly_term.magenta.light_black",
             "foreground": "var(magenta)",
             "background": "var(light_black)"
         },
         {
-            "scope": "sterm.magenta.light_red",
+            "scope": "sly_term.magenta.light_red",
             "foreground": "var(magenta)",
             "background": "var(light_red)"
         },
         {
-            "scope": "sterm.magenta.light_green",
+            "scope": "sly_term.magenta.light_green",
             "foreground": "var(magenta)",
             "background": "var(light_green)"
         },
         {
-            "scope": "sterm.magenta.light_brown",
+            "scope": "sly_term.magenta.light_brown",
             "foreground": "var(magenta)",
             "background": "var(light_brown)"
         },
         {
-            "scope": "sterm.magenta.light_blue",
+            "scope": "sly_term.magenta.light_blue",
             "foreground": "var(magenta)",
             "background": "var(light_blue)"
         },
         {
-            "scope": "sterm.magenta.light_magenta",
+            "scope": "sly_term.magenta.light_magenta",
             "foreground": "var(magenta)",
             "background": "var(light_magenta)"
         },
         {
-            "scope": "sterm.magenta.light_cyan",
+            "scope": "sly_term.magenta.light_cyan",
             "foreground": "var(magenta)",
             "background": "var(light_cyan)"
         },
         {
-            "scope": "sterm.magenta.light_white",
+            "scope": "sly_term.magenta.light_white",
             "foreground": "var(magenta)",
             "background": "var(light_white)"
         },
         {
-            "scope": "sterm.magenta.default",
+            "scope": "sly_term.magenta.default",
             "foreground": "var(magenta)",
             "background": "var(background)"
         },
         {
-            "scope": "sterm.cyan.black",
+            "scope": "sly_term.cyan.black",
             "foreground": "var(cyan)",
             "background": "var(black)"
         },
         {
-            "scope": "sterm.cyan.red",
+            "scope": "sly_term.cyan.red",
             "foreground": "var(cyan)",
             "background": "var(red)"
         },
         {
-            "scope": "sterm.cyan.green",
+            "scope": "sly_term.cyan.green",
             "foreground": "var(cyan)",
             "background": "var(green)"
         },
         {
-            "scope": "sterm.cyan.brown",
+            "scope": "sly_term.cyan.brown",
             "foreground": "var(cyan)",
             "background": "var(brown)"
         },
         {
-            "scope": "sterm.cyan.blue",
+            "scope": "sly_term.cyan.blue",
             "foreground": "var(cyan)",
             "background": "var(blue)"
         },
         {
-            "scope": "sterm.cyan.magenta",
+            "scope": "sly_term.cyan.magenta",
             "foreground": "var(cyan)",
             "background": "var(magenta)"
         },
         {
-            "scope": "sterm.cyan.cyan",
+            "scope": "sly_term.cyan.cyan",
             "foreground": "var(cyan)",
             "background": "var(cyan)"
         },
         {
-            "scope": "sterm.cyan.white",
+            "scope": "sly_term.cyan.white",
             "foreground": "var(cyan)",
             "background": "var(white)"
         },
         {
-            "scope": "sterm.cyan.light_black",
+            "scope": "sly_term.cyan.light_black",
             "foreground": "var(cyan)",
             "background": "var(light_black)"
         },
         {
-            "scope": "sterm.cyan.light_red",
+            "scope": "sly_term.cyan.light_red",
             "foreground": "var(cyan)",
             "background": "var(light_red)"
         },
         {
-            "scope": "sterm.cyan.light_green",
+            "scope": "sly_term.cyan.light_green",
             "foreground": "var(cyan)",
             "background": "var(light_green)"
         },
         {
-            "scope": "sterm.cyan.light_brown",
+            "scope": "sly_term.cyan.light_brown",
             "foreground": "var(cyan)",
             "background": "var(light_brown)"
         },
         {
-            "scope": "sterm.cyan.light_blue",
+            "scope": "sly_term.cyan.light_blue",
             "foreground": "var(cyan)",
             "background": "var(light_blue)"
         },
         {
-            "scope": "sterm.cyan.light_magenta",
+            "scope": "sly_term.cyan.light_magenta",
             "foreground": "var(cyan)",
             "background": "var(light_magenta)"
         },
         {
-            "scope": "sterm.cyan.light_cyan",
+            "scope": "sly_term.cyan.light_cyan",
             "foreground": "var(cyan)",
             "background": "var(light_cyan)"
         },
         {
-            "scope": "sterm.cyan.light_white",
+            "scope": "sly_term.cyan.light_white",
             "foreground": "var(cyan)",
             "background": "var(light_white)"
         },
         {
-            "scope": "sterm.cyan.default",
+            "scope": "sly_term.cyan.default",
             "foreground": "var(cyan)",
             "background": "var(background)"
         },
         {
-            "scope": "sterm.white.black",
+            "scope": "sly_term.white.black",
             "foreground": "var(white)",
             "background": "var(black)"
         },
         {
-            "scope": "sterm.white.red",
+            "scope": "sly_term.white.red",
             "foreground": "var(white)",
             "background": "var(red)"
         },
         {
-            "scope": "sterm.white.green",
+            "scope": "sly_term.white.green",
             "foreground": "var(white)",
             "background": "var(green)"
         },
         {
-            "scope": "sterm.white.brown",
+            "scope": "sly_term.white.brown",
             "foreground": "var(white)",
             "background": "var(brown)"
         },
         {
-            "scope": "sterm.white.blue",
+            "scope": "sly_term.white.blue",
             "foreground": "var(white)",
             "background": "var(blue)"
         },
         {
-            "scope": "sterm.white.magenta",
+            "scope": "sly_term.white.magenta",
             "foreground": "var(white)",
             "background": "var(magenta)"
         },
         {
-            "scope": "sterm.white.cyan",
+            "scope": "sly_term.white.cyan",
             "foreground": "var(white)",
             "background": "var(cyan)"
         },
         {
-            "scope": "sterm.white.white",
+            "scope": "sly_term.white.white",
             "foreground": "var(white)",
             "background": "var(white)"
         },
         {
-            "scope": "sterm.white.light_black",
+            "scope": "sly_term.white.light_black",
             "foreground": "var(white)",
             "background": "var(light_black)"
         },
         {
-            "scope": "sterm.white.light_red",
+            "scope": "sly_term.white.light_red",
             "foreground": "var(white)",
             "background": "var(light_red)"
         },
         {
-            "scope": "sterm.white.light_green",
+            "scope": "sly_term.white.light_green",
             "foreground": "var(white)",
             "background": "var(light_green)"
         },
         {
-            "scope": "sterm.white.light_brown",
+            "scope": "sly_term.white.light_brown",
             "foreground": "var(white)",
             "background": "var(light_brown)"
         },
         {
-            "scope": "sterm.white.light_blue",
+            "scope": "sly_term.white.light_blue",
             "foreground": "var(white)",
             "background": "var(light_blue)"
         },
         {
-            "scope": "sterm.white.light_magenta",
+            "scope": "sly_term.white.light_magenta",
             "foreground": "var(white)",
             "background": "var(light_magenta)"
         },
         {
-            "scope": "sterm.white.light_cyan",
+            "scope": "sly_term.white.light_cyan",
             "foreground": "var(white)",
             "background": "var(light_cyan)"
         },
         {
-            "scope": "sterm.white.light_white",
+            "scope": "sly_term.white.light_white",
             "foreground": "var(white)",
             "background": "var(light_white)"
         },
         {
-            "scope": "sterm.white.default",
+            "scope": "sly_term.white.default",
             "foreground": "var(white)",
             "background": "var(background)"
         },
         {
-            "scope": "sterm.light_black.black",
+            "scope": "sly_term.light_black.black",
             "foreground": "var(light_black)",
             "background": "var(black)"
         },
         {
-            "scope": "sterm.light_black.red",
+            "scope": "sly_term.light_black.red",
             "foreground": "var(light_black)",
             "background": "var(red)"
         },
         {
-            "scope": "sterm.light_black.green",
+            "scope": "sly_term.light_black.green",
             "foreground": "var(light_black)",
             "background": "var(green)"
         },
         {
-            "scope": "sterm.light_black.brown",
+            "scope": "sly_term.light_black.brown",
             "foreground": "var(light_black)",
             "background": "var(brown)"
         },
         {
-            "scope": "sterm.light_black.blue",
+            "scope": "sly_term.light_black.blue",
             "foreground": "var(light_black)",
             "background": "var(blue)"
         },
         {
-            "scope": "sterm.light_black.magenta",
+            "scope": "sly_term.light_black.magenta",
             "foreground": "var(light_black)",
             "background": "var(magenta)"
         },
         {
-            "scope": "sterm.light_black.cyan",
+            "scope": "sly_term.light_black.cyan",
             "foreground": "var(light_black)",
             "background": "var(cyan)"
         },
         {
-            "scope": "sterm.light_black.white",
+            "scope": "sly_term.light_black.white",
             "foreground": "var(light_black)",
             "background": "var(white)"
         },
         {
-            "scope": "sterm.light_black.light_black",
+            "scope": "sly_term.light_black.light_black",
             "foreground": "var(light_black)",
             "background": "var(light_black)"
         },
         {
-            "scope": "sterm.light_black.light_red",
+            "scope": "sly_term.light_black.light_red",
             "foreground": "var(light_black)",
             "background": "var(light_red)"
         },
         {
-            "scope": "sterm.light_black.light_green",
+            "scope": "sly_term.light_black.light_green",
             "foreground": "var(light_black)",
             "background": "var(light_green)"
         },
         {
-            "scope": "sterm.light_black.light_brown",
+            "scope": "sly_term.light_black.light_brown",
             "foreground": "var(light_black)",
             "background": "var(light_brown)"
         },
         {
-            "scope": "sterm.light_black.light_blue",
+            "scope": "sly_term.light_black.light_blue",
             "foreground": "var(light_black)",
             "background": "var(light_blue)"
         },
         {
-            "scope": "sterm.light_black.light_magenta",
+            "scope": "sly_term.light_black.light_magenta",
             "foreground": "var(light_black)",
             "background": "var(light_magenta)"
         },
         {
-            "scope": "sterm.light_black.light_cyan",
+            "scope": "sly_term.light_black.light_cyan",
             "foreground": "var(light_black)",
             "background": "var(light_cyan)"
         },
         {
-            "scope": "sterm.light_black.light_white",
+            "scope": "sly_term.light_black.light_white",
             "foreground": "var(light_black)",
             "background": "var(light_white)"
         },
         {
-            "scope": "sterm.light_black.default",
+            "scope": "sly_term.light_black.default",
             "foreground": "var(light_black)",
             "background": "var(background)"
         },
         {
-            "scope": "sterm.light_red.black",
+            "scope": "sly_term.light_red.black",
             "foreground": "var(light_red)",
             "background": "var(black)"
         },
         {
-            "scope": "sterm.light_red.red",
+            "scope": "sly_term.light_red.red",
             "foreground": "var(light_red)",
             "background": "var(red)"
         },
         {
-            "scope": "sterm.light_red.green",
+            "scope": "sly_term.light_red.green",
             "foreground": "var(light_red)",
             "background": "var(green)"
         },
         {
-            "scope": "sterm.light_red.brown",
+            "scope": "sly_term.light_red.brown",
             "foreground": "var(light_red)",
             "background": "var(brown)"
         },
         {
-            "scope": "sterm.light_red.blue",
+            "scope": "sly_term.light_red.blue",
             "foreground": "var(light_red)",
             "background": "var(blue)"
         },
         {
-            "scope": "sterm.light_red.magenta",
+            "scope": "sly_term.light_red.magenta",
             "foreground": "var(light_red)",
             "background": "var(magenta)"
         },
         {
-            "scope": "sterm.light_red.cyan",
+            "scope": "sly_term.light_red.cyan",
             "foreground": "var(light_red)",
             "background": "var(cyan)"
         },
         {
-            "scope": "sterm.light_red.white",
+            "scope": "sly_term.light_red.white",
             "foreground": "var(light_red)",
             "background": "var(white)"
         },
         {
-            "scope": "sterm.light_red.light_black",
+            "scope": "sly_term.light_red.light_black",
             "foreground": "var(light_red)",
             "background": "var(light_black)"
         },
         {
-            "scope": "sterm.light_red.light_red",
+            "scope": "sly_term.light_red.light_red",
             "foreground": "var(light_red)",
             "background": "var(light_red)"
         },
         {
-            "scope": "sterm.light_red.light_green",
+            "scope": "sly_term.light_red.light_green",
             "foreground": "var(light_red)",
             "background": "var(light_green)"
         },
         {
-            "scope": "sterm.light_red.light_brown",
+            "scope": "sly_term.light_red.light_brown",
             "foreground": "var(light_red)",
             "background": "var(light_brown)"
         },
         {
-            "scope": "sterm.light_red.light_blue",
+            "scope": "sly_term.light_red.light_blue",
             "foreground": "var(light_red)",
             "background": "var(light_blue)"
         },
         {
-            "scope": "sterm.light_red.light_magenta",
+            "scope": "sly_term.light_red.light_magenta",
             "foreground": "var(light_red)",
             "background": "var(light_magenta)"
         },
         {
-            "scope": "sterm.light_red.light_cyan",
+            "scope": "sly_term.light_red.light_cyan",
             "foreground": "var(light_red)",
             "background": "var(light_cyan)"
         },
         {
-            "scope": "sterm.light_red.light_white",
+            "scope": "sly_term.light_red.light_white",
             "foreground": "var(light_red)",
             "background": "var(light_white)"
         },
         {
-            "scope": "sterm.light_red.default",
+            "scope": "sly_term.light_red.default",
             "foreground": "var(light_red)",
             "background": "var(background)"
         },
         {
-            "scope": "sterm.light_green.black",
+            "scope": "sly_term.light_green.black",
             "foreground": "var(light_green)",
             "background": "var(black)"
         },
         {
-            "scope": "sterm.light_green.red",
+            "scope": "sly_term.light_green.red",
             "foreground": "var(light_green)",
             "background": "var(red)"
         },
         {
-            "scope": "sterm.light_green.green",
+            "scope": "sly_term.light_green.green",
             "foreground": "var(light_green)",
             "background": "var(green)"
         },
         {
-            "scope": "sterm.light_green.brown",
+            "scope": "sly_term.light_green.brown",
             "foreground": "var(light_green)",
             "background": "var(brown)"
         },
         {
-            "scope": "sterm.light_green.blue",
+            "scope": "sly_term.light_green.blue",
             "foreground": "var(light_green)",
             "background": "var(blue)"
         },
         {
-            "scope": "sterm.light_green.magenta",
+            "scope": "sly_term.light_green.magenta",
             "foreground": "var(light_green)",
             "background": "var(magenta)"
         },
         {
-            "scope": "sterm.light_green.cyan",
+            "scope": "sly_term.light_green.cyan",
             "foreground": "var(light_green)",
             "background": "var(cyan)"
         },
         {
-            "scope": "sterm.light_green.white",
+            "scope": "sly_term.light_green.white",
             "foreground": "var(light_green)",
             "background": "var(white)"
         },
         {
-            "scope": "sterm.light_green.light_black",
+            "scope": "sly_term.light_green.light_black",
             "foreground": "var(light_green)",
             "background": "var(light_black)"
         },
         {
-            "scope": "sterm.light_green.light_red",
+            "scope": "sly_term.light_green.light_red",
             "foreground": "var(light_green)",
             "background": "var(light_red)"
         },
         {
-            "scope": "sterm.light_green.light_green",
+            "scope": "sly_term.light_green.light_green",
             "foreground": "var(light_green)",
             "background": "var(light_green)"
         },
         {
-            "scope": "sterm.light_green.light_brown",
+            "scope": "sly_term.light_green.light_brown",
             "foreground": "var(light_green)",
             "background": "var(light_brown)"
         },
         {
-            "scope": "sterm.light_green.light_blue",
+            "scope": "sly_term.light_green.light_blue",
             "foreground": "var(light_green)",
             "background": "var(light_blue)"
         },
         {
-            "scope": "sterm.light_green.light_magenta",
+            "scope": "sly_term.light_green.light_magenta",
             "foreground": "var(light_green)",
             "background": "var(light_magenta)"
         },
         {
-            "scope": "sterm.light_green.light_cyan",
+            "scope": "sly_term.light_green.light_cyan",
             "foreground": "var(light_green)",
             "background": "var(light_cyan)"
         },
         {
-            "scope": "sterm.light_green.light_white",
+            "scope": "sly_term.light_green.light_white",
             "foreground": "var(light_green)",
             "background": "var(light_white)"
         },
         {
-            "scope": "sterm.light_green.default",
+            "scope": "sly_term.light_green.default",
             "foreground": "var(light_green)",
             "background": "var(background)"
         },
         {
-            "scope": "sterm.light_brown.black",
+            "scope": "sly_term.light_brown.black",
             "foreground": "var(light_brown)",
             "background": "var(black)"
         },
         {
-            "scope": "sterm.light_brown.red",
+            "scope": "sly_term.light_brown.red",
             "foreground": "var(light_brown)",
             "background": "var(red)"
         },
         {
-            "scope": "sterm.light_brown.green",
+            "scope": "sly_term.light_brown.green",
             "foreground": "var(light_brown)",
             "background": "var(green)"
         },
         {
-            "scope": "sterm.light_brown.brown",
+            "scope": "sly_term.light_brown.brown",
             "foreground": "var(light_brown)",
             "background": "var(brown)"
         },
         {
-            "scope": "sterm.light_brown.blue",
+            "scope": "sly_term.light_brown.blue",
             "foreground": "var(light_brown)",
             "background": "var(blue)"
         },
         {
-            "scope": "sterm.light_brown.magenta",
+            "scope": "sly_term.light_brown.magenta",
             "foreground": "var(light_brown)",
             "background": "var(magenta)"
         },
         {
-            "scope": "sterm.light_brown.cyan",
+            "scope": "sly_term.light_brown.cyan",
             "foreground": "var(light_brown)",
             "background": "var(cyan)"
         },
         {
-            "scope": "sterm.light_brown.white",
+            "scope": "sly_term.light_brown.white",
             "foreground": "var(light_brown)",
             "background": "var(white)"
         },
         {
-            "scope": "sterm.light_brown.light_black",
+            "scope": "sly_term.light_brown.light_black",
             "foreground": "var(light_brown)",
             "background": "var(light_black)"
         },
         {
-            "scope": "sterm.light_brown.light_red",
+            "scope": "sly_term.light_brown.light_red",
             "foreground": "var(light_brown)",
             "background": "var(light_red)"
         },
         {
-            "scope": "sterm.light_brown.light_green",
+            "scope": "sly_term.light_brown.light_green",
             "foreground": "var(light_brown)",
             "background": "var(light_green)"
         },
         {
-            "scope": "sterm.light_brown.light_brown",
+            "scope": "sly_term.light_brown.light_brown",
             "foreground": "var(light_brown)",
             "background": "var(light_brown)"
         },
         {
-            "scope": "sterm.light_brown.light_blue",
+            "scope": "sly_term.light_brown.light_blue",
             "foreground": "var(light_brown)",
             "background": "var(light_blue)"
         },
         {
-            "scope": "sterm.light_brown.light_magenta",
+            "scope": "sly_term.light_brown.light_magenta",
             "foreground": "var(light_brown)",
             "background": "var(light_magenta)"
         },
         {
-            "scope": "sterm.light_brown.light_cyan",
+            "scope": "sly_term.light_brown.light_cyan",
             "foreground": "var(light_brown)",
             "background": "var(light_cyan)"
         },
         {
-            "scope": "sterm.light_brown.light_white",
+            "scope": "sly_term.light_brown.light_white",
             "foreground": "var(light_brown)",
             "background": "var(light_white)"
         },
         {
-            "scope": "sterm.light_brown.default",
+            "scope": "sly_term.light_brown.default",
             "foreground": "var(light_brown)",
             "background": "var(background)"
         },
         {
-            "scope": "sterm.light_blue.black",
+            "scope": "sly_term.light_blue.black",
             "foreground": "var(light_blue)",
             "background": "var(black)"
         },
         {
-            "scope": "sterm.light_blue.red",
+            "scope": "sly_term.light_blue.red",
             "foreground": "var(light_blue)",
             "background": "var(red)"
         },
         {
-            "scope": "sterm.light_blue.green",
+            "scope": "sly_term.light_blue.green",
             "foreground": "var(light_blue)",
             "background": "var(green)"
         },
         {
-            "scope": "sterm.light_blue.brown",
+            "scope": "sly_term.light_blue.brown",
             "foreground": "var(light_blue)",
             "background": "var(brown)"
         },
         {
-            "scope": "sterm.light_blue.blue",
+            "scope": "sly_term.light_blue.blue",
             "foreground": "var(light_blue)",
             "background": "var(blue)"
         },
         {
-            "scope": "sterm.light_blue.magenta",
+            "scope": "sly_term.light_blue.magenta",
             "foreground": "var(light_blue)",
             "background": "var(magenta)"
         },
         {
-            "scope": "sterm.light_blue.cyan",
+            "scope": "sly_term.light_blue.cyan",
             "foreground": "var(light_blue)",
             "background": "var(cyan)"
         },
         {
-            "scope": "sterm.light_blue.white",
+            "scope": "sly_term.light_blue.white",
             "foreground": "var(light_blue)",
             "background": "var(white)"
         },
         {
-            "scope": "sterm.light_blue.light_black",
+            "scope": "sly_term.light_blue.light_black",
             "foreground": "var(light_blue)",
             "background": "var(light_black)"
         },
         {
-            "scope": "sterm.light_blue.light_red",
+            "scope": "sly_term.light_blue.light_red",
             "foreground": "var(light_blue)",
             "background": "var(light_red)"
         },
         {
-            "scope": "sterm.light_blue.light_green",
+            "scope": "sly_term.light_blue.light_green",
             "foreground": "var(light_blue)",
             "background": "var(light_green)"
         },
         {
-            "scope": "sterm.light_blue.light_brown",
+            "scope": "sly_term.light_blue.light_brown",
             "foreground": "var(light_blue)",
             "background": "var(light_brown)"
         },
         {
-            "scope": "sterm.light_blue.light_blue",
+            "scope": "sly_term.light_blue.light_blue",
             "foreground": "var(light_blue)",
             "background": "var(light_blue)"
         },
         {
-            "scope": "sterm.light_blue.light_magenta",
+            "scope": "sly_term.light_blue.light_magenta",
             "foreground": "var(light_blue)",
             "background": "var(light_magenta)"
         },
         {
-            "scope": "sterm.light_blue.light_cyan",
+            "scope": "sly_term.light_blue.light_cyan",
             "foreground": "var(light_blue)",
             "background": "var(light_cyan)"
         },
         {
-            "scope": "sterm.light_blue.light_white",
+            "scope": "sly_term.light_blue.light_white",
             "foreground": "var(light_blue)",
             "background": "var(light_white)"
         },
         {
-            "scope": "sterm.light_blue.default",
+            "scope": "sly_term.light_blue.default",
             "foreground": "var(light_blue)",
             "background": "var(background)"
         },
         {
-            "scope": "sterm.light_magenta.black",
+            "scope": "sly_term.light_magenta.black",
             "foreground": "var(light_magenta)",
             "background": "var(black)"
         },
         {
-            "scope": "sterm.light_magenta.red",
+            "scope": "sly_term.light_magenta.red",
             "foreground": "var(light_magenta)",
             "background": "var(red)"
         },
         {
-            "scope": "sterm.light_magenta.green",
+            "scope": "sly_term.light_magenta.green",
             "foreground": "var(light_magenta)",
             "background": "var(green)"
         },
         {
-            "scope": "sterm.light_magenta.brown",
+            "scope": "sly_term.light_magenta.brown",
             "foreground": "var(light_magenta)",
             "background": "var(brown)"
         },
         {
-            "scope": "sterm.light_magenta.blue",
+            "scope": "sly_term.light_magenta.blue",
             "foreground": "var(light_magenta)",
             "background": "var(blue)"
         },
         {
-            "scope": "sterm.light_magenta.magenta",
+            "scope": "sly_term.light_magenta.magenta",
             "foreground": "var(light_magenta)",
             "background": "var(magenta)"
         },
         {
-            "scope": "sterm.light_magenta.cyan",
+            "scope": "sly_term.light_magenta.cyan",
             "foreground": "var(light_magenta)",
             "background": "var(cyan)"
         },
         {
-            "scope": "sterm.light_magenta.white",
+            "scope": "sly_term.light_magenta.white",
             "foreground": "var(light_magenta)",
             "background": "var(white)"
         },
         {
-            "scope": "sterm.light_magenta.light_black",
+            "scope": "sly_term.light_magenta.light_black",
             "foreground": "var(light_magenta)",
             "background": "var(light_black)"
         },
         {
-            "scope": "sterm.light_magenta.light_red",
+            "scope": "sly_term.light_magenta.light_red",
             "foreground": "var(light_magenta)",
             "background": "var(light_red)"
         },
         {
-            "scope": "sterm.light_magenta.light_green",
+            "scope": "sly_term.light_magenta.light_green",
             "foreground": "var(light_magenta)",
             "background": "var(light_green)"
         },
         {
-            "scope": "sterm.light_magenta.light_brown",
+            "scope": "sly_term.light_magenta.light_brown",
             "foreground": "var(light_magenta)",
             "background": "var(light_brown)"
         },
         {
-            "scope": "sterm.light_magenta.light_blue",
+            "scope": "sly_term.light_magenta.light_blue",
             "foreground": "var(light_magenta)",
             "background": "var(light_blue)"
         },
         {
-            "scope": "sterm.light_magenta.light_magenta",
+            "scope": "sly_term.light_magenta.light_magenta",
             "foreground": "var(light_magenta)",
             "background": "var(light_magenta)"
         },
         {
-            "scope": "sterm.light_magenta.light_cyan",
+            "scope": "sly_term.light_magenta.light_cyan",
             "foreground": "var(light_magenta)",
             "background": "var(light_cyan)"
         },
         {
-            "scope": "sterm.light_magenta.light_white",
+            "scope": "sly_term.light_magenta.light_white",
             "foreground": "var(light_magenta)",
             "background": "var(light_white)"
         },
         {
-            "scope": "sterm.light_magenta.default",
+            "scope": "sly_term.light_magenta.default",
             "foreground": "var(light_magenta)",
             "background": "var(background)"
         },
         {
-            "scope": "sterm.light_cyan.black",
+            "scope": "sly_term.light_cyan.black",
             "foreground": "var(light_cyan)",
             "background": "var(black)"
         },
         {
-            "scope": "sterm.light_cyan.red",
+            "scope": "sly_term.light_cyan.red",
             "foreground": "var(light_cyan)",
             "background": "var(red)"
         },
         {
-            "scope": "sterm.light_cyan.green",
+            "scope": "sly_term.light_cyan.green",
             "foreground": "var(light_cyan)",
             "background": "var(green)"
         },
         {
-            "scope": "sterm.light_cyan.brown",
+            "scope": "sly_term.light_cyan.brown",
             "foreground": "var(light_cyan)",
             "background": "var(brown)"
         },
         {
-            "scope": "sterm.light_cyan.blue",
+            "scope": "sly_term.light_cyan.blue",
             "foreground": "var(light_cyan)",
             "background": "var(blue)"
         },
         {
-            "scope": "sterm.light_cyan.magenta",
+            "scope": "sly_term.light_cyan.magenta",
             "foreground": "var(light_cyan)",
             "background": "var(magenta)"
         },
         {
-            "scope": "sterm.light_cyan.cyan",
+            "scope": "sly_term.light_cyan.cyan",
             "foreground": "var(light_cyan)",
             "background": "var(cyan)"
         },
         {
-            "scope": "sterm.light_cyan.white",
+            "scope": "sly_term.light_cyan.white",
             "foreground": "var(light_cyan)",
             "background": "var(white)"
         },
         {
-            "scope": "sterm.light_cyan.light_black",
+            "scope": "sly_term.light_cyan.light_black",
             "foreground": "var(light_cyan)",
             "background": "var(light_black)"
         },
         {
-            "scope": "sterm.light_cyan.light_red",
+            "scope": "sly_term.light_cyan.light_red",
             "foreground": "var(light_cyan)",
             "background": "var(light_red)"
         },
         {
-            "scope": "sterm.light_cyan.light_green",
+            "scope": "sly_term.light_cyan.light_green",
             "foreground": "var(light_cyan)",
             "background": "var(light_green)"
         },
         {
-            "scope": "sterm.light_cyan.light_brown",
+            "scope": "sly_term.light_cyan.light_brown",
             "foreground": "var(light_cyan)",
             "background": "var(light_brown)"
         },
         {
-            "scope": "sterm.light_cyan.light_blue",
+            "scope": "sly_term.light_cyan.light_blue",
             "foreground": "var(light_cyan)",
             "background": "var(light_blue)"
         },
         {
-            "scope": "sterm.light_cyan.light_magenta",
+            "scope": "sly_term.light_cyan.light_magenta",
             "foreground": "var(light_cyan)",
             "background": "var(light_magenta)"
         },
         {
-            "scope": "sterm.light_cyan.light_cyan",
+            "scope": "sly_term.light_cyan.light_cyan",
             "foreground": "var(light_cyan)",
             "background": "var(light_cyan)"
         },
         {
-            "scope": "sterm.light_cyan.light_white",
+            "scope": "sly_term.light_cyan.light_white",
             "foreground": "var(light_cyan)",
             "background": "var(light_white)"
         },
         {
-            "scope": "sterm.light_cyan.default",
+            "scope": "sly_term.light_cyan.default",
             "foreground": "var(light_cyan)",
             "background": "var(background)"
         },
         {
-            "scope": "sterm.light_white.black",
+            "scope": "sly_term.light_white.black",
             "foreground": "var(light_white)",
             "background": "var(black)"
         },
         {
-            "scope": "sterm.light_white.red",
+            "scope": "sly_term.light_white.red",
             "foreground": "var(light_white)",
             "background": "var(red)"
         },
         {
-            "scope": "sterm.light_white.green",
+            "scope": "sly_term.light_white.green",
             "foreground": "var(light_white)",
             "background": "var(green)"
         },
         {
-            "scope": "sterm.light_white.brown",
+            "scope": "sly_term.light_white.brown",
             "foreground": "var(light_white)",
             "background": "var(brown)"
         },
         {
-            "scope": "sterm.light_white.blue",
+            "scope": "sly_term.light_white.blue",
             "foreground": "var(light_white)",
             "background": "var(blue)"
         },
         {
-            "scope": "sterm.light_white.magenta",
+            "scope": "sly_term.light_white.magenta",
             "foreground": "var(light_white)",
             "background": "var(magenta)"
         },
         {
-            "scope": "sterm.light_white.cyan",
+            "scope": "sly_term.light_white.cyan",
             "foreground": "var(light_white)",
             "background": "var(cyan)"
         },
         {
-            "scope": "sterm.light_white.white",
+            "scope": "sly_term.light_white.white",
             "foreground": "var(light_white)",
             "background": "var(white)"
         },
         {
-            "scope": "sterm.light_white.light_black",
+            "scope": "sly_term.light_white.light_black",
             "foreground": "var(light_white)",
             "background": "var(light_black)"
         },
         {
-            "scope": "sterm.light_white.light_red",
+            "scope": "sly_term.light_white.light_red",
             "foreground": "var(light_white)",
             "background": "var(light_red)"
         },
         {
-            "scope": "sterm.light_white.light_green",
+            "scope": "sly_term.light_white.light_green",
             "foreground": "var(light_white)",
             "background": "var(light_green)"
         },
         {
-            "scope": "sterm.light_white.light_brown",
+            "scope": "sly_term.light_white.light_brown",
             "foreground": "var(light_white)",
             "background": "var(light_brown)"
         },
         {
-            "scope": "sterm.light_white.light_blue",
+            "scope": "sly_term.light_white.light_blue",
             "foreground": "var(light_white)",
             "background": "var(light_blue)"
         },
         {
-            "scope": "sterm.light_white.light_magenta",
+            "scope": "sly_term.light_white.light_magenta",
             "foreground": "var(light_white)",
             "background": "var(light_magenta)"
         },
         {
-            "scope": "sterm.light_white.light_cyan",
+            "scope": "sly_term.light_white.light_cyan",
             "foreground": "var(light_white)",
             "background": "var(light_cyan)"
         },
         {
-            "scope": "sterm.light_white.light_white",
+            "scope": "sly_term.light_white.light_white",
             "foreground": "var(light_white)",
             "background": "var(light_white)"
         },
         {
-            "scope": "sterm.light_white.default",
+            "scope": "sly_term.light_white.default",
             "foreground": "var(light_white)",
             "background": "var(background)"
         },
         {
-            "scope": "sterm.default.black",
+            "scope": "sly_term.default.black",
             "foreground": "var(foreground)",
             "background": "var(black)"
         },
         {
-            "scope": "sterm.default.red",
+            "scope": "sly_term.default.red",
             "foreground": "var(foreground)",
             "background": "var(red)"
         },
         {
-            "scope": "sterm.default.green",
+            "scope": "sly_term.default.green",
             "foreground": "var(foreground)",
             "background": "var(green)"
         },
         {
-            "scope": "sterm.default.brown",
+            "scope": "sly_term.default.brown",
             "foreground": "var(foreground)",
             "background": "var(brown)"
         },
         {
-            "scope": "sterm.default.blue",
+            "scope": "sly_term.default.blue",
             "foreground": "var(foreground)",
             "background": "var(blue)"
         },
         {
-            "scope": "sterm.default.magenta",
+            "scope": "sly_term.default.magenta",
             "foreground": "var(foreground)",
             "background": "var(magenta)"
         },
         {
-            "scope": "sterm.default.cyan",
+            "scope": "sly_term.default.cyan",
             "foreground": "var(foreground)",
             "background": "var(cyan)"
         },
         {
-            "scope": "sterm.default.white",
+            "scope": "sly_term.default.white",
             "foreground": "var(foreground)",
             "background": "var(white)"
         },
         {
-            "scope": "sterm.default.light_black",
+            "scope": "sly_term.default.light_black",
             "foreground": "var(foreground)",
             "background": "var(light_black)"
         },
         {
-            "scope": "sterm.default.light_red",
+            "scope": "sly_term.default.light_red",
             "foreground": "var(foreground)",
             "background": "var(light_red)"
         },
         {
-            "scope": "sterm.default.light_green",
+            "scope": "sly_term.default.light_green",
             "foreground": "var(foreground)",
             "background": "var(light_green)"
         },
         {
-            "scope": "sterm.default.light_brown",
+            "scope": "sly_term.default.light_brown",
             "foreground": "var(foreground)",
             "background": "var(light_brown)"
         },
         {
-            "scope": "sterm.default.light_blue",
+            "scope": "sly_term.default.light_blue",
             "foreground": "var(foreground)",
             "background": "var(light_blue)"
         },
         {
-            "scope": "sterm.default.light_magenta",
+            "scope": "sly_term.default.light_magenta",
             "foreground": "var(foreground)",
             "background": "var(light_magenta)"
         },
         {
-            "scope": "sterm.default.light_cyan",
+            "scope": "sly_term.default.light_cyan",
             "foreground": "var(foreground)",
             "background": "var(light_cyan)"
         },
         {
-            "scope": "sterm.default.light_white",
+            "scope": "sly_term.default.light_white",
             "foreground": "var(foreground)",
             "background": "var(light_white)"
         },
         {
-            "scope": "sterm.default.default",
+            "scope": "sly_term.default.default",
             "foreground": "var(foreground)",
             "background": "var(background)"
         }
