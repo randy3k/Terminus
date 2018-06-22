@@ -26,7 +26,7 @@ else:
     from ptyprocess import PtyProcessUnicode as PtyProcess
 
 
-logger = logging.getLogger('SublimelyTerminal')
+logger = logging.getLogger('Terminus')
 
 if not logger.hasHandlers():
     ch = logging.StreamHandler(sys.stdout)
@@ -333,12 +333,12 @@ class Terminal():
         def view_is_attached():
             if self.panel_name:
                 window = self.view.window() or parent_window
-                sly_term_view = window.find_output_panel(self.panel_name)
-                return sly_term_view and sly_term_view.id() == self.view.id()
+                terminus_view = window.find_output_panel(self.panel_name)
+                return terminus_view and terminus_view.id() == self.view.id()
             else:
                 return self.view.window()
 
-        sly_term_is_alive = responsive(period=1, default=True)(
+        terminus_is_alive = responsive(period=1, default=True)(
             lambda: self.process.isalive() and view_is_attached())
 
         @responsive(period=1, default=False)
@@ -348,7 +348,7 @@ class Terminal():
 
         def reader():
             # run self.view.windows() via `view_is_attached` periodically to refresh gui
-            while sly_term_is_alive() and view_is_attached():
+            while terminus_is_alive() and view_is_attached():
                 try:
                     temp = self.process.read(1024)
                 except EOFError:
@@ -360,7 +360,7 @@ class Terminal():
         threading.Thread(target=reader).start()
 
         def renderer():
-            while sly_term_is_alive():
+            while terminus_is_alive():
                 with intermission(period=0.03):
                     with lock:
                         if len(data[0]) > 0:
@@ -372,7 +372,7 @@ class Terminal():
                         self.handle_resize()
 
                     if self._need_to_render():
-                        self.view.run_command("sly_term_render")
+                        self.view.run_command("terminus_render")
 
             sublime.set_timeout(lambda: self.handle_end_loop())
 
@@ -467,7 +467,7 @@ def _get_incremental_key():
 get_incremental_key = _get_incremental_key()
 
 
-class SlyTermRender(sublime_plugin.TextCommand):
+class TerminusRender(sublime_plugin.TextCommand):
     def run(self, edit, force=False):
         self.force = force
         view = self.view
@@ -559,7 +559,7 @@ class SlyTermRender(sublime_plugin.TextCommand):
                 view.add_regions(
                     get_incremental_key(),
                     [sublime.Region(a, b)],
-                    "sly_term.{}.{}".format(fg, bg))
+                    "terminus.{}.{}".format(fg, bg))
 
     def ensure_position(self, edit, row, col=0):
         view = self.view
@@ -617,7 +617,7 @@ class SlyTermRender(sublime_plugin.TextCommand):
             view.erase(edit, tail_region)
 
 
-class SlyTermOpen(sublime_plugin.WindowCommand):
+class TerminusOpen(sublime_plugin.WindowCommand):
 
     def run(
             self,
@@ -655,7 +655,7 @@ class SlyTermOpen(sublime_plugin.WindowCommand):
 
         else:
             if "TERM" not in _env:
-                settings = sublime.load_settings("SublimelyTerminal.sublime-settings")
+                settings = sublime.load_settings("Terminus.sublime-settings")
                 _env["TERM"] = settings.get("unix_term", "linux")
 
             if _env["TERM"] not in ["linux", "xterm", "xterm-16color", "xterm-256color"]:
@@ -682,12 +682,12 @@ class SlyTermOpen(sublime_plugin.WindowCommand):
 
         if panel_name:
             self.window.destroy_output_panel(panel_name)  # do not reuse
-            sly_term_view = self.window.get_output_panel(panel_name)
+            terminus_view = self.window.get_output_panel(panel_name)
         else:
-            sly_term_view = self.window.new_file()
+            terminus_view = self.window.new_file()
 
-        sly_term_view.run_command(
-            "sly_term_activate",
+        terminus_view.run_command(
+            "terminus_activate",
             {
                 "cmd": cmd,
                 "cwd": cwd,
@@ -699,10 +699,10 @@ class SlyTermOpen(sublime_plugin.WindowCommand):
 
         if panel_name:
             self.window.run_command("show_panel", {"panel": "output.{}".format(panel_name)})
-            self.window.focus_view(sly_term_view)
+            self.window.focus_view(terminus_view)
 
     def show_configs(self):
-        settings = sublime.load_settings("SublimelyTerminal.sublime-settings")
+        settings = sublime.load_settings("Terminus.sublime-settings")
         configs = settings.get("shell_configs", [])
 
         ok_configs = []
@@ -753,7 +753,7 @@ class SlyTermOpen(sublime_plugin.WindowCommand):
         if name == "Default":
             return default_config
 
-        settings = sublime.load_settings("SublimelyTerminal.sublime-settings")
+        settings = sublime.load_settings("Terminus.sublime-settings")
         configs = settings.get("shell_configs", [])
 
         platform = sublime.platform()
@@ -770,7 +770,7 @@ class SlyTermOpen(sublime_plugin.WindowCommand):
         raise Exception("Config {} not found".format(name))
 
     def default_config(self):
-        settings = sublime.load_settings("SublimelyTerminal.sublime-settings")
+        settings = sublime.load_settings("Terminus.sublime-settings")
         configs = settings.get("shell_configs", [])
 
         platform = sublime.platform()
@@ -804,20 +804,20 @@ class SlyTermOpen(sublime_plugin.WindowCommand):
             }
 
 
-class SlyTermActivate(sublime_plugin.TextCommand):
+class TerminusActivate(sublime_plugin.TextCommand):
 
     def run(self, _, **kwargs):
-        sly_term_settings = sublime.load_settings("SublimelyTerminal.sublime-settings")
+        terminus_settings = sublime.load_settings("Terminus.sublime-settings")
 
         view = self.view
         settings = view.settings()
-        settings.set("sly_term_view", True)
+        settings.set("terminus_view", True)
         if "panel_name" in kwargs:
-            settings.set("sly_term_view.panel_name", kwargs["panel_name"])
-        settings.set("sly_term_view.args", kwargs)
+            settings.set("terminus_view.panel_name", kwargs["panel_name"])
+        settings.set("terminus_view.args", kwargs)
         settings.set(
-            "sly_term_view.nature_clipboard",
-            sly_term_settings.get("nature_clipboard", True))
+            "terminus_view.nature_clipboard",
+            terminus_settings.get("nature_clipboard", True))
         view.set_scratch(True)
         view.set_read_only(False)
         settings.set("gutter", False)
@@ -830,13 +830,13 @@ class SlyTermActivate(sublime_plugin.TextCommand):
         settings.set("draw_indent_guides", False)
         settings.set("caret_style", "blink")
         settings.set("scroll_past_end", True)
-        settings.set("color_scheme", "SublimelyTerminal.sublime-color-scheme")
+        settings.set("color_scheme", "Terminus.sublime-color-scheme")
 
         terminal = Terminal(self.view)
         terminal.open(**kwargs)
 
 
-class SlyTermEventHandler(sublime_plugin.EventListener):
+class TerminusEventHandler(sublime_plugin.EventListener):
 
     def on_pre_close(self, view):
         terminal = Terminal.from_id(view.id())
@@ -849,7 +849,7 @@ class SlyTermEventHandler(sublime_plugin.EventListener):
         if not terminal or not terminal.process.isalive():
             return
         command, args, _ = view.command_history(0)
-        if command == "sly_term_render":
+        if command == "terminus_render":
             return
         elif command == "insert" and "characters" in args:
             chars = args["characters"]
@@ -864,32 +864,32 @@ class SlyTermEventHandler(sublime_plugin.EventListener):
         if terminal:
             # TODO: update cursor
             # sublime.set_timeout(
-                # lambda: view.run_command("sly_term_render", {"force": True}), 100)
+                # lambda: view.run_command("terminus_render", {"force": True}), 100)
             return
         settings = view.settings()
-        if not settings.has("sly_term_view.args"):
+        if not settings.has("terminus_view.args"):
             return
 
-        kwargs = settings.get("sly_term_view.args")
+        kwargs = settings.get("terminus_view.args")
         if "cmd" not in kwargs:
             return
 
         # pass offset so the previous output will not be erased
         kwargs["offset"] = view.rowcol(view.size())[0] + 1
-        view.run_command("sly_term_activate", kwargs)
+        view.run_command("terminus_activate", kwargs)
 
 
-class SlyTermKeypress(sublime_plugin.TextCommand):
+class TerminusKeypress(sublime_plugin.TextCommand):
 
     def run(self, _, **kwargs):
         terminal = Terminal.from_id(self.view.id())
         if not terminal or not terminal.process.isalive():
             return
         terminal.send_key(**kwargs)
-        self.view.run_command("sly_term_render")
+        self.view.run_command("terminus_render")
 
 
-class SlyTermPaste(sublime_plugin.TextCommand):
+class TerminusPaste(sublime_plugin.TextCommand):
 
     def run(self, edit, bracketed=False):
         view = self.view
@@ -909,7 +909,7 @@ class SlyTermPaste(sublime_plugin.TextCommand):
             terminal.send_key("bracketed_paste_mode_end")
 
 
-class SlyTermDeleteWord(sublime_plugin.TextCommand):
+class TerminusDeleteWord(sublime_plugin.TextCommand):
     """
     On Windows, ctrl+backspace and ctrl+delete are used to delete words
     However, there is no standard key to delete word with ctrl+backspace
@@ -954,21 +954,27 @@ class SlyTermDeleteWord(sublime_plugin.TextCommand):
         terminal.send_string(delete_code * n)
 
 
-class ToggleSlyTermPanel(sublime_plugin.WindowCommand):
+class ToggleTerminusPanel(sublime_plugin.WindowCommand):
 
     def run(self, **kwargs):
         window = self.window
-        panel_name = kwargs["panel_name"]
-        sly_term_view = window.find_output_panel(panel_name)
-        if sly_term_view:
+        if "config_name" not in kwargs:
+            kwargs["config_name"] = "Default"
+        if "panel_name" in kwargs:
+            panel_name = kwargs["panel_name"]
+        else:
+            panel_name = "Terminal"
+            kwargs["panel_name"] = panel_name
+        terminus_view = window.find_output_panel(panel_name)
+        if terminus_view:
             window.run_command(
                 "show_panel", {"panel": "output.{}".format(panel_name), "toggle": True})
-            window.focus_view(sly_term_view)
+            window.focus_view(terminus_view)
         else:
-            window.run_command("sly_term_open", kwargs)
+            window.run_command("terminus_open", kwargs)
 
 
-class SlyTermSendString(sublime_plugin.WindowCommand):
+class TerminusSendString(sublime_plugin.WindowCommand):
     """
     Send string to a (tagged) terminal
     """
@@ -979,15 +985,15 @@ class SlyTermSendString(sublime_plugin.WindowCommand):
             if terminal:
                 self.bring_view_to_topmost(terminal.view)
         else:
-            view = self.get_sly_term_panel()
+            view = self.get_terminus_panel()
             terminal = None
             if view:
                 self.window.run_command("show_panel", {"panel": "output.{}".format(
-                    view.settings().get("sly_term_view.panel_name")
+                    view.settings().get("terminus_view.panel_name")
                 )})
                 terminal = Terminal.from_id(view.id())
             else:
-                view = self.get_sly_term_view()
+                view = self.get_terminus_view()
                 if view:
                     self.bring_view_to_topmost(view)
                     terminal = Terminal.from_id(view.id())
@@ -997,9 +1003,9 @@ class SlyTermSendString(sublime_plugin.WindowCommand):
         elif not terminal.process.isalive():
             raise Exception("process is terminated")
         terminal.send_string(string)
-        terminal.view.run_command("sly_term_render")
+        terminal.view.run_command("terminus_render")
 
-    def get_sly_term_panel(self):
+    def get_terminus_panel(self):
         window = self.window
         for panel in window.panels():
             panel_view = window.find_output_panel(panel.replace("output.", ""))
@@ -1009,7 +1015,7 @@ class SlyTermSendString(sublime_plugin.WindowCommand):
                     return panel_view
         return None
 
-    def get_sly_term_view(self):
+    def get_terminus_view(self):
         window = self.window
         for v in window.views():
             terminal = Terminal.from_id(v.id())
@@ -1028,7 +1034,7 @@ class SlyTermSendString(sublime_plugin.WindowCommand):
 
 
 def plugin_loaded():
-    settings = sublime.load_settings("SublimelyTerminal.sublime-settings")
+    settings = sublime.load_settings("Terminus.sublime-settings")
 
     def on_change(debug):
         if debug:
@@ -1045,6 +1051,6 @@ def plugin_unloaded():
     for w in sublime.windows():
         w.destroy_output_panel("Terminal")
         for view in w.views():
-            if view.settings().get("sly_term_view"):
+            if view.settings().get("terminus_view"):
                 w.focus_view(view)
                 w.run_command("close")

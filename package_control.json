@@ -2,8 +2,8 @@
     "schema_version": "3.0.0",
     "packages": [
         {
-            "name": "SublimelyTerminal",
-            "details": "https://github.com/randy3k/SublimelyTerminal",
+            "name": "Terminus",
+            "details": "https://github.com/randy3k/Terminus",
             "author": "randy3k",
             "releases": [
                 {

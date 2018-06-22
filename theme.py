@@ -11,7 +11,7 @@ from .utils import settings_on_change
 THEMES = os.path.join(os.path.dirname(__file__), "themes")
 
 
-class SlyTermSelectTheme(sublime_plugin.WindowCommand):
+class TerminusSelectTheme(sublime_plugin.WindowCommand):
     def run(self, theme=None):
         if theme:
             if theme not in ["default", "user"]:
@@ -19,14 +19,14 @@ class SlyTermSelectTheme(sublime_plugin.WindowCommand):
                 if not os.path.isfile(themefile):
                     raise IOError("{} not found".format(themefile))
 
-            settings = sublime.load_settings("SublimelyTerminal.sublime-settings")
+            settings = sublime.load_settings("Terminus.sublime-settings")
             settings.set("theme", theme)
-            sublime.save_settings("SublimelyTerminal.sublime-settings")
+            sublime.save_settings("Terminus.sublime-settings")
 
         else:
             self.themes = ["default", "user"] + \
                 sorted([f.replace(".json", "") for f in os.listdir(THEMES) if f.endswith(".json")])
-            settings = sublime.load_settings("SublimelyTerminal.sublime-settings")
+            settings = sublime.load_settings("Terminus.sublime-settings")
             self.original_theme = settings.get("theme", "default")
             try:
                 selected_index = self.themes.index(self.original_theme)
@@ -41,16 +41,16 @@ class SlyTermSelectTheme(sublime_plugin.WindowCommand):
     def on_selection(self, index):
         if index == -1:
             self.window.run_command(
-                "sly_term_select_theme",
+                "terminus_select_theme",
                 {"theme": self.original_theme})
             return
         theme = self.themes[index]
-        self.window.run_command("sly_term_select_theme", {"theme": theme})
+        self.window.run_command("terminus_select_theme", {"theme": theme})
 
 
-class SlyTermGenerateTheme(sublime_plugin.WindowCommand):
+class TerminusGenerateTheme(sublime_plugin.WindowCommand):
     def run(self, theme=None, remove=False, force=False):
-        settings = sublime.load_settings("SublimelyTerminal.sublime-settings")
+        settings = sublime.load_settings("Terminus.sublime-settings")
 
         if not theme:
             theme = settings.get("theme", "default")
@@ -75,14 +75,14 @@ class SlyTermGenerateTheme(sublime_plugin.WindowCommand):
         path = os.path.join(
             sublime.packages_path(),
             "User",
-            "SublimelyTerminal",
-            "SublimelyTerminal.sublime-color-scheme"
+            "Terminus",
+            "Terminus.sublime-color-scheme"
         )
 
         path256 = os.path.join(
             sublime.packages_path(),
             "User",
-            "SublimelyTerminal.sublime-color-scheme"
+            "Terminus.sublime-color-scheme"
         )
 
         if remove:
@@ -111,28 +111,28 @@ class SlyTermGenerateTheme(sublime_plugin.WindowCommand):
 
 def plugin_loaded():
 
-    # this is a hack to remove the deprecated Console.sublime-color-scheme
-    deprecated_path = os.path.join(
-        sublime.packages_path(),
-        "User",
-        "Console.sublime-color-scheme"
-    )
-    if os.path.isfile(deprecated_path):
-        os.unlink(deprecated_path)
+    # this is a hack to remove the deprecated sublime-color-scheme files
+    deprecated_paths = [
+        os.path.join(sublime.packages_path(), "User", "Console.sublime-color-scheme"),
+        os.path.join(sublime.packages_path(), "User", "SublimelyTerminal.sublime-color-scheme")
+    ]
+    for deprecated_path in deprecated_paths:
+        if os.path.isfile(deprecated_path):
+            os.unlink(deprecated_path)
 
-    settings = sublime.load_settings("SublimelyTerminal.sublime-settings")
+    settings = sublime.load_settings("Terminus.sublime-settings")
 
     path = os.path.join(
         sublime.packages_path(),
         "User",
-        "SublimelyTerminal",
-        "SublimelyTerminal.sublime-color-scheme"
+        "Terminus",
+        "Terminus.sublime-color-scheme"
     )
 
     if settings.get("theme", "default") != "default":
         if not os.path.isfile(path):
-            sublime.active_window().run_command("sly_term_generate_theme")
+            sublime.active_window().run_command("terminus_generate_theme")
 
     settings_on_change(settings, ["256color", "user_theme_colors", "theme"])(
-        lambda _: sublime.active_window().run_command("sly_term_generate_theme")
+        lambda _: sublime.active_window().run_command("terminus_generate_theme")
     )

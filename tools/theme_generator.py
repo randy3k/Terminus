@@ -5,7 +5,7 @@ from copy import deepcopy
 from collections import OrderedDict
 
 TEMPLATE = OrderedDict(
-    name="Console",
+    name="Terminus",
     variables=OrderedDict(),
     globals=OrderedDict()
 )
@@ -102,7 +102,7 @@ def generate_theme_file(
             elif vcolor == "#default" or vcolor == background:
                 vcolor = "var(background)"
             rule = {}
-            rule["scope"] = "sly_term.{}.{}".format(u, v)
+            rule["scope"] = "terminus.{}.{}".format(u, v)
             rule["foreground"] = ucolor
             rule["background"] = vcolor
             COLOR_SCHEME["rules"].append(rule)
@@ -117,7 +117,7 @@ def generate_theme_file(
 
 if __name__ == "__main__":
 
-    path = os.path.join(os.path.dirname(__file__), "..", "SublimelyTerminal.sublime-color-scheme")
+    path = os.path.join(os.path.dirname(__file__), "..", "Terminus.sublime-color-scheme")
     variables = {
         "background": "#262626",
         "foreground": "#ffffff",

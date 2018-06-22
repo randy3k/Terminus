@@ -1,47 +1,47 @@
 [
     {
-        "caption": "Sublimely Terminal: Open Default Shell in View",
-        "command": "sly_term_open",
+        "caption": "Terminus: Open Default Shell in View",
+        "command": "terminus_open",
         "args": {"config_name": "Default"}
     },
     {
-        "caption": "Sublimely Terminal: Open Default Shell in Panel",
-        "command": "sly_term_open",
+        "caption": "Terminus: Open Default Shell in Panel",
+        "command": "terminus_open",
         "args": {"config_name": "Default", "panel_name": "Terminal"}
     },
     {
-        "caption": "Sublimely Terminal: List Shells",
-        "command": "sly_term_open"
+        "caption": "Terminus: List Shells",
+        "command": "terminus_open"
     },
     {
-        "caption": "Sublimely Terminal Utilities: Select Theme",
-        "command": "sly_term_select_theme"
+        "caption": "Terminus Utilities: Select Theme",
+        "command": "terminus_select_theme"
     },
     {
-        "caption": "Sublimely Terminal Utilities: Generate User Theme",
-        "command": "sly_term_generate_theme",
+        "caption": "Terminus Utilities: Generate User Theme",
+        "command": "terminus_generate_theme",
         "args": {"force": true}
     },
     {
-        "caption": "Sublimely Terminal Utilities: Remove User Theme",
-        "command": "sly_term_generate_theme",
+        "caption": "Terminus Utilities: Remove User Theme",
+        "command": "terminus_generate_theme",
         "args": {"remove": true}
     },
     {
-        "caption": "Preferences: Sublimely Terminal Settings",
-        "command": "sly_term_edit_settings",
+        "caption": "Preferences: Terminus Settings",
+        "command": "terminus_edit_settings",
         "args":
         {
-            "base_file": "${packages}/SublimelyTerminal/SublimelyTerminal.sublime-settings",
+            "base_file": "${packages}/Terminus/Terminus.sublime-settings",
             "default": "{\n\t$0\n}\n"
         }
     },
     {
-        "caption": "Preferences: Sublimely Terminal Key Bindings",
-        "command": "sly_term_edit_settings",
+        "caption": "Preferences: Terminus Key Bindings",
+        "command": "terminus_edit_settings",
         "args":
         {
-            "base_file": "${packages}/SublimelyTerminal/Default (${platform}).sublime-keymap",
+            "base_file": "${packages}/Terminus/Default (${platform}).sublime-keymap",
             "default": "[\n\t$0\n]\n"
         }
     }

@@ -1,19 +1,19 @@
 [
-    { "keys": ["ctrl+shift+c"], "command": "copy", "context": [{"key": "setting.sly_term_view"}] },
-    { "keys": ["ctrl+shift+v"], "command": "sly_term_paste", "context": [{"key": "setting.sly_term_view"}] },
+    { "keys": ["ctrl+shift+c"], "command": "copy", "context": [{"key": "setting.terminus_view"}] },
+    { "keys": ["ctrl+shift+v"], "command": "terminus_paste", "context": [{"key": "setting.terminus_view"}] },
     { "keys": ["ctrl+c"], "command": "copy",
         "context":
         [
-            {"key": "setting.sly_term_view"},
-            {"key": "setting.sly_term_view.nature_clipboard"},
+            {"key": "setting.terminus_view"},
+            {"key": "setting.terminus_view.nature_clipboard"},
             {"key": "selection_empty", "operator": "equal", "operand": false, "match_all": true},
         ]
     },
-    { "keys": ["ctrl+v"], "command": "sly_term_paste",
+    { "keys": ["ctrl+v"], "command": "terminus_paste",
         "context":
         [
-            {"key": "setting.sly_term_view"},
-            {"key": "setting.sly_term_view.nature_clipboard"}
+            {"key": "setting.terminus_view"},
+            {"key": "setting.terminus_view.nature_clipboard"}
         ]
     }
 ]

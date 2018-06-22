@@ -1,6 +1,6 @@
 [
-    { "keys": ["super+v"], "command": "sly_term_paste", "context": [{"key": "setting.sly_term_view"}] },
+    { "keys": ["super+v"], "command": "terminus_paste", "context": [{"key": "setting.terminus_view"}] },
 
-    { "keys": ["super+left"], "command": "sly_term_keypress", "args": {"key": "a", "ctrl": true}, "context": [{"key": "setting.sly_term_view"}] },
-    { "keys": ["super+right"], "command": "sly_term_keypress", "args": {"key": "e", "ctrl": true}, "context": [{"key": "setting.sly_term_view"}] }
+    { "keys": ["super+left"], "command": "terminus_keypress", "args": {"key": "a", "ctrl": true}, "context": [{"key": "setting.terminus_view"}] },
+    { "keys": ["super+right"], "command": "terminus_keypress", "args": {"key": "e", "ctrl": true}, "context": [{"key": "setting.terminus_view"}] }
 ]

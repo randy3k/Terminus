@@ -9,13 +9,13 @@ It is a cross platform terminal for Sublime Text which works on Windows, macOS a
     </tr>
     <tr>
         <td width="50%">
-            <a href="https://user-images.githubusercontent.com/1690993/41758519-1be3b638-75b7-11e8-85c7-9ad50ea5652d.gif">
-                <img src="https://user-images.githubusercontent.com/1690993/41758519-1be3b638-75b7-11e8-85c7-9ad50ea5652d.gif" width="100%">
+            <a href="https://user-images.githubusercontent.com/1690993/41784539-03534fdc-760e-11e8-845d-3d133a559df5.gif">
+                <img src="https://user-images.githubusercontent.com/1690993/41784539-03534fdc-760e-11e8-845d-3d133a559df5.gif" width="100%">
             </a>
         </td>
         <td width="50%">
-            <a href="https://user-images.githubusercontent.com/1690993/41478434-a46f19c4-7095-11e8-995d-f7b4ef8b9c0e.gif">
-                <img src="https://user-images.githubusercontent.com/1690993/41478434-a46f19c4-7095-11e8-995d-f7b4ef8b9c0e.gif" width="100%">
+            <a href="https://user-images.githubusercontent.com/1690993/41786131-a625d870-7612-11e8-882d-f1574184faba.gif">
+                <img src="https://user-images.githubusercontent.com/1690993/41786131-a625d870-7612-11e8-882d-f1574184faba.gif" width="100%">
             </a>
         </td>
     </tr>
@@ -25,8 +25,8 @@ It is a cross platform terminal for Sublime Text which works on Windows, macOS a
     </tr>
     <tr>
         <td width="50%">
-            <a href="https://user-images.githubusercontent.com/1690993/41727462-69fe7ec2-7542-11e8-9c42-64796c1fb023.png">
-                <img src="https://user-images.githubusercontent.com/1690993/41727462-69fe7ec2-7542-11e8-9c42-64796c1fb023.png" width="100%">
+            <a href="https://user-images.githubusercontent.com/1690993/41784748-a7ed9d90-760e-11e8-8979-dd341933f1bb.gif">
+                <img src="https://user-images.githubusercontent.com/1690993/41784748-a7ed9d90-760e-11e8-8979-dd341933f1bb.gif" width="100%">
             </a>
         </td>
         <td width="50%">
@@ -52,27 +52,25 @@ This package is not yet available via Package Control default channel, you have 
 - paste
 
     ```
-    https://raw.githubusercontent.com/randy3k/SublimelyTerminal/master/package_control.json
+    https://raw.githubusercontent.com/randy3k/Terminus/master/package_control.json
     ```
     and hit enter
 
-- then you could install it as usual - `Package Control: Install Package` and search for `SublimelyTerminal`
+- then you could install it as usual - `Package Control: Install Package` and search for `Terminus`
 
 ### Getting started
 
-- run `Sublimely Terminal: Open Default Shell in View`
+- run `Terminus: Open Default Shell in View`
 
 
 ### Keybind to toggle Terminal Panel
 
-- run `Perferences: Sublimely Terminal Key Bindings`
+- run `Perferences: Terminus Key Bindings`
 - add the following
 
 ```js
 { 
-    "keys": ["alt+`"], 
-    "command": "toggle_sly_term_panel", 
-    "args": {"config_name": "Default", "panel_name": "Terminal"}
+    "keys": ["alt+`"], "command": "toggle_terminus_panel"
 }
 ```
 
@@ -90,10 +88,10 @@ If your terminal panel has weired background color, try playing with the setting
 
 ### Note to other package developers
 
-A terminal could be opened using the command `sly_term_open` with
+A terminal could be opened using the command `terminus_open` with
 ```py
 window.run_command(
-    "sly_term_open", {
+    "terminus_open", {
         config_name=None,  # the shell config name, the default config is "Default"
         cmd=None,          # the cmd to execuate if config_name is None
         cwd=None,          # the working directory
@@ -108,10 +106,10 @@ window.run_command(
 Text can be sent to the terminal with
 ```py
 window.run_command(
-    "sly_term_send_string", 
+    "terminus_send_string", 
     {
         "string": "ls\n",
-        "tag": None        # or the tag which is passed to "sly_term_open"
+        "tag": None        # or the tag which is passed to "terminus_open"
     }
 )
 ```
@@ -121,5 +119,3 @@ If `tag` is not provided, the text will be sent to the first terminal found in t
 ### Acknowledgments
 
 This package won't be possible without [pyte](https://github.com/selectel/pyte), [pywinpty](https://github.com/spyder-ide/pywinpty) and [ptyprocess](https://github.com/pexpect/ptyprocess).
-
-The package name "SublimelyTemrinal" was suggested by [nutjob2](https://forum.sublimetext.com/t/finally-a-multi-platform-terminal-running-in-sublime-text/37560/43?u=randy3k).
