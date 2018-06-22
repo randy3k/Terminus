@@ -961,11 +961,9 @@ class ToggleSlyTermPanel(sublime_plugin.WindowCommand):
         panel_name = kwargs["panel_name"]
         sly_term_view = window.find_output_panel(panel_name)
         if sly_term_view:
-            if window.active_panel() == "output.{}".format(panel_name):
-                window.run_command("hide_panel", {"panel": "output.{}".format(panel_name)})
-            else:
-                window.run_command("show_panel", {"panel": "output.{}".format(panel_name)})
-                window.focus_view(sly_term_view)
+            window.run_command(
+                "show_panel", {"panel": "output.{}".format(panel_name), "toggle": True})
+            window.focus_view(sly_term_view)
         else:
             window.run_command("sly_term_open", kwargs)
 
