@@ -57,6 +57,10 @@ This package is not yet available via Package Control default channel, you have 
 
 - then you could install it as usual - `Package Control: Install Package` and search for `SublimelyTerminal`
 
+### Getting started
+
+- run `Sublimely Terminal: Open Default Shell in View`
+
 
 ### Keybind to toggle Terminal Panel
 
