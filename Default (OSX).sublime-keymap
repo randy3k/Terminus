@@ -1,6 +1,6 @@
 [
-    {"keys": ["super+v"], "command": "subterm_paste", "context": [{"key": "setting.subterm_view"}]},
+    { "keys": ["super+v"], "command": "subterm_paste", "context": [{"key": "setting.subterm_view"}] },
 
-    {"keys": ["super+left"], "command": "subterm_keypress", "args": {"key": "a", "ctrl": true}, "context": [{"key": "setting.subterm_view"}]},
-    {"keys": ["super+right"], "command": "subterm_keypress", "args": {"key": "e", "ctrl": true}, "context": [{"key": "setting.subterm_view"}]}
+    { "keys": ["super+left"], "command": "subterm_keypress", "args": {"key": "a", "ctrl": true}, "context": [{"key": "setting.subterm_view"}] },
+    { "keys": ["super+right"], "command": "subterm_keypress", "args": {"key": "e", "ctrl": true}, "context": [{"key": "setting.subterm_view"}] }
 ]

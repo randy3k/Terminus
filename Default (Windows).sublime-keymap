@@ -1,20 +1,22 @@
 [
-    {"keys": ["ctrl+shift+c"], "command": "copy", "context": [{"key": "setting.subterm_view"}]},
-    {"keys": ["ctrl+shift+v"], "command": "subterm_paste", "context": [{"key": "setting.subterm_view"}]},
-    {"keys": ["ctrl+c"], "command": "copy",
-        "context": [
-            {"key": "setting.subterm_view"},
-            {"key": "setting.subterm_view.nature_clipboard"},
-            {"key": "selection_empty", "operator": "equal", "operand": false, "match_all": true},
+    { "keys": ["ctrl+shift+c"], "command": "copy", "context": [{"key": "setting.subterm_view"}] },
+    { "keys": ["ctrl+shift+v"], "command": "subterm_paste", "context": [{"key": "setting.subterm_view"}] },
+    { "keys": ["ctrl+c"], "command": "copy",
+        "context":
+        [
+            { "key": "setting.subterm_view" },
+            { "key": "setting.subterm_view.nature_clipboard" },
+            { "key": "selection_empty", "operator": "equal", "operand": false, "match_all": true },
         ]
     },
-    {"keys": ["ctrl+v"], "command": "subterm_paste",
-        "context": [
-            {"key": "setting.subterm_view"},
-            {"key": "setting.subterm_view.nature_clipboard"}
+    { "keys": ["ctrl+v"], "command": "subterm_paste",
+        "context":
+        [
+            { "key": "setting.subterm_view" },
+            { "key": "setting.subterm_view.nature_clipboard" }
         ]
     },
 
-    {"keys": ["ctrl+backspace"], "command": "subterm_delete_word", "args": {"forward": false}, "context": [{"key": "setting.subterm_view"}]},
-    {"keys": ["ctrl+delete"], "command": "subterm_delete_word", "args": {"forward": true}, "context": [{"key": "setting.subterm_view"}]}
+    { "keys": ["ctrl+backspace"], "command": "subterm_delete_word", "args": {"forward": false}, "context": [{"key": "setting.subterm_view"}] },
+    { "keys": ["ctrl+delete"], "command": "subterm_delete_word", "args": {"forward": true}, "context": [{"key": "setting.subterm_view"}] }
 ]
