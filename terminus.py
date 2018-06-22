@@ -545,7 +545,7 @@ class TerminusRender(sublime_plugin.TextCommand):
         line_region = view.line(view.text_point(line, 0))
         segments = list(segment_buffer_line(buffer_line))
         view.erase(edit, line_region)
-        view.insert(edit, line_region.begin(), "".join(s[0] for s in segments))
+        view.insert(edit, line_region.begin(), "".join(s[0] for s in segments).rstrip())
         self.colorize_line(edit, line, segments)
 
     def colorize_line(self, edit, line, segments):
@@ -877,6 +877,22 @@ class TerminusEventHandler(sublime_plugin.EventListener):
         # pass offset so the previous output will not be erased
         kwargs["offset"] = view.rowcol(view.size())[0] + 1
         view.run_command("terminus_activate", kwargs)
+
+
+class TerminusClose(sublime_plugin.TextCommand):
+
+    def run(self, _):
+        view = self.view
+        panel_name = view.settings().get("terminus_view.panel_name")
+        if panel_name:
+            window = view.window()
+            if window:
+                window.destroy_output_panel(panel_name)
+        else:
+            window = view.window()
+            if window:
+                window.focus_view(view)
+                window.run_command("close")
 
 
 class TerminusKeypress(sublime_plugin.TextCommand):

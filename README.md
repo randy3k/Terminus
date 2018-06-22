@@ -63,15 +63,21 @@ This package is not yet available via Package Control default channel, you have 
 - run `Terminus: Open Default Shell in View`
 
 
-### Keybind to toggle Terminal Panel
+### User Key Bindings
+
+There are various key bindings which you may found useful.
 
 - run `Perferences: Terminus Key Bindings`
-- add the following
 
+- toggle terminal panel
 ```js
-{ 
-    "keys": ["alt+`"], "command": "toggle_terminus_panel"
-}
+{ "keys": ["alt+`"], "command": "toggle_terminus_panel" }
+```
+
+- close terminal in view or panel. It is particular useful for Window/Linux users who do not use `ctrl+w`; 
+macOS users could use `super+w` to close any terminal.
+```js
+{ "keys": ["ctrl+w"], "command": "terminus_close" }
 ```
 
 ### Terminal Panel issue with DA UI
