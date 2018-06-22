@@ -116,3 +116,5 @@ If `tag` is not provided, the text will be sent to the first terminal found in t
 ### Acknowledgments
 
 This package won't be possible without [pyte](https://github.com/selectel/pyte), [pywinpty](https://github.com/spyder-ide/pywinpty) and [ptyprocess](https://github.com/pexpect/ptyprocess).
+
+The package name "SublimelyTemrinal" was suggested by [nutjob2](https://forum.sublimetext.com/t/finally-a-multi-platform-terminal-running-in-sublime-text/37560/43?u=randy3k).
