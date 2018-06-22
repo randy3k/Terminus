@@ -862,8 +862,9 @@ class StermEventHandler(sublime_plugin.EventListener):
     def on_activated(self, view):
         terminal = Terminal.from_id(view.id())
         if terminal:
-            sublime.set_timeout(
-                lambda: view.run_command("sterm_render", {"force": True}), 100)
+            # TODO: update cursor
+            # sublime.set_timeout(
+                # lambda: view.run_command("sterm_render", {"force": True}), 100)
             return
         settings = view.settings()
         if not settings.has("sterm_view.args"):
