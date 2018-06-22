@@ -634,7 +634,7 @@ class TerminusOpen(sublime_plugin.WindowCommand):
             config = self.get_config_by_name(config_name)
         elif cmd:
             config = {
-                "name": "Terminal",
+                "name": "Terminus",
                 "cmd": cmd,
                 "env": env,
                 "title": title
@@ -746,7 +746,7 @@ class TerminusOpen(sublime_plugin.WindowCommand):
             if index == 0:
                 self.run(config_name)
             elif index == 1:
-                self.run(config_name, panel_name="Terminal")
+                self.run(config_name, panel_name="Terminus")
 
     def get_config_by_name(self, name):
         default_config = self.default_config()
@@ -963,7 +963,7 @@ class ToggleTerminusPanel(sublime_plugin.WindowCommand):
         if "panel_name" in kwargs:
             panel_name = kwargs["panel_name"]
         else:
-            panel_name = "Terminal"
+            panel_name = "Terminus"
             kwargs["panel_name"] = panel_name
         terminus_view = window.find_output_panel(panel_name)
         if terminus_view:
@@ -1049,7 +1049,7 @@ def plugin_loaded():
 def plugin_unloaded():
     # close all terminals
     for w in sublime.windows():
-        w.destroy_output_panel("Terminal")
+        w.destroy_output_panel("Terminus")
         for view in w.views():
             if view.settings().get("terminus_view"):
                 w.focus_view(view)

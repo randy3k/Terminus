@@ -7,7 +7,7 @@
     {
         "caption": "Terminus: Open Default Shell in Panel",
         "command": "terminus_open",
-        "args": {"config_name": "Default", "panel_name": "Terminal"}
+        "args": {"config_name": "Default", "panel_name": "Terminus"}
     },
     {
         "caption": "Terminus: List Shells",
