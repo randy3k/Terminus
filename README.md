@@ -4,13 +4,13 @@ It is a cross platform terminal for Sublime Text which works on Windows, macOS a
 
 <table>
     <tr>
-        <th>macOS/Linux</th>
-        <th>Windows</th>
+        <th>Unix shell</th>
+        <th>Cmd.exe</th>
     </tr>
     <tr>
         <td width="50%">
-            <a href="https://user-images.githubusercontent.com/1690993/41478796-00ba3cb2-7097-11e8-9de9-bec85213a5c8.gif">
-                <img src="https://user-images.githubusercontent.com/1690993/41478796-00ba3cb2-7097-11e8-9de9-bec85213a5c8.gif" width="100%">
+            <a href="https://user-images.githubusercontent.com/1690993/41758519-1be3b638-75b7-11e8-85c7-9ad50ea5652d.gif">
+                <img src="https://user-images.githubusercontent.com/1690993/41758519-1be3b638-75b7-11e8-85c7-9ad50ea5652d.gif" width="100%">
             </a>
         </td>
         <td width="50%">
