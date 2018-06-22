@@ -1,3 +1,59 @@
+import time
+from wcwidth import wcwidth
+from functools import wraps
+from contextlib import contextmanager
+
+
+def responsive(period=0.1, default=True):
+    """
+    make a function more responsive
+    """
+    def wrapper(f):
+        t = [0]
+
+        @wraps(f)
+        def _(*args, **kwargs):
+            now = time.time()
+            if now - t[0] > period:
+                t[0] = now
+                return f(*args, **kwargs)
+            else:
+                return default
+
+        return _
+
+    return wrapper
+
+
+@contextmanager
+def intermission(period=0.1):
+    """
+    intermission of period seconds.
+    """
+    startt = time.time()
+    yield
+    deltat = time.time() - startt
+    if deltat < period:
+        time.sleep(period - deltat)
+
+
+def rev_wcwidth(text, width):
+    """
+    Given a text, return the location such that the substring has width `width`.
+    """
+    w = 0
+    i = 0
+    # loop over to check for double width chars
+    for i, c in enumerate(text):
+        w += wcwidth(c)
+        if w >= width:
+            break
+    if w >= width:
+        return i
+    else:
+        return i + width - w
+
+
 def settings_on_change(settings, keys, clear=True):
     if not isinstance(keys, list):
         keys = [keys]
