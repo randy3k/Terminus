@@ -1,34 +1,34 @@
 [
     {
-        "caption": "SublimelyTerminal: Open Default Shell in View",
+        "caption": "Sublimely Terminal: Open Default Shell in View",
         "command": "subterm_open",
         "args": {"config_name": "Default"}
     },
     {
-        "caption": "SublimelyTerminal: Open Default Shell in Panel",
+        "caption": "Sublimely Terminal: Open Default Shell in Panel",
         "command": "subterm_open",
         "args": {"config_name": "Default", "panel_name": "Terminal"}
     },
     {
-        "caption": "SublimelyTerminal: List Shells",
+        "caption": "Sublimely Terminal: List Shells",
         "command": "subterm_open"
     },
     {
-        "caption": "SublimelyTerminal Utilities: Select Theme",
+        "caption": "Sublimely Terminal Utilities: Select Theme",
         "command": "subterm_select_theme"
     },
     {
-        "caption": "SublimelyTerminal Utilities: Generate User Theme",
+        "caption": "Sublimely Terminal Utilities: Generate User Theme",
         "command": "subterm_generate_theme",
         "args": {"force": true}
     },
     {
-        "caption": "SublimelyTerminal Utilities: Remove User Theme",
+        "caption": "Sublimely Terminal Utilities: Remove User Theme",
         "command": "subterm_generate_theme",
         "args": {"remove": true}
     },
     {
-        "caption": "Preferences: SublimelyTerminal Settings",
+        "caption": "Preferences: Sublimely Terminal Settings",
         "command": "subterm_edit_settings",
         "args":
         {
@@ -37,7 +37,7 @@
         }
     },
     {
-        "caption": "Preferences: SublimelyTerminal Key Bindings",
+        "caption": "Preferences: Sublimely Terminal Key Bindings",
         "command": "subterm_edit_settings",
         "args":
         {
