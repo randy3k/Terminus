@@ -333,12 +333,12 @@ class Terminal():
         def view_is_attached():
             if self.panel_name:
                 window = self.view.window() or parent_window
-                subterm_view = window.find_output_panel(self.panel_name)
-                return subterm_view and subterm_view.id() == self.view.id()
+                sterm_view = window.find_output_panel(self.panel_name)
+                return sterm_view and sterm_view.id() == self.view.id()
             else:
                 return self.view.window()
 
-        subterm_is_alive = responsive(period=1, default=True)(
+        sterm_is_alive = responsive(period=1, default=True)(
             lambda: self.process.isalive() and view_is_attached())
 
         @responsive(period=1, default=False)
@@ -348,7 +348,7 @@ class Terminal():
 
         def reader():
             # run self.view.windows() via `view_is_attached` periodically to refresh gui
-            while subterm_is_alive() and view_is_attached():
+            while sterm_is_alive() and view_is_attached():
                 try:
                     temp = self.process.read(1024)
                 except EOFError:
@@ -360,7 +360,7 @@ class Terminal():
         threading.Thread(target=reader).start()
 
         def renderer():
-            while subterm_is_alive():
+            while sterm_is_alive():
                 with intermission(period=0.03):
                     with lock:
                         if len(data[0]) > 0:
@@ -372,7 +372,7 @@ class Terminal():
                         self.handle_resize()
 
                     if self._need_to_render():
-                        self.view.run_command("subterm_render")
+                        self.view.run_command("sterm_render")
 
             sublime.set_timeout(lambda: self.handle_end_loop())
 
@@ -467,7 +467,7 @@ def _get_incremental_key():
 get_incremental_key = _get_incremental_key()
 
 
-class SubtermRender(sublime_plugin.TextCommand):
+class StermRender(sublime_plugin.TextCommand):
     def run(self, edit, force=False):
         self.force = force
         view = self.view
@@ -559,7 +559,7 @@ class SubtermRender(sublime_plugin.TextCommand):
                 view.add_regions(
                     get_incremental_key(),
                     [sublime.Region(a, b)],
-                    "subterm.{}.{}".format(fg, bg))
+                    "sterm.{}.{}".format(fg, bg))
 
     def ensure_position(self, edit, row, col=0):
         view = self.view
@@ -617,7 +617,7 @@ class SubtermRender(sublime_plugin.TextCommand):
             view.erase(edit, tail_region)
 
 
-class SubtermOpen(sublime_plugin.WindowCommand):
+class StermOpen(sublime_plugin.WindowCommand):
 
     def run(
             self,
@@ -682,12 +682,12 @@ class SubtermOpen(sublime_plugin.WindowCommand):
 
         if panel_name:
             self.window.destroy_output_panel(panel_name)  # do not reuse
-            subterm_view = self.window.get_output_panel(panel_name)
+            sterm_view = self.window.get_output_panel(panel_name)
         else:
-            subterm_view = self.window.new_file()
+            sterm_view = self.window.new_file()
 
-        subterm_view.run_command(
-            "subterm_activate",
+        sterm_view.run_command(
+            "sterm_activate",
             {
                 "cmd": cmd,
                 "cwd": cwd,
@@ -699,7 +699,7 @@ class SubtermOpen(sublime_plugin.WindowCommand):
 
         if panel_name:
             self.window.run_command("show_panel", {"panel": "output.{}".format(panel_name)})
-            self.window.focus_view(subterm_view)
+            self.window.focus_view(sterm_view)
 
     def show_configs(self):
         settings = sublime.load_settings("SublimelyTerminal.sublime-settings")
@@ -804,20 +804,20 @@ class SubtermOpen(sublime_plugin.WindowCommand):
             }
 
 
-class SubtermActivate(sublime_plugin.TextCommand):
+class StermActivate(sublime_plugin.TextCommand):
 
     def run(self, _, **kwargs):
-        subterm_settings = sublime.load_settings("SublimelyTerminal.sublime-settings")
+        sterm_settings = sublime.load_settings("SublimelyTerminal.sublime-settings")
 
         view = self.view
         settings = view.settings()
-        settings.set("subterm_view", True)
+        settings.set("sterm_view", True)
         if "panel_name" in kwargs:
-            settings.set("subterm_view.panel_name", kwargs["panel_name"])
-        settings.set("subterm_view.args", kwargs)
+            settings.set("sterm_view.panel_name", kwargs["panel_name"])
+        settings.set("sterm_view.args", kwargs)
         settings.set(
-            "subterm_view.nature_clipboard",
-            subterm_settings.get("nature_clipboard", True))
+            "sterm_view.nature_clipboard",
+            sterm_settings.get("nature_clipboard", True))
         view.set_scratch(True)
         view.set_read_only(False)
         settings.set("gutter", False)
@@ -836,7 +836,7 @@ class SubtermActivate(sublime_plugin.TextCommand):
         terminal.open(**kwargs)
 
 
-class SubtermEventHandler(sublime_plugin.EventListener):
+class StermEventHandler(sublime_plugin.EventListener):
 
     def on_pre_close(self, view):
         terminal = Terminal.from_id(view.id())
@@ -849,7 +849,7 @@ class SubtermEventHandler(sublime_plugin.EventListener):
         if not terminal or not terminal.process.isalive():
             return
         command, args, _ = view.command_history(0)
-        if command == "subterm_render":
+        if command == "sterm_render":
             return
         elif command == "insert" and "characters" in args:
             chars = args["characters"]
@@ -863,32 +863,32 @@ class SubtermEventHandler(sublime_plugin.EventListener):
         terminal = Terminal.from_id(view.id())
         if terminal:
             sublime.set_timeout(
-                lambda: view.run_command("subterm_render", {"force": True}), 100)
+                lambda: view.run_command("sterm_render", {"force": True}), 100)
             return
         settings = view.settings()
-        if not settings.has("subterm_view.args"):
+        if not settings.has("sterm_view.args"):
             return
 
-        kwargs = settings.get("subterm_view.args")
+        kwargs = settings.get("sterm_view.args")
         if "cmd" not in kwargs:
             return
 
         # pass offset so the previous output will not be erased
         kwargs["offset"] = view.rowcol(view.size())[0] + 1
-        view.run_command("subterm_activate", kwargs)
+        view.run_command("sterm_activate", kwargs)
 
 
-class SubtermKeypress(sublime_plugin.TextCommand):
+class StermKeypress(sublime_plugin.TextCommand):
 
     def run(self, _, **kwargs):
         terminal = Terminal.from_id(self.view.id())
         if not terminal or not terminal.process.isalive():
             return
         terminal.send_key(**kwargs)
-        self.view.run_command("subterm_render")
+        self.view.run_command("sterm_render")
 
 
-class SubtermPaste(sublime_plugin.TextCommand):
+class StermPaste(sublime_plugin.TextCommand):
 
     def run(self, edit, bracketed=False):
         view = self.view
@@ -908,7 +908,7 @@ class SubtermPaste(sublime_plugin.TextCommand):
             terminal.send_key("bracketed_paste_mode_end")
 
 
-class SubtermDeleteWord(sublime_plugin.TextCommand):
+class StermDeleteWord(sublime_plugin.TextCommand):
     """
     On Windows, ctrl+backspace and ctrl+delete are used to delete words
     However, there is no standard key to delete word with ctrl+backspace
@@ -953,23 +953,23 @@ class SubtermDeleteWord(sublime_plugin.TextCommand):
         terminal.send_string(delete_code * n)
 
 
-class ToggleSubtermPanel(sublime_plugin.WindowCommand):
+class ToggleStermPanel(sublime_plugin.WindowCommand):
 
     def run(self, **kwargs):
         window = self.window
         panel_name = kwargs["panel_name"]
-        subterm_view = window.find_output_panel(panel_name)
-        if subterm_view:
+        sterm_view = window.find_output_panel(panel_name)
+        if sterm_view:
             if window.active_panel() == "output.{}".format(panel_name):
                 window.run_command("hide_panel", {"panel": "output.{}".format(panel_name)})
             else:
                 window.run_command("show_panel", {"panel": "output.{}".format(panel_name)})
-                window.focus_view(subterm_view)
+                window.focus_view(sterm_view)
         else:
-            window.run_command("subterm_open", kwargs)
+            window.run_command("sterm_open", kwargs)
 
 
-class SubtermSendString(sublime_plugin.WindowCommand):
+class StermSendString(sublime_plugin.WindowCommand):
     """
     Send string to a (tagged) terminal
     """
@@ -980,13 +980,13 @@ class SubtermSendString(sublime_plugin.WindowCommand):
             if terminal:
                 self.bring_view_to_topmost(terminal.view)
         else:
-            view = self.get_subterm_panel()
+            view = self.get_sterm_panel()
             if view:
                 self.window.run_command("show_panel", {"panel": "output.{}".format(
-                    view.settings().get("subterm_view.panel_name")
+                    view.settings().get("sterm_view.panel_name")
                 )})
             else:
-                view = self.get_subterm_view()
+                view = self.get_sterm_view()
                 if view:
                     self.bring_view_to_topmost(view)
             terminal = Terminal.from_id(view.id())
@@ -996,9 +996,9 @@ class SubtermSendString(sublime_plugin.WindowCommand):
         elif not terminal.process.isalive():
             raise Exception("process is terminated")
         terminal.send_string(string)
-        terminal.view.run_command("subterm_render")
+        terminal.view.run_command("sterm_render")
 
-    def get_subterm_panel(self):
+    def get_sterm_panel(self):
         window = self.window
         for panel in window.panels():
             panel_view = window.find_output_panel(panel.replace("output.", ""))
@@ -1008,7 +1008,7 @@ class SubtermSendString(sublime_plugin.WindowCommand):
                     return panel_view
         return None
 
-    def get_subterm_view(self):
+    def get_sterm_view(self):
         window = self.window
         for v in window.views():
             terminal = Terminal.from_id(v.id())
@@ -1044,6 +1044,6 @@ def plugin_unloaded():
     for w in sublime.windows():
         w.destroy_output_panel("Terminal")
         for view in w.views():
-            if view.settings().get("subterm_view"):
+            if view.settings().get("sterm_view"):
                 w.focus_view(view)
                 w.run_command("close")

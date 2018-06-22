@@ -11,7 +11,7 @@ from .utils import settings_on_change
 THEMES = os.path.join(os.path.dirname(__file__), "themes")
 
 
-class SubtermSelectTheme(sublime_plugin.WindowCommand):
+class StermSelectTheme(sublime_plugin.WindowCommand):
     def run(self, theme=None):
         if theme:
             if theme not in ["default", "user"]:
@@ -41,14 +41,14 @@ class SubtermSelectTheme(sublime_plugin.WindowCommand):
     def on_selection(self, index):
         if index == -1:
             self.window.run_command(
-                "subterm_select_theme",
+                "sterm_select_theme",
                 {"theme": self.original_theme})
             return
         theme = self.themes[index]
-        self.window.run_command("subterm_select_theme", {"theme": theme})
+        self.window.run_command("sterm_select_theme", {"theme": theme})
 
 
-class SubtermGenerateTheme(sublime_plugin.WindowCommand):
+class StermGenerateTheme(sublime_plugin.WindowCommand):
     def run(self, theme=None, remove=False, force=False):
         settings = sublime.load_settings("SublimelyTerminal.sublime-settings")
 
@@ -122,8 +122,8 @@ def plugin_loaded():
 
     if settings.get("theme", "default") != "default":
         if not os.path.isfile(path):
-            sublime.active_window().run_command("subterm_generate_theme")
+            sublime.active_window().run_command("sterm_generate_theme")
 
     settings_on_change(settings, ["256color", "user_theme_colors", "theme"])(
-        lambda _: sublime.active_window().run_command("subterm_generate_theme")
+        lambda _: sublime.active_window().run_command("sterm_generate_theme")
     )

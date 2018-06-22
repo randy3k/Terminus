@@ -1,19 +1,19 @@
 [
-    { "keys": ["ctrl+shift+c"], "command": "copy", "context": [{"key": "setting.subterm_view"}] },
-    { "keys": ["ctrl+shift+v"], "command": "subterm_paste", "context": [{"key": "setting.subterm_view"}] },
+    { "keys": ["ctrl+shift+c"], "command": "copy", "context": [{"key": "setting.sterm_view"}] },
+    { "keys": ["ctrl+shift+v"], "command": "sterm_paste", "context": [{"key": "setting.sterm_view"}] },
     { "keys": ["ctrl+c"], "command": "copy",
         "context":
         [
-            {"key": "setting.subterm_view"},
-            {"key": "setting.subterm_view.nature_clipboard"},
+            {"key": "setting.sterm_view"},
+            {"key": "setting.sterm_view.nature_clipboard"},
             {"key": "selection_empty", "operator": "equal", "operand": false, "match_all": true},
         ]
     },
-    { "keys": ["ctrl+v"], "command": "subterm_paste",
+    { "keys": ["ctrl+v"], "command": "sterm_paste",
         "context":
         [
-            {"key": "setting.subterm_view"},
-            {"key": "setting.subterm_view.nature_clipboard"}
+            {"key": "setting.sterm_view"},
+            {"key": "setting.sterm_view.nature_clipboard"}
         ]
     }
 ]

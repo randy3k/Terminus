@@ -70,7 +70,7 @@ This package is not yet available via Package Control default channel, you have 
 ```js
 { 
     "keys": ["alt+`"], 
-    "command": "toggle_subterm_panel", 
+    "command": "toggle_sterm_panel", 
     "args": {"config_name": "Default", "panel_name": "Terminal"}
 }
 ```
@@ -89,10 +89,10 @@ If your terminal panel has weired background color, try playing with the setting
 
 ### Note to other package developers
 
-A terminal could be opened using the command `subterm_open` with
+A terminal could be opened using the command `sterm_open` with
 ```py
 window.run_command(
-    "subterm_open", {
+    "sterm_open", {
         config_name=None,  # the shell config name, the default config is "Default"
         cmd=None,          # the cmd to execuate if config_name is None
         cwd=None,          # the working directory
@@ -107,10 +107,10 @@ window.run_command(
 Text can be sent to the terminal with
 ```py
 window.run_command(
-    "subterm_send_string", 
+    "sterm_send_string", 
     {
         "string": "ls\n",
-        "tag": None        # or the tag which is passed to "subterm_open"
+        "tag": None        # or the tag which is passed to "sterm_open"
     }
 )
 ```
