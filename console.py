@@ -886,41 +886,6 @@ class ConsoleKeypress(sublime_plugin.TextCommand):
         self.view.run_command("console_render")
 
 
-class ConsoleSendString(sublime_plugin.WindowCommand):
-    """
-    Send string to a (tagged) console
-    """
-
-    def run(self, string, tag=None):
-        if tag:
-            console = Console.from_tag(tag)
-        else:
-            # check the active panel
-            window = self.window
-            for panel in window.panels():
-                panel_view = window.find_output_panel(panel.replace("output.", ""))
-                if panel_view:
-                    console = Console.from_id(panel_view.id())
-                    if console:
-                        window.run_command("show_panel", {"panel": panel})
-                        break
-            else:
-                console = None
-            if not console:
-                # search over all views in this windows
-                for v in window.views():
-                    console = Console.from_id(v.id())
-                    if console:
-                        break
-
-        if not console:
-            raise Exception("no console found")
-        elif not console.process.isalive():
-            raise Exception("process is terminated")
-        console.send_string(string)
-        console.view.run_command("console_render")
-
-
 class ConsolePaste(sublime_plugin.TextCommand):
 
     def run(self, edit, bracketed=False):
@@ -1000,6 +965,62 @@ class ToggleConsolePanel(sublime_plugin.WindowCommand):
                 window.focus_view(console_view)
         else:
             window.run_command("console_open", kwargs)
+
+
+class ConsoleSendString(sublime_plugin.WindowCommand):
+    """
+    Send string to a (tagged) console
+    """
+
+    def run(self, string, tag=None):
+        if tag:
+            console = Console.from_tag(tag)
+            self.bring_view_to_topmost(console.view)
+        else:
+            view = self.get_console_panel()
+            if view:
+                self.window.run_command("show_panel", {"panel": "output.{}".format(
+                    view.settings().get("console_view.panel_name")
+                )})
+            else:
+                view = self.get_console_view()
+                if view:
+                    self.bring_view_to_topmost(view)
+            console = Console.from_id(view.id())
+
+        if not console:
+            raise Exception("no console found")
+        elif not console.process.isalive():
+            raise Exception("process is terminated")
+        console.send_string(string)
+        console.view.run_command("console_render")
+
+    def get_console_panel(self):
+        window = self.window
+        for panel in window.panels():
+            panel_view = window.find_output_panel(panel.replace("output.", ""))
+            if panel_view:
+                console = Console.from_id(panel_view.id())
+                if console:
+                    return panel_view
+        return None
+
+    def get_console_view(self):
+        window = self.window
+        for v in window.views():
+            console = Console.from_id(v.id())
+            if console:
+                return v
+
+    def bring_view_to_topmost(self, view):
+        # move the view to the top of the group
+        window = view.window()
+        group, index = window.get_view_index(view)
+        group_active_view = window.active_view_in_group(group)
+        if group_active_view != view:
+            window_active_view = window.active_view()
+            window.focus_view(view)
+            window.focus_view(window_active_view)
 
 
 def plugin_loaded():
