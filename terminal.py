@@ -977,7 +977,8 @@ class SubtermSendString(sublime_plugin.WindowCommand):
     def run(self, string, tag=None):
         if tag:
             terminal = Terminal.from_tag(tag)
-            self.bring_view_to_topmost(terminal.view)
+            if terminal:
+                self.bring_view_to_topmost(terminal.view)
         else:
             view = self.get_subterm_panel()
             if view:
