@@ -2,28 +2,28 @@ import sublime
 import sublime_plugin
 
 
-class ConsoleEditSettingsListener(sublime_plugin.EventListener):
+class SubtermEditSettingsListener(sublime_plugin.EventListener):
     def on_post_window_command(self, window, command, args):
         if command == "edit_settings":
             base = args.get("base_file", "")
             w = sublime.active_window()
-            if base.endswith("sublime-keymap") and "/Console/Default" in base:
+            if base.endswith("sublime-keymap") and "/SublimelyTerminal/Default" in base:
                 user_view = w.active_view()
                 user_view.settings().erase("edit_settings_view")
-                user_view.settings().set("console_edit_keybindings_view", 'user')
+                user_view.settings().set("subterm_edit_keybindings_view", 'user')
                 w.focus_group(0)
                 base_platform_view = w.active_view()
                 base_platform_view.settings().erase("edit_settings_view")
-                base_platform_view.settings().set("console_edit_keybindings_view", 'base')
+                base_platform_view.settings().set("subterm_edit_keybindings_view", 'base')
                 base_platform_view.set_read_only(True)
                 w.run_command(
-                    "open_file", {"file": "${packages}/Console/Default.sublime-keymap"})
+                    "open_file", {"file": "${packages}/SublimelyTerminal/Default.sublime-keymap"})
                 base_view = w.active_view()
-                base_view.settings().set("console_edit_keybindings_view", 'base')
+                base_view.settings().set("subterm_edit_keybindings_view", 'base')
                 base_view.set_read_only(True)
                 w.focus_group(1)
 
-            elif base.endswith("Console.sublime-settings"):
+            elif base.endswith("SublimelyTerminal.sublime-settings"):
                 w.focus_group(0)
                 base_view = w.active_view()
                 base_view.set_read_only(True)
@@ -35,7 +35,7 @@ class ConsoleEditSettingsListener(sublime_plugin.EventListener):
         """
         view_settings = view.settings()
 
-        if view_settings.get('console_edit_keybindings_view') is None:
+        if view_settings.get('subterm_edit_keybindings_view') is None:
             return
 
         if view.window() is None:
@@ -50,7 +50,7 @@ class ConsoleEditSettingsListener(sublime_plugin.EventListener):
 
         view_settings = view.settings()
 
-        if view_settings.get('console_edit_keybindings_view') is None:
+        if view_settings.get('subterm_edit_keybindings_view') is None:
             return
 
         window_id = view_settings.get('window_id')
@@ -65,7 +65,7 @@ class ConsoleEditSettingsListener(sublime_plugin.EventListener):
 
         views = window.views()
         for other in views:
-            if other.settings().get("console_edit_keybindings_view"):
+            if other.settings().get("subterm_edit_keybindings_view"):
                 def close_view():
                     window.focus_view(other)
                     window.run_command("close")
@@ -77,7 +77,7 @@ class ConsoleEditSettingsListener(sublime_plugin.EventListener):
                 sublime.set_timeout(close_view, 10)
 
 
-class ConsoleEditSettingsCommand(sublime_plugin.WindowCommand):
+class SubtermEditSettingsCommand(sublime_plugin.WindowCommand):
     """
     For some reasons, the command palette doesn't trigger `on_post_window_command` for
     dev version of Sublime Text. The command palette would call `gs_edit_settings` and

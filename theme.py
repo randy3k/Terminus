@@ -11,7 +11,7 @@ from .utils import settings_on_change
 THEMES = os.path.join(os.path.dirname(__file__), "themes")
 
 
-class ConsoleSelectTheme(sublime_plugin.WindowCommand):
+class SubtermSelectTheme(sublime_plugin.WindowCommand):
     def run(self, theme=None):
         if theme:
             if theme not in ["default", "user"]:
@@ -19,14 +19,14 @@ class ConsoleSelectTheme(sublime_plugin.WindowCommand):
                 if not os.path.isfile(themefile):
                     raise IOError("{} not found".format(themefile))
 
-            settings = sublime.load_settings("Console.sublime-settings")
+            settings = sublime.load_settings("SublimelyTerminal.sublime-settings")
             settings.set("theme", theme)
-            sublime.save_settings("Console.sublime-settings")
+            sublime.save_settings("SublimelyTerminal.sublime-settings")
 
         else:
             self.themes = ["default", "user"] + \
                 sorted([f.replace(".json", "") for f in os.listdir(THEMES) if f.endswith(".json")])
-            settings = sublime.load_settings("Console.sublime-settings")
+            settings = sublime.load_settings("SublimelyTerminal.sublime-settings")
             self.original_theme = settings.get("theme", "default")
             try:
                 selected_index = self.themes.index(self.original_theme)
@@ -41,16 +41,16 @@ class ConsoleSelectTheme(sublime_plugin.WindowCommand):
     def on_selection(self, index):
         if index == -1:
             self.window.run_command(
-                "console_select_theme",
+                "subterm_select_theme",
                 {"theme": self.original_theme})
             return
         theme = self.themes[index]
-        self.window.run_command("console_select_theme", {"theme": theme})
+        self.window.run_command("subterm_select_theme", {"theme": theme})
 
 
-class ConsoleGenerateTheme(sublime_plugin.WindowCommand):
+class SubtermGenerateTheme(sublime_plugin.WindowCommand):
     def run(self, theme=None, remove=False, force=False):
-        settings = sublime.load_settings("Console.sublime-settings")
+        settings = sublime.load_settings("SublimelyTerminal.sublime-settings")
 
         if not theme:
             theme = settings.get("theme", "default")
@@ -75,14 +75,14 @@ class ConsoleGenerateTheme(sublime_plugin.WindowCommand):
         path = os.path.join(
             sublime.packages_path(),
             "User",
-            "Console",
-            "Console.sublime-color-scheme"
+            "SublimelyTerminal",
+            "SublimelyTerminal.sublime-color-scheme"
         )
 
         path256 = os.path.join(
             sublime.packages_path(),
             "User",
-            "Console.sublime-color-scheme"
+            "SublimelyTerminal.sublime-color-scheme"
         )
 
         if remove:
@@ -111,19 +111,19 @@ class ConsoleGenerateTheme(sublime_plugin.WindowCommand):
 
 def plugin_loaded():
 
-    settings = sublime.load_settings("Console.sublime-settings")
+    settings = sublime.load_settings("SublimelyTerminal.sublime-settings")
 
     path = os.path.join(
         sublime.packages_path(),
         "User",
-        "Console",
-        "Console.sublime-color-scheme"
+        "SublimelyTerminal",
+        "SublimelyTerminal.sublime-color-scheme"
     )
 
     if settings.get("theme", "default") != "default":
         if not os.path.isfile(path):
-            sublime.active_window().run_command("console_generate_theme")
+            sublime.active_window().run_command("subterm_generate_theme")
 
     settings_on_change(settings, ["256color", "user_theme_colors", "theme"])(
-        lambda _: sublime.active_window().run_command("console_generate_theme")
+        lambda _: sublime.active_window().run_command("subterm_generate_theme")
     )

@@ -1,20 +1,20 @@
 [
-    {"keys": ["ctrl+shift+c"], "command": "copy", "context": [{"key": "setting.console_view"}]},
-    {"keys": ["ctrl+shift+v"], "command": "console_paste", "context": [{"key": "setting.console_view"}]},
+    {"keys": ["ctrl+shift+c"], "command": "copy", "context": [{"key": "setting.subterm_view"}]},
+    {"keys": ["ctrl+shift+v"], "command": "subterm_paste", "context": [{"key": "setting.subterm_view"}]},
     {"keys": ["ctrl+c"], "command": "copy",
         "context": [
-            {"key": "setting.console_view"},
-            {"key": "setting.console_view.nature_clipboard"},
+            {"key": "setting.subterm_view"},
+            {"key": "setting.subterm_view.nature_clipboard"},
             {"key": "selection_empty", "operator": "equal", "operand": false, "match_all": true},
         ]
     },
-    {"keys": ["ctrl+v"], "command": "console_paste",
+    {"keys": ["ctrl+v"], "command": "subterm_paste",
         "context": [
-            {"key": "setting.console_view"},
-            {"key": "setting.console_view.nature_clipboard"}
+            {"key": "setting.subterm_view"},
+            {"key": "setting.subterm_view.nature_clipboard"}
         ]
     },
 
-    {"keys": ["ctrl+backspace"], "command": "console_delete_word", "args": {"forward": false}, "context": [{"key": "setting.console_view"}]},
-    {"keys": ["ctrl+delete"], "command": "console_delete_word", "args": {"forward": true}, "context": [{"key": "setting.console_view"}]}
+    {"keys": ["ctrl+backspace"], "command": "subterm_delete_word", "args": {"forward": false}, "context": [{"key": "setting.subterm_view"}]},
+    {"keys": ["ctrl+delete"], "command": "subterm_delete_word", "args": {"forward": true}, "context": [{"key": "setting.subterm_view"}]}
 ]

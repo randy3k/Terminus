@@ -2,8 +2,8 @@
     "schema_version": "3.0.0",
     "packages": [
         {
-            "name": "Console",
-            "details": "https://github.com/randy3k/Console",
+            "name": "SublimelyTerminal",
+            "details": "https://github.com/randy3k/SublimelyTerminal",
             "author": "randy3k",
             "releases": [
                 {

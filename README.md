@@ -20,7 +20,7 @@ It is a cross platform terminal for Sublime Text which works on Windows, macOS a
         </td>
     </tr>
     <tr>
-        <th>Console in panel</th>
+        <th>Terminal in panel</th>
         <th></th>
     </tr>
     <tr>
@@ -51,29 +51,29 @@ This package is not yet available via Package Control default channel, you have 
 - paste
 
     ```
-    https://raw.githubusercontent.com/randy3k/Console/master/package_control.json
+    https://raw.githubusercontent.com/randy3k/SublimelyTerminal/master/package_control.json
     ```
     and hit enter
 
-- then you could install it as usual - `Package Control: Install Package` and search for `Console`
+- then you could install it as usual - `Package Control: Install Package` and search for `SublimelyTerminal`
 
 
-### Keybind to toggle Console Panel
+### Keybind to toggle Terminal Panel
 
-- run `Perferences: Console Key Bindings`
+- run `Perferences: Sublimely Terminal Key Bindings`
 - add the following
 
 ```js
 { 
     "keys": ["alt+`"], 
-    "command": "toggle_console_panel", 
-    "args": {"config_name": "Default", "panel_name": "Console"}
+    "command": "toggle_subterm_panel", 
+    "args": {"config_name": "Default", "panel_name": "Terminal"}
 }
 ```
 
-### Console Panel issue with DA UI
+### Terminal Panel issue with DA UI
 
-If your console panel has weired background color, try playing with the setting `panel_background_color` in `DA UI: Theme Settings`.
+If your terminal panel has weired background color, try playing with the setting `panel_background_color` in `DA UI: Theme Settings`.
 
 <img src="https://user-images.githubusercontent.com/1690993/41728204-31a9a2a2-7544-11e8-9fb6-a37b59da852a.png" width="50%" />
 
@@ -85,32 +85,32 @@ If your console panel has weired background color, try playing with the setting 
 
 ### Note to other package developers
 
-A console could be opened using the command `console_open` with
+A terminal could be opened using the command `subterm_open` with
 ```py
 window.run_command(
-    "console_open", {
+    "subterm_open", {
         config_name=None,  # the shell config name, the default config is "Default"
         cmd=None,          # the cmd to execuate if config_name is None
         cwd=None,          # the working directory
         env={},            # extra environmental variables
         title=None,        # title of the view
-        panel_name=None,   # the name of the panel if console should be opened in panel
-        tag=None           # a tag to identify the console
+        panel_name=None,   # the name of the panel if terminal should be opened in panel
+        tag=None           # a tag to identify the terminal
     }
 )
 ```
 
-Text can be sent to the console with
+Text can be sent to the terminal with
 ```py
 window.run_command(
-    "console_send_string", 
+    "subterm_send_string", 
     {
         "string": "ls\n",
-        "tag": None        # or the tag which is passed to "console_open"
+        "tag": None        # or the tag which is passed to "subterm_open"
     }
 )
 ```
-If `tag` is not provided, the text will be sent to the first console found in the current window.
+If `tag` is not provided, the text will be sent to the first terminal found in the current window.
 
 
 ### Acknowledgments

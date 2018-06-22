@@ -1,47 +1,47 @@
 [
     {
-        "caption": "Console: Open Default Shell in View",
-        "command": "console_open",
+        "caption": "SublimelyTerminal: Open Default Shell in View",
+        "command": "subterm_open",
         "args": {"config_name": "Default"}
     },
     {
-        "caption": "Console: Open Default Shell in Panel",
-        "command": "console_open",
-        "args": {"config_name": "Default", "panel_name": "Console"}
+        "caption": "SublimelyTerminal: Open Default Shell in Panel",
+        "command": "subterm_open",
+        "args": {"config_name": "Default", "panel_name": "Terminal"}
     },
     {
-        "caption": "Console: List Shells",
-        "command": "console_open"
+        "caption": "SublimelyTerminal: List Shells",
+        "command": "subterm_open"
     },
     {
-        "caption": "Console Utilities: Select Theme",
-        "command": "console_select_theme"
+        "caption": "SublimelyTerminal Utilities: Select Theme",
+        "command": "subterm_select_theme"
     },
     {
-        "caption": "Console Utilities: Generate User Theme",
-        "command": "console_generate_theme",
+        "caption": "SublimelyTerminal Utilities: Generate User Theme",
+        "command": "subterm_generate_theme",
         "args": {"force": true}
     },
     {
-        "caption": "Console Utilities: Remove User Theme",
-        "command": "console_generate_theme",
+        "caption": "SublimelyTerminal Utilities: Remove User Theme",
+        "command": "subterm_generate_theme",
         "args": {"remove": true}
     },
     {
-        "caption": "Preferences: Console Settings",
-        "command": "console_edit_settings",
+        "caption": "Preferences: SublimelyTerminal Settings",
+        "command": "subterm_edit_settings",
         "args":
         {
-            "base_file": "${packages}/Console/Console.sublime-settings",
+            "base_file": "${packages}/SublimelyTerminal/SublimelyTerminal.sublime-settings",
             "default": "{\n\t$0\n}\n"
         }
     },
     {
-        "caption": "Preferences: Console Key Bindings",
-        "command": "console_edit_settings",
+        "caption": "Preferences: SublimelyTerminal Key Bindings",
+        "command": "subterm_edit_settings",
         "args":
         {
-            "base_file": "${packages}/Console/Default (${platform}).sublime-keymap",
+            "base_file": "${packages}/SublimelyTerminal/Default (${platform}).sublime-keymap",
             "default": "[\n\t$0\n]\n"
         }
     }

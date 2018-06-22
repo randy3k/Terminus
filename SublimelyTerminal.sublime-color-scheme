@@ -34,1447 +34,1447 @@
     },
     "rules": [
         {
-            "scope": "console.black.black",
+            "scope": "subterm.black.black",
             "foreground": "var(black)",
             "background": "var(black)"
         },
         {
-            "scope": "console.black.red",
+            "scope": "subterm.black.red",
             "foreground": "var(black)",
             "background": "var(red)"
         },
         {
-            "scope": "console.black.green",
+            "scope": "subterm.black.green",
             "foreground": "var(black)",
             "background": "var(green)"
         },
         {
-            "scope": "console.black.brown",
+            "scope": "subterm.black.brown",
             "foreground": "var(black)",
             "background": "var(brown)"
         },
         {
-            "scope": "console.black.blue",
+            "scope": "subterm.black.blue",
             "foreground": "var(black)",
             "background": "var(blue)"
         },
         {
-            "scope": "console.black.magenta",
+            "scope": "subterm.black.magenta",
             "foreground": "var(black)",
             "background": "var(magenta)"
         },
         {
-            "scope": "console.black.cyan",
+            "scope": "subterm.black.cyan",
             "foreground": "var(black)",
             "background": "var(cyan)"
         },
         {
-            "scope": "console.black.white",
+            "scope": "subterm.black.white",
             "foreground": "var(black)",
             "background": "var(white)"
         },
         {
-            "scope": "console.black.light_black",
+            "scope": "subterm.black.light_black",
             "foreground": "var(black)",
             "background": "var(light_black)"
         },
         {
-            "scope": "console.black.light_red",
+            "scope": "subterm.black.light_red",
             "foreground": "var(black)",
             "background": "var(light_red)"
         },
         {
-            "scope": "console.black.light_green",
+            "scope": "subterm.black.light_green",
             "foreground": "var(black)",
             "background": "var(light_green)"
         },
         {
-            "scope": "console.black.light_brown",
+            "scope": "subterm.black.light_brown",
             "foreground": "var(black)",
             "background": "var(light_brown)"
         },
         {
-            "scope": "console.black.light_blue",
+            "scope": "subterm.black.light_blue",
             "foreground": "var(black)",
             "background": "var(light_blue)"
         },
         {
-            "scope": "console.black.light_magenta",
+            "scope": "subterm.black.light_magenta",
             "foreground": "var(black)",
             "background": "var(light_magenta)"
         },
         {
-            "scope": "console.black.light_cyan",
+            "scope": "subterm.black.light_cyan",
             "foreground": "var(black)",
             "background": "var(light_cyan)"
         },
         {
-            "scope": "console.black.light_white",
+            "scope": "subterm.black.light_white",
             "foreground": "var(black)",
             "background": "var(light_white)"
         },
         {
-            "scope": "console.black.default",
+            "scope": "subterm.black.default",
             "foreground": "var(black)",
             "background": "var(background)"
         },
         {
-            "scope": "console.red.black",
+            "scope": "subterm.red.black",
             "foreground": "var(red)",
             "background": "var(black)"
         },
         {
-            "scope": "console.red.red",
+            "scope": "subterm.red.red",
             "foreground": "var(red)",
             "background": "var(red)"
         },
         {
-            "scope": "console.red.green",
+            "scope": "subterm.red.green",
             "foreground": "var(red)",
             "background": "var(green)"
         },
         {
-            "scope": "console.red.brown",
+            "scope": "subterm.red.brown",
             "foreground": "var(red)",
             "background": "var(brown)"
         },
         {
-            "scope": "console.red.blue",
+            "scope": "subterm.red.blue",
             "foreground": "var(red)",
             "background": "var(blue)"
         },
         {
-            "scope": "console.red.magenta",
+            "scope": "subterm.red.magenta",
             "foreground": "var(red)",
             "background": "var(magenta)"
         },
         {
-            "scope": "console.red.cyan",
+            "scope": "subterm.red.cyan",
             "foreground": "var(red)",
             "background": "var(cyan)"
         },
         {
-            "scope": "console.red.white",
+            "scope": "subterm.red.white",
             "foreground": "var(red)",
             "background": "var(white)"
         },
         {
-            "scope": "console.red.light_black",
+            "scope": "subterm.red.light_black",
             "foreground": "var(red)",
             "background": "var(light_black)"
         },
         {
-            "scope": "console.red.light_red",
+            "scope": "subterm.red.light_red",
             "foreground": "var(red)",
             "background": "var(light_red)"
         },
         {
-            "scope": "console.red.light_green",
+            "scope": "subterm.red.light_green",
             "foreground": "var(red)",
             "background": "var(light_green)"
         },
         {
-            "scope": "console.red.light_brown",
+            "scope": "subterm.red.light_brown",
             "foreground": "var(red)",
             "background": "var(light_brown)"
         },
         {
-            "scope": "console.red.light_blue",
+            "scope": "subterm.red.light_blue",
             "foreground": "var(red)",
             "background": "var(light_blue)"
         },
         {
-            "scope": "console.red.light_magenta",
+            "scope": "subterm.red.light_magenta",
             "foreground": "var(red)",
             "background": "var(light_magenta)"
         },
         {
-            "scope": "console.red.light_cyan",
+            "scope": "subterm.red.light_cyan",
             "foreground": "var(red)",
             "background": "var(light_cyan)"
         },
         {
-            "scope": "console.red.light_white",
+            "scope": "subterm.red.light_white",
             "foreground": "var(red)",
             "background": "var(light_white)"
         },
         {
-            "scope": "console.red.default",
+            "scope": "subterm.red.default",
             "foreground": "var(red)",
             "background": "var(background)"
         },
         {
-            "scope": "console.green.black",
+            "scope": "subterm.green.black",
             "foreground": "var(green)",
             "background": "var(black)"
         },
         {
-            "scope": "console.green.red",
+            "scope": "subterm.green.red",
             "foreground": "var(green)",
             "background": "var(red)"
         },
         {
-            "scope": "console.green.green",
+            "scope": "subterm.green.green",
             "foreground": "var(green)",
             "background": "var(green)"
         },
         {
-            "scope": "console.green.brown",
+            "scope": "subterm.green.brown",
             "foreground": "var(green)",
             "background": "var(brown)"
         },
         {
-            "scope": "console.green.blue",
+            "scope": "subterm.green.blue",
             "foreground": "var(green)",
             "background": "var(blue)"
         },
         {
-            "scope": "console.green.magenta",
+            "scope": "subterm.green.magenta",
             "foreground": "var(green)",
             "background": "var(magenta)"
         },
         {
-            "scope": "console.green.cyan",
+            "scope": "subterm.green.cyan",
             "foreground": "var(green)",
             "background": "var(cyan)"
         },
         {
-            "scope": "console.green.white",
+            "scope": "subterm.green.white",
             "foreground": "var(green)",
             "background": "var(white)"
         },
         {
-            "scope": "console.green.light_black",
+            "scope": "subterm.green.light_black",
             "foreground": "var(green)",
             "background": "var(light_black)"
         },
         {
-            "scope": "console.green.light_red",
+            "scope": "subterm.green.light_red",
             "foreground": "var(green)",
             "background": "var(light_red)"
         },
         {
-            "scope": "console.green.light_green",
+            "scope": "subterm.green.light_green",
             "foreground": "var(green)",
             "background": "var(light_green)"
         },
         {
-            "scope": "console.green.light_brown",
+            "scope": "subterm.green.light_brown",
             "foreground": "var(green)",
             "background": "var(light_brown)"
         },
         {
-            "scope": "console.green.light_blue",
+            "scope": "subterm.green.light_blue",
             "foreground": "var(green)",
             "background": "var(light_blue)"
         },
         {
-            "scope": "console.green.light_magenta",
+            "scope": "subterm.green.light_magenta",
             "foreground": "var(green)",
             "background": "var(light_magenta)"
         },
         {
-            "scope": "console.green.light_cyan",
+            "scope": "subterm.green.light_cyan",
             "foreground": "var(green)",
             "background": "var(light_cyan)"
         },
         {
-            "scope": "console.green.light_white",
+            "scope": "subterm.green.light_white",
             "foreground": "var(green)",
             "background": "var(light_white)"
         },
         {
-            "scope": "console.green.default",
+            "scope": "subterm.green.default",
             "foreground": "var(green)",
             "background": "var(background)"
         },
         {
-            "scope": "console.brown.black",
+            "scope": "subterm.brown.black",
             "foreground": "var(brown)",
             "background": "var(black)"
         },
         {
-            "scope": "console.brown.red",
+            "scope": "subterm.brown.red",
             "foreground": "var(brown)",
             "background": "var(red)"
         },
         {
-            "scope": "console.brown.green",
+            "scope": "subterm.brown.green",
             "foreground": "var(brown)",
             "background": "var(green)"
         },
         {
-            "scope": "console.brown.brown",
+            "scope": "subterm.brown.brown",
             "foreground": "var(brown)",
             "background": "var(brown)"
         },
         {
-            "scope": "console.brown.blue",
+            "scope": "subterm.brown.blue",
             "foreground": "var(brown)",
             "background": "var(blue)"
         },
         {
-            "scope": "console.brown.magenta",
+            "scope": "subterm.brown.magenta",
             "foreground": "var(brown)",
             "background": "var(magenta)"
         },
         {
-            "scope": "console.brown.cyan",
+            "scope": "subterm.brown.cyan",
             "foreground": "var(brown)",
             "background": "var(cyan)"
         },
         {
-            "scope": "console.brown.white",
+            "scope": "subterm.brown.white",
             "foreground": "var(brown)",
             "background": "var(white)"
         },
         {
-            "scope": "console.brown.light_black",
+            "scope": "subterm.brown.light_black",
             "foreground": "var(brown)",
             "background": "var(light_black)"
         },
         {
-            "scope": "console.brown.light_red",
+            "scope": "subterm.brown.light_red",
             "foreground": "var(brown)",
             "background": "var(light_red)"
         },
         {
-            "scope": "console.brown.light_green",
+            "scope": "subterm.brown.light_green",
             "foreground": "var(brown)",
             "background": "var(light_green)"
         },
         {
-            "scope": "console.brown.light_brown",
+            "scope": "subterm.brown.light_brown",
             "foreground": "var(brown)",
             "background": "var(light_brown)"
         },
         {
-            "scope": "console.brown.light_blue",
+            "scope": "subterm.brown.light_blue",
             "foreground": "var(brown)",
             "background": "var(light_blue)"
         },
         {
-            "scope": "console.brown.light_magenta",
+            "scope": "subterm.brown.light_magenta",
             "foreground": "var(brown)",
             "background": "var(light_magenta)"
         },
         {
-            "scope": "console.brown.light_cyan",
+            "scope": "subterm.brown.light_cyan",
             "foreground": "var(brown)",
             "background": "var(light_cyan)"
         },
         {
-            "scope": "console.brown.light_white",
+            "scope": "subterm.brown.light_white",
             "foreground": "var(brown)",
             "background": "var(light_white)"
         },
         {
-            "scope": "console.brown.default",
+            "scope": "subterm.brown.default",
             "foreground": "var(brown)",
             "background": "var(background)"
         },
         {
-            "scope": "console.blue.black",
+            "scope": "subterm.blue.black",
             "foreground": "var(blue)",
             "background": "var(black)"
         },
         {
-            "scope": "console.blue.red",
+            "scope": "subterm.blue.red",
             "foreground": "var(blue)",
             "background": "var(red)"
         },
         {
-            "scope": "console.blue.green",
+            "scope": "subterm.blue.green",
             "foreground": "var(blue)",
             "background": "var(green)"
         },
         {
-            "scope": "console.blue.brown",
+            "scope": "subterm.blue.brown",
             "foreground": "var(blue)",
             "background": "var(brown)"
         },
         {
-            "scope": "console.blue.blue",
+            "scope": "subterm.blue.blue",
             "foreground": "var(blue)",
             "background": "var(blue)"
         },
         {
-            "scope": "console.blue.magenta",
+            "scope": "subterm.blue.magenta",
             "foreground": "var(blue)",
             "background": "var(magenta)"
         },
         {
-            "scope": "console.blue.cyan",
+            "scope": "subterm.blue.cyan",
             "foreground": "var(blue)",
             "background": "var(cyan)"
         },
         {
-            "scope": "console.blue.white",
+            "scope": "subterm.blue.white",
             "foreground": "var(blue)",
             "background": "var(white)"
         },
         {
-            "scope": "console.blue.light_black",
+            "scope": "subterm.blue.light_black",
             "foreground": "var(blue)",
             "background": "var(light_black)"
         },
         {
-            "scope": "console.blue.light_red",
+            "scope": "subterm.blue.light_red",
             "foreground": "var(blue)",
             "background": "var(light_red)"
         },
         {
-            "scope": "console.blue.light_green",
+            "scope": "subterm.blue.light_green",
             "foreground": "var(blue)",
             "background": "var(light_green)"
         },
         {
-            "scope": "console.blue.light_brown",
+            "scope": "subterm.blue.light_brown",
             "foreground": "var(blue)",
             "background": "var(light_brown)"
         },
         {
-            "scope": "console.blue.light_blue",
+            "scope": "subterm.blue.light_blue",
             "foreground": "var(blue)",
             "background": "var(light_blue)"
         },
         {
-            "scope": "console.blue.light_magenta",
+            "scope": "subterm.blue.light_magenta",
             "foreground": "var(blue)",
             "background": "var(light_magenta)"
         },
         {
-            "scope": "console.blue.light_cyan",
+            "scope": "subterm.blue.light_cyan",
             "foreground": "var(blue)",
             "background": "var(light_cyan)"
         },
         {
-            "scope": "console.blue.light_white",
+            "scope": "subterm.blue.light_white",
             "foreground": "var(blue)",
             "background": "var(light_white)"
         },
         {
-            "scope": "console.blue.default",
+            "scope": "subterm.blue.default",
             "foreground": "var(blue)",
             "background": "var(background)"
         },
         {
-            "scope": "console.magenta.black",
+            "scope": "subterm.magenta.black",
             "foreground": "var(magenta)",
             "background": "var(black)"
         },
         {
-            "scope": "console.magenta.red",
+            "scope": "subterm.magenta.red",
             "foreground": "var(magenta)",
             "background": "var(red)"
         },
         {
-            "scope": "console.magenta.green",
+            "scope": "subterm.magenta.green",
             "foreground": "var(magenta)",
             "background": "var(green)"
         },
         {
-            "scope": "console.magenta.brown",
+            "scope": "subterm.magenta.brown",
             "foreground": "var(magenta)",
             "background": "var(brown)"
         },
         {
-            "scope": "console.magenta.blue",
+            "scope": "subterm.magenta.blue",
             "foreground": "var(magenta)",
             "background": "var(blue)"
         },
         {
-            "scope": "console.magenta.magenta",
+            "scope": "subterm.magenta.magenta",
             "foreground": "var(magenta)",
             "background": "var(magenta)"
         },
         {
-            "scope": "console.magenta.cyan",
+            "scope": "subterm.magenta.cyan",
             "foreground": "var(magenta)",
             "background": "var(cyan)"
         },
         {
-            "scope": "console.magenta.white",
+            "scope": "subterm.magenta.white",
             "foreground": "var(magenta)",
             "background": "var(white)"
         },
         {
-            "scope": "console.magenta.light_black",
+            "scope": "subterm.magenta.light_black",
             "foreground": "var(magenta)",
             "background": "var(light_black)"
         },
         {
-            "scope": "console.magenta.light_red",
+            "scope": "subterm.magenta.light_red",
             "foreground": "var(magenta)",
             "background": "var(light_red)"
         },
         {
-            "scope": "console.magenta.light_green",
+            "scope": "subterm.magenta.light_green",
             "foreground": "var(magenta)",
             "background": "var(light_green)"
         },
         {
-            "scope": "console.magenta.light_brown",
+            "scope": "subterm.magenta.light_brown",
             "foreground": "var(magenta)",
             "background": "var(light_brown)"
         },
         {
-            "scope": "console.magenta.light_blue",
+            "scope": "subterm.magenta.light_blue",
             "foreground": "var(magenta)",
             "background": "var(light_blue)"
         },
         {
-            "scope": "console.magenta.light_magenta",
+            "scope": "subterm.magenta.light_magenta",
             "foreground": "var(magenta)",
             "background": "var(light_magenta)"
         },
         {
-            "scope": "console.magenta.light_cyan",
+            "scope": "subterm.magenta.light_cyan",
             "foreground": "var(magenta)",
             "background": "var(light_cyan)"
         },
         {
-            "scope": "console.magenta.light_white",
+            "scope": "subterm.magenta.light_white",
             "foreground": "var(magenta)",
             "background": "var(light_white)"
         },
         {
-            "scope": "console.magenta.default",
+            "scope": "subterm.magenta.default",
             "foreground": "var(magenta)",
             "background": "var(background)"
         },
         {
-            "scope": "console.cyan.black",
+            "scope": "subterm.cyan.black",
             "foreground": "var(cyan)",
             "background": "var(black)"
         },
         {
-            "scope": "console.cyan.red",
+            "scope": "subterm.cyan.red",
             "foreground": "var(cyan)",
             "background": "var(red)"
         },
         {
-            "scope": "console.cyan.green",
+            "scope": "subterm.cyan.green",
             "foreground": "var(cyan)",
             "background": "var(green)"
         },
         {
-            "scope": "console.cyan.brown",
+            "scope": "subterm.cyan.brown",
             "foreground": "var(cyan)",
             "background": "var(brown)"
         },
         {
-            "scope": "console.cyan.blue",
+            "scope": "subterm.cyan.blue",
             "foreground": "var(cyan)",
             "background": "var(blue)"
         },
         {
-            "scope": "console.cyan.magenta",
+            "scope": "subterm.cyan.magenta",
             "foreground": "var(cyan)",
             "background": "var(magenta)"
         },
         {
-            "scope": "console.cyan.cyan",
+            "scope": "subterm.cyan.cyan",
             "foreground": "var(cyan)",
             "background": "var(cyan)"
         },
         {
-            "scope": "console.cyan.white",
+            "scope": "subterm.cyan.white",
             "foreground": "var(cyan)",
             "background": "var(white)"
         },
         {
-            "scope": "console.cyan.light_black",
+            "scope": "subterm.cyan.light_black",
             "foreground": "var(cyan)",
             "background": "var(light_black)"
         },
         {
-            "scope": "console.cyan.light_red",
+            "scope": "subterm.cyan.light_red",
             "foreground": "var(cyan)",
             "background": "var(light_red)"
         },
         {
-            "scope": "console.cyan.light_green",
+            "scope": "subterm.cyan.light_green",
             "foreground": "var(cyan)",
             "background": "var(light_green)"
         },
         {
-            "scope": "console.cyan.light_brown",
+            "scope": "subterm.cyan.light_brown",
             "foreground": "var(cyan)",
             "background": "var(light_brown)"
         },
         {
-            "scope": "console.cyan.light_blue",
+            "scope": "subterm.cyan.light_blue",
             "foreground": "var(cyan)",
             "background": "var(light_blue)"
         },
         {
-            "scope": "console.cyan.light_magenta",
+            "scope": "subterm.cyan.light_magenta",
             "foreground": "var(cyan)",
             "background": "var(light_magenta)"
         },
         {
-            "scope": "console.cyan.light_cyan",
+            "scope": "subterm.cyan.light_cyan",
             "foreground": "var(cyan)",
             "background": "var(light_cyan)"
         },
         {
-            "scope": "console.cyan.light_white",
+            "scope": "subterm.cyan.light_white",
             "foreground": "var(cyan)",
             "background": "var(light_white)"
         },
         {
-            "scope": "console.cyan.default",
+            "scope": "subterm.cyan.default",
             "foreground": "var(cyan)",
             "background": "var(background)"
         },
         {
-            "scope": "console.white.black",
+            "scope": "subterm.white.black",
             "foreground": "var(white)",
             "background": "var(black)"
         },
         {
-            "scope": "console.white.red",
+            "scope": "subterm.white.red",
             "foreground": "var(white)",
             "background": "var(red)"
         },
         {
-            "scope": "console.white.green",
+            "scope": "subterm.white.green",
             "foreground": "var(white)",
             "background": "var(green)"
         },
         {
-            "scope": "console.white.brown",
+            "scope": "subterm.white.brown",
             "foreground": "var(white)",
             "background": "var(brown)"
         },
         {
-            "scope": "console.white.blue",
+            "scope": "subterm.white.blue",
             "foreground": "var(white)",
             "background": "var(blue)"
         },
         {
-            "scope": "console.white.magenta",
+            "scope": "subterm.white.magenta",
             "foreground": "var(white)",
             "background": "var(magenta)"
         },
         {
-            "scope": "console.white.cyan",
+            "scope": "subterm.white.cyan",
             "foreground": "var(white)",
             "background": "var(cyan)"
         },
         {
-            "scope": "console.white.white",
+            "scope": "subterm.white.white",
             "foreground": "var(white)",
             "background": "var(white)"
         },
         {
-            "scope": "console.white.light_black",
+            "scope": "subterm.white.light_black",
             "foreground": "var(white)",
             "background": "var(light_black)"
         },
         {
-            "scope": "console.white.light_red",
+            "scope": "subterm.white.light_red",
             "foreground": "var(white)",
             "background": "var(light_red)"
         },
         {
-            "scope": "console.white.light_green",
+            "scope": "subterm.white.light_green",
             "foreground": "var(white)",
             "background": "var(light_green)"
         },
         {
-            "scope": "console.white.light_brown",
+            "scope": "subterm.white.light_brown",
             "foreground": "var(white)",
             "background": "var(light_brown)"
         },
         {
-            "scope": "console.white.light_blue",
+            "scope": "subterm.white.light_blue",
             "foreground": "var(white)",
             "background": "var(light_blue)"
         },
         {
-            "scope": "console.white.light_magenta",
+            "scope": "subterm.white.light_magenta",
             "foreground": "var(white)",
             "background": "var(light_magenta)"
         },
         {
-            "scope": "console.white.light_cyan",
+            "scope": "subterm.white.light_cyan",
             "foreground": "var(white)",
             "background": "var(light_cyan)"
         },
         {
-            "scope": "console.white.light_white",
+            "scope": "subterm.white.light_white",
             "foreground": "var(white)",
             "background": "var(light_white)"
         },
         {
-            "scope": "console.white.default",
+            "scope": "subterm.white.default",
             "foreground": "var(white)",
             "background": "var(background)"
         },
         {
-            "scope": "console.light_black.black",
+            "scope": "subterm.light_black.black",
             "foreground": "var(light_black)",
             "background": "var(black)"
         },
         {
-            "scope": "console.light_black.red",
+            "scope": "subterm.light_black.red",
             "foreground": "var(light_black)",
             "background": "var(red)"
         },
         {
-            "scope": "console.light_black.green",
+            "scope": "subterm.light_black.green",
             "foreground": "var(light_black)",
             "background": "var(green)"
         },
         {
-            "scope": "console.light_black.brown",
+            "scope": "subterm.light_black.brown",
             "foreground": "var(light_black)",
             "background": "var(brown)"
         },
         {
-            "scope": "console.light_black.blue",
+            "scope": "subterm.light_black.blue",
             "foreground": "var(light_black)",
             "background": "var(blue)"
         },
         {
-            "scope": "console.light_black.magenta",
+            "scope": "subterm.light_black.magenta",
             "foreground": "var(light_black)",
             "background": "var(magenta)"
         },
         {
-            "scope": "console.light_black.cyan",
+            "scope": "subterm.light_black.cyan",
             "foreground": "var(light_black)",
             "background": "var(cyan)"
         },
         {
-            "scope": "console.light_black.white",
+            "scope": "subterm.light_black.white",
             "foreground": "var(light_black)",
             "background": "var(white)"
         },
         {
-            "scope": "console.light_black.light_black",
+            "scope": "subterm.light_black.light_black",
             "foreground": "var(light_black)",
             "background": "var(light_black)"
         },
         {
-            "scope": "console.light_black.light_red",
+            "scope": "subterm.light_black.light_red",
             "foreground": "var(light_black)",
             "background": "var(light_red)"
         },
         {
-            "scope": "console.light_black.light_green",
+            "scope": "subterm.light_black.light_green",
             "foreground": "var(light_black)",
             "background": "var(light_green)"
         },
         {
-            "scope": "console.light_black.light_brown",
+            "scope": "subterm.light_black.light_brown",
             "foreground": "var(light_black)",
             "background": "var(light_brown)"
         },
         {
-            "scope": "console.light_black.light_blue",
+            "scope": "subterm.light_black.light_blue",
             "foreground": "var(light_black)",
             "background": "var(light_blue)"
         },
         {
-            "scope": "console.light_black.light_magenta",
+            "scope": "subterm.light_black.light_magenta",
             "foreground": "var(light_black)",
             "background": "var(light_magenta)"
         },
         {
-            "scope": "console.light_black.light_cyan",
+            "scope": "subterm.light_black.light_cyan",
             "foreground": "var(light_black)",
             "background": "var(light_cyan)"
         },
         {
-            "scope": "console.light_black.light_white",
+            "scope": "subterm.light_black.light_white",
             "foreground": "var(light_black)",
             "background": "var(light_white)"
         },
         {
-            "scope": "console.light_black.default",
+            "scope": "subterm.light_black.default",
             "foreground": "var(light_black)",
             "background": "var(background)"
         },
         {
-            "scope": "console.light_red.black",
+            "scope": "subterm.light_red.black",
             "foreground": "var(light_red)",
             "background": "var(black)"
         },
         {
-            "scope": "console.light_red.red",
+            "scope": "subterm.light_red.red",
             "foreground": "var(light_red)",
             "background": "var(red)"
         },
         {
-            "scope": "console.light_red.green",
+            "scope": "subterm.light_red.green",
             "foreground": "var(light_red)",
             "background": "var(green)"
         },
         {
-            "scope": "console.light_red.brown",
+            "scope": "subterm.light_red.brown",
             "foreground": "var(light_red)",
             "background": "var(brown)"
         },
         {
-            "scope": "console.light_red.blue",
+            "scope": "subterm.light_red.blue",
             "foreground": "var(light_red)",
             "background": "var(blue)"
         },
         {
-            "scope": "console.light_red.magenta",
+            "scope": "subterm.light_red.magenta",
             "foreground": "var(light_red)",
             "background": "var(magenta)"
         },
         {
-            "scope": "console.light_red.cyan",
+            "scope": "subterm.light_red.cyan",
             "foreground": "var(light_red)",
             "background": "var(cyan)"
         },
         {
-            "scope": "console.light_red.white",
+            "scope": "subterm.light_red.white",
             "foreground": "var(light_red)",
             "background": "var(white)"
         },
         {
-            "scope": "console.light_red.light_black",
+            "scope": "subterm.light_red.light_black",
             "foreground": "var(light_red)",
             "background": "var(light_black)"
         },
         {
-            "scope": "console.light_red.light_red",
+            "scope": "subterm.light_red.light_red",
             "foreground": "var(light_red)",
             "background": "var(light_red)"
         },
         {
-            "scope": "console.light_red.light_green",
+            "scope": "subterm.light_red.light_green",
             "foreground": "var(light_red)",
             "background": "var(light_green)"
         },
         {
-            "scope": "console.light_red.light_brown",
+            "scope": "subterm.light_red.light_brown",
             "foreground": "var(light_red)",
             "background": "var(light_brown)"
         },
         {
-            "scope": "console.light_red.light_blue",
+            "scope": "subterm.light_red.light_blue",
             "foreground": "var(light_red)",
             "background": "var(light_blue)"
         },
         {
-            "scope": "console.light_red.light_magenta",
+            "scope": "subterm.light_red.light_magenta",
             "foreground": "var(light_red)",
             "background": "var(light_magenta)"
         },
         {
-            "scope": "console.light_red.light_cyan",
+            "scope": "subterm.light_red.light_cyan",
             "foreground": "var(light_red)",
             "background": "var(light_cyan)"
         },
         {
-            "scope": "console.light_red.light_white",
+            "scope": "subterm.light_red.light_white",
             "foreground": "var(light_red)",
             "background": "var(light_white)"
         },
         {
-            "scope": "console.light_red.default",
+            "scope": "subterm.light_red.default",
             "foreground": "var(light_red)",
             "background": "var(background)"
         },
         {
-            "scope": "console.light_green.black",
+            "scope": "subterm.light_green.black",
             "foreground": "var(light_green)",
             "background": "var(black)"
         },
         {
-            "scope": "console.light_green.red",
+            "scope": "subterm.light_green.red",
             "foreground": "var(light_green)",
             "background": "var(red)"
         },
         {
-            "scope": "console.light_green.green",
+            "scope": "subterm.light_green.green",
             "foreground": "var(light_green)",
             "background": "var(green)"
         },
         {
-            "scope": "console.light_green.brown",
+            "scope": "subterm.light_green.brown",
             "foreground": "var(light_green)",
             "background": "var(brown)"
         },
         {
-            "scope": "console.light_green.blue",
+            "scope": "subterm.light_green.blue",
             "foreground": "var(light_green)",
             "background": "var(blue)"
         },
         {
-            "scope": "console.light_green.magenta",
+            "scope": "subterm.light_green.magenta",
             "foreground": "var(light_green)",
             "background": "var(magenta)"
         },
         {
-            "scope": "console.light_green.cyan",
+            "scope": "subterm.light_green.cyan",
             "foreground": "var(light_green)",
             "background": "var(cyan)"
         },
         {
-            "scope": "console.light_green.white",
+            "scope": "subterm.light_green.white",
             "foreground": "var(light_green)",
             "background": "var(white)"
         },
         {
-            "scope": "console.light_green.light_black",
+            "scope": "subterm.light_green.light_black",
             "foreground": "var(light_green)",
             "background": "var(light_black)"
         },
         {
-            "scope": "console.light_green.light_red",
+            "scope": "subterm.light_green.light_red",
             "foreground": "var(light_green)",
             "background": "var(light_red)"
         },
         {
-            "scope": "console.light_green.light_green",
+            "scope": "subterm.light_green.light_green",
             "foreground": "var(light_green)",
             "background": "var(light_green)"
         },
         {
-            "scope": "console.light_green.light_brown",
+            "scope": "subterm.light_green.light_brown",
             "foreground": "var(light_green)",
             "background": "var(light_brown)"
         },
         {
-            "scope": "console.light_green.light_blue",
+            "scope": "subterm.light_green.light_blue",
             "foreground": "var(light_green)",
             "background": "var(light_blue)"
         },
         {
-            "scope": "console.light_green.light_magenta",
+            "scope": "subterm.light_green.light_magenta",
             "foreground": "var(light_green)",
             "background": "var(light_magenta)"
         },
         {
-            "scope": "console.light_green.light_cyan",
+            "scope": "subterm.light_green.light_cyan",
             "foreground": "var(light_green)",
             "background": "var(light_cyan)"
         },
         {
-            "scope": "console.light_green.light_white",
+            "scope": "subterm.light_green.light_white",
             "foreground": "var(light_green)",
             "background": "var(light_white)"
         },
         {
-            "scope": "console.light_green.default",
+            "scope": "subterm.light_green.default",
             "foreground": "var(light_green)",
             "background": "var(background)"
         },
         {
-            "scope": "console.light_brown.black",
+            "scope": "subterm.light_brown.black",
             "foreground": "var(light_brown)",
             "background": "var(black)"
         },
         {
-            "scope": "console.light_brown.red",
+            "scope": "subterm.light_brown.red",
             "foreground": "var(light_brown)",
             "background": "var(red)"
         },
         {
-            "scope": "console.light_brown.green",
+            "scope": "subterm.light_brown.green",
             "foreground": "var(light_brown)",
             "background": "var(green)"
         },
         {
-            "scope": "console.light_brown.brown",
+            "scope": "subterm.light_brown.brown",
             "foreground": "var(light_brown)",
             "background": "var(brown)"
         },
         {
-            "scope": "console.light_brown.blue",
+            "scope": "subterm.light_brown.blue",
             "foreground": "var(light_brown)",
             "background": "var(blue)"
         },
         {
-            "scope": "console.light_brown.magenta",
+            "scope": "subterm.light_brown.magenta",
             "foreground": "var(light_brown)",
             "background": "var(magenta)"
         },
         {
-            "scope": "console.light_brown.cyan",
+            "scope": "subterm.light_brown.cyan",
             "foreground": "var(light_brown)",
             "background": "var(cyan)"
         },
         {
-            "scope": "console.light_brown.white",
+            "scope": "subterm.light_brown.white",
             "foreground": "var(light_brown)",
             "background": "var(white)"
         },
         {
-            "scope": "console.light_brown.light_black",
+            "scope": "subterm.light_brown.light_black",
             "foreground": "var(light_brown)",
             "background": "var(light_black)"
         },
         {
-            "scope": "console.light_brown.light_red",
+            "scope": "subterm.light_brown.light_red",
             "foreground": "var(light_brown)",
             "background": "var(light_red)"
         },
         {
-            "scope": "console.light_brown.light_green",
+            "scope": "subterm.light_brown.light_green",
             "foreground": "var(light_brown)",
             "background": "var(light_green)"
         },
         {
-            "scope": "console.light_brown.light_brown",
+            "scope": "subterm.light_brown.light_brown",
             "foreground": "var(light_brown)",
             "background": "var(light_brown)"
         },
         {
-            "scope": "console.light_brown.light_blue",
+            "scope": "subterm.light_brown.light_blue",
             "foreground": "var(light_brown)",
             "background": "var(light_blue)"
         },
         {
-            "scope": "console.light_brown.light_magenta",
+            "scope": "subterm.light_brown.light_magenta",
             "foreground": "var(light_brown)",
             "background": "var(light_magenta)"
         },
         {
-            "scope": "console.light_brown.light_cyan",
+            "scope": "subterm.light_brown.light_cyan",
             "foreground": "var(light_brown)",
             "background": "var(light_cyan)"
         },
         {
-            "scope": "console.light_brown.light_white",
+            "scope": "subterm.light_brown.light_white",
             "foreground": "var(light_brown)",
             "background": "var(light_white)"
         },
         {
-            "scope": "console.light_brown.default",
+            "scope": "subterm.light_brown.default",
             "foreground": "var(light_brown)",
             "background": "var(background)"
         },
         {
-            "scope": "console.light_blue.black",
+            "scope": "subterm.light_blue.black",
             "foreground": "var(light_blue)",
             "background": "var(black)"
         },
         {
-            "scope": "console.light_blue.red",
+            "scope": "subterm.light_blue.red",
             "foreground": "var(light_blue)",
             "background": "var(red)"
         },
         {
-            "scope": "console.light_blue.green",
+            "scope": "subterm.light_blue.green",
             "foreground": "var(light_blue)",
             "background": "var(green)"
         },
         {
-            "scope": "console.light_blue.brown",
+            "scope": "subterm.light_blue.brown",
             "foreground": "var(light_blue)",
             "background": "var(brown)"
         },
         {
-            "scope": "console.light_blue.blue",
+            "scope": "subterm.light_blue.blue",
             "foreground": "var(light_blue)",
             "background": "var(blue)"
         },
         {
-            "scope": "console.light_blue.magenta",
+            "scope": "subterm.light_blue.magenta",
             "foreground": "var(light_blue)",
             "background": "var(magenta)"
         },
         {
-            "scope": "console.light_blue.cyan",
+            "scope": "subterm.light_blue.cyan",
             "foreground": "var(light_blue)",
             "background": "var(cyan)"
         },
         {
-            "scope": "console.light_blue.white",
+            "scope": "subterm.light_blue.white",
             "foreground": "var(light_blue)",
             "background": "var(white)"
         },
         {
-            "scope": "console.light_blue.light_black",
+            "scope": "subterm.light_blue.light_black",
             "foreground": "var(light_blue)",
             "background": "var(light_black)"
         },
         {
-            "scope": "console.light_blue.light_red",
+            "scope": "subterm.light_blue.light_red",
             "foreground": "var(light_blue)",
             "background": "var(light_red)"
         },
         {
-            "scope": "console.light_blue.light_green",
+            "scope": "subterm.light_blue.light_green",
             "foreground": "var(light_blue)",
             "background": "var(light_green)"
         },
         {
-            "scope": "console.light_blue.light_brown",
+            "scope": "subterm.light_blue.light_brown",
             "foreground": "var(light_blue)",
             "background": "var(light_brown)"
         },
         {
-            "scope": "console.light_blue.light_blue",
+            "scope": "subterm.light_blue.light_blue",
             "foreground": "var(light_blue)",
             "background": "var(light_blue)"
         },
         {
-            "scope": "console.light_blue.light_magenta",
+            "scope": "subterm.light_blue.light_magenta",
             "foreground": "var(light_blue)",
             "background": "var(light_magenta)"
         },
         {
-            "scope": "console.light_blue.light_cyan",
+            "scope": "subterm.light_blue.light_cyan",
             "foreground": "var(light_blue)",
             "background": "var(light_cyan)"
         },
         {
-            "scope": "console.light_blue.light_white",
+            "scope": "subterm.light_blue.light_white",
             "foreground": "var(light_blue)",
             "background": "var(light_white)"
         },
         {
-            "scope": "console.light_blue.default",
+            "scope": "subterm.light_blue.default",
             "foreground": "var(light_blue)",
             "background": "var(background)"
         },
         {
-            "scope": "console.light_magenta.black",
+            "scope": "subterm.light_magenta.black",
             "foreground": "var(light_magenta)",
             "background": "var(black)"
         },
         {
-            "scope": "console.light_magenta.red",
+            "scope": "subterm.light_magenta.red",
             "foreground": "var(light_magenta)",
             "background": "var(red)"
         },
         {
-            "scope": "console.light_magenta.green",
+            "scope": "subterm.light_magenta.green",
             "foreground": "var(light_magenta)",
             "background": "var(green)"
         },
         {
-            "scope": "console.light_magenta.brown",
+            "scope": "subterm.light_magenta.brown",
             "foreground": "var(light_magenta)",
             "background": "var(brown)"
         },
         {
-            "scope": "console.light_magenta.blue",
+            "scope": "subterm.light_magenta.blue",
             "foreground": "var(light_magenta)",
             "background": "var(blue)"
         },
         {
-            "scope": "console.light_magenta.magenta",
+            "scope": "subterm.light_magenta.magenta",
             "foreground": "var(light_magenta)",
             "background": "var(magenta)"
         },
         {
-            "scope": "console.light_magenta.cyan",
+            "scope": "subterm.light_magenta.cyan",
             "foreground": "var(light_magenta)",
             "background": "var(cyan)"
         },
         {
-            "scope": "console.light_magenta.white",
+            "scope": "subterm.light_magenta.white",
             "foreground": "var(light_magenta)",
             "background": "var(white)"
         },
         {
-            "scope": "console.light_magenta.light_black",
+            "scope": "subterm.light_magenta.light_black",
             "foreground": "var(light_magenta)",
             "background": "var(light_black)"
         },
         {
-            "scope": "console.light_magenta.light_red",
+            "scope": "subterm.light_magenta.light_red",
             "foreground": "var(light_magenta)",
             "background": "var(light_red)"
         },
         {
-            "scope": "console.light_magenta.light_green",
+            "scope": "subterm.light_magenta.light_green",
             "foreground": "var(light_magenta)",
             "background": "var(light_green)"
         },
         {
-            "scope": "console.light_magenta.light_brown",
+            "scope": "subterm.light_magenta.light_brown",
             "foreground": "var(light_magenta)",
             "background": "var(light_brown)"
         },
         {
-            "scope": "console.light_magenta.light_blue",
+            "scope": "subterm.light_magenta.light_blue",
             "foreground": "var(light_magenta)",
             "background": "var(light_blue)"
         },
         {
-            "scope": "console.light_magenta.light_magenta",
+            "scope": "subterm.light_magenta.light_magenta",
             "foreground": "var(light_magenta)",
             "background": "var(light_magenta)"
         },
         {
-            "scope": "console.light_magenta.light_cyan",
+            "scope": "subterm.light_magenta.light_cyan",
             "foreground": "var(light_magenta)",
             "background": "var(light_cyan)"
         },
         {
-            "scope": "console.light_magenta.light_white",
+            "scope": "subterm.light_magenta.light_white",
             "foreground": "var(light_magenta)",
             "background": "var(light_white)"
         },
         {
-            "scope": "console.light_magenta.default",
+            "scope": "subterm.light_magenta.default",
             "foreground": "var(light_magenta)",
             "background": "var(background)"
         },
         {
-            "scope": "console.light_cyan.black",
+            "scope": "subterm.light_cyan.black",
             "foreground": "var(light_cyan)",
             "background": "var(black)"
         },
         {
-            "scope": "console.light_cyan.red",
+            "scope": "subterm.light_cyan.red",
             "foreground": "var(light_cyan)",
             "background": "var(red)"
         },
         {
-            "scope": "console.light_cyan.green",
+            "scope": "subterm.light_cyan.green",
             "foreground": "var(light_cyan)",
             "background": "var(green)"
         },
         {
-            "scope": "console.light_cyan.brown",
+            "scope": "subterm.light_cyan.brown",
             "foreground": "var(light_cyan)",
             "background": "var(brown)"
         },
         {
-            "scope": "console.light_cyan.blue",
+            "scope": "subterm.light_cyan.blue",
             "foreground": "var(light_cyan)",
             "background": "var(blue)"
         },
         {
-            "scope": "console.light_cyan.magenta",
+            "scope": "subterm.light_cyan.magenta",
             "foreground": "var(light_cyan)",
             "background": "var(magenta)"
         },
         {
-            "scope": "console.light_cyan.cyan",
+            "scope": "subterm.light_cyan.cyan",
             "foreground": "var(light_cyan)",
             "background": "var(cyan)"
         },
         {
-            "scope": "console.light_cyan.white",
+            "scope": "subterm.light_cyan.white",
             "foreground": "var(light_cyan)",
             "background": "var(white)"
         },
         {
-            "scope": "console.light_cyan.light_black",
+            "scope": "subterm.light_cyan.light_black",
             "foreground": "var(light_cyan)",
             "background": "var(light_black)"
         },
         {
-            "scope": "console.light_cyan.light_red",
+            "scope": "subterm.light_cyan.light_red",
             "foreground": "var(light_cyan)",
             "background": "var(light_red)"
         },
         {
-            "scope": "console.light_cyan.light_green",
+            "scope": "subterm.light_cyan.light_green",
             "foreground": "var(light_cyan)",
             "background": "var(light_green)"
         },
         {
-            "scope": "console.light_cyan.light_brown",
+            "scope": "subterm.light_cyan.light_brown",
             "foreground": "var(light_cyan)",
             "background": "var(light_brown)"
         },
         {
-            "scope": "console.light_cyan.light_blue",
+            "scope": "subterm.light_cyan.light_blue",
             "foreground": "var(light_cyan)",
             "background": "var(light_blue)"
         },
         {
-            "scope": "console.light_cyan.light_magenta",
+            "scope": "subterm.light_cyan.light_magenta",
             "foreground": "var(light_cyan)",
             "background": "var(light_magenta)"
         },
         {
-            "scope": "console.light_cyan.light_cyan",
+            "scope": "subterm.light_cyan.light_cyan",
             "foreground": "var(light_cyan)",
             "background": "var(light_cyan)"
         },
         {
-            "scope": "console.light_cyan.light_white",
+            "scope": "subterm.light_cyan.light_white",
             "foreground": "var(light_cyan)",
             "background": "var(light_white)"
         },
         {
-            "scope": "console.light_cyan.default",
+            "scope": "subterm.light_cyan.default",
             "foreground": "var(light_cyan)",
             "background": "var(background)"
         },
         {
-            "scope": "console.light_white.black",
+            "scope": "subterm.light_white.black",
             "foreground": "var(light_white)",
             "background": "var(black)"
         },
         {
-            "scope": "console.light_white.red",
+            "scope": "subterm.light_white.red",
             "foreground": "var(light_white)",
             "background": "var(red)"
         },
         {
-            "scope": "console.light_white.green",
+            "scope": "subterm.light_white.green",
             "foreground": "var(light_white)",
             "background": "var(green)"
         },
         {
-            "scope": "console.light_white.brown",
+            "scope": "subterm.light_white.brown",
             "foreground": "var(light_white)",
             "background": "var(brown)"
         },
         {
-            "scope": "console.light_white.blue",
+            "scope": "subterm.light_white.blue",
             "foreground": "var(light_white)",
             "background": "var(blue)"
         },
         {
-            "scope": "console.light_white.magenta",
+            "scope": "subterm.light_white.magenta",
             "foreground": "var(light_white)",
             "background": "var(magenta)"
         },
         {
-            "scope": "console.light_white.cyan",
+            "scope": "subterm.light_white.cyan",
             "foreground": "var(light_white)",
             "background": "var(cyan)"
         },
         {
-            "scope": "console.light_white.white",
+            "scope": "subterm.light_white.white",
             "foreground": "var(light_white)",
             "background": "var(white)"
         },
         {
-            "scope": "console.light_white.light_black",
+            "scope": "subterm.light_white.light_black",
             "foreground": "var(light_white)",
             "background": "var(light_black)"
         },
         {
-            "scope": "console.light_white.light_red",
+            "scope": "subterm.light_white.light_red",
             "foreground": "var(light_white)",
             "background": "var(light_red)"
         },
         {
-            "scope": "console.light_white.light_green",
+            "scope": "subterm.light_white.light_green",
             "foreground": "var(light_white)",
             "background": "var(light_green)"
         },
         {
-            "scope": "console.light_white.light_brown",
+            "scope": "subterm.light_white.light_brown",
             "foreground": "var(light_white)",
             "background": "var(light_brown)"
         },
         {
-            "scope": "console.light_white.light_blue",
+            "scope": "subterm.light_white.light_blue",
             "foreground": "var(light_white)",
             "background": "var(light_blue)"
         },
         {
-            "scope": "console.light_white.light_magenta",
+            "scope": "subterm.light_white.light_magenta",
             "foreground": "var(light_white)",
             "background": "var(light_magenta)"
         },
         {
-            "scope": "console.light_white.light_cyan",
+            "scope": "subterm.light_white.light_cyan",
             "foreground": "var(light_white)",
             "background": "var(light_cyan)"
         },
         {
-            "scope": "console.light_white.light_white",
+            "scope": "subterm.light_white.light_white",
             "foreground": "var(light_white)",
             "background": "var(light_white)"
         },
         {
-            "scope": "console.light_white.default",
+            "scope": "subterm.light_white.default",
             "foreground": "var(light_white)",
             "background": "var(background)"
         },
         {
-            "scope": "console.default.black",
+            "scope": "subterm.default.black",
             "foreground": "var(foreground)",
             "background": "var(black)"
         },
         {
-            "scope": "console.default.red",
+            "scope": "subterm.default.red",
             "foreground": "var(foreground)",
             "background": "var(red)"
         },
         {
-            "scope": "console.default.green",
+            "scope": "subterm.default.green",
             "foreground": "var(foreground)",
             "background": "var(green)"
         },
         {
-            "scope": "console.default.brown",
+            "scope": "subterm.default.brown",
             "foreground": "var(foreground)",
             "background": "var(brown)"
         },
         {
-            "scope": "console.default.blue",
+            "scope": "subterm.default.blue",
             "foreground": "var(foreground)",
             "background": "var(blue)"
         },
         {
-            "scope": "console.default.magenta",
+            "scope": "subterm.default.magenta",
             "foreground": "var(foreground)",
             "background": "var(magenta)"
         },
         {
-            "scope": "console.default.cyan",
+            "scope": "subterm.default.cyan",
             "foreground": "var(foreground)",
             "background": "var(cyan)"
         },
         {
-            "scope": "console.default.white",
+            "scope": "subterm.default.white",
             "foreground": "var(foreground)",
             "background": "var(white)"
         },
         {
-            "scope": "console.default.light_black",
+            "scope": "subterm.default.light_black",
             "foreground": "var(foreground)",
             "background": "var(light_black)"
         },
         {
-            "scope": "console.default.light_red",
+            "scope": "subterm.default.light_red",
             "foreground": "var(foreground)",
             "background": "var(light_red)"
         },
         {
-            "scope": "console.default.light_green",
+            "scope": "subterm.default.light_green",
             "foreground": "var(foreground)",
             "background": "var(light_green)"
         },
         {
-            "scope": "console.default.light_brown",
+            "scope": "subterm.default.light_brown",
             "foreground": "var(foreground)",
             "background": "var(light_brown)"
         },
         {
-            "scope": "console.default.light_blue",
+            "scope": "subterm.default.light_blue",
             "foreground": "var(foreground)",
             "background": "var(light_blue)"
         },
         {
-            "scope": "console.default.light_magenta",
+            "scope": "subterm.default.light_magenta",
             "foreground": "var(foreground)",
             "background": "var(light_magenta)"
         },
         {
-            "scope": "console.default.light_cyan",
+            "scope": "subterm.default.light_cyan",
             "foreground": "var(foreground)",
             "background": "var(light_cyan)"
         },
         {
-            "scope": "console.default.light_white",
+            "scope": "subterm.default.light_white",
             "foreground": "var(foreground)",
             "background": "var(light_white)"
         },
         {
-            "scope": "console.default.default",
+            "scope": "subterm.default.default",
             "foreground": "var(foreground)",
             "background": "var(background)"
         }

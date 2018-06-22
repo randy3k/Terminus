@@ -26,7 +26,7 @@ else:
     from ptyprocess import PtyProcessUnicode as PtyProcess
 
 
-logger = logging.getLogger('Console')
+logger = logging.getLogger('SublimelyTerminal')
 
 if not logger.hasHandlers():
     ch = logging.StreamHandler(sys.stdout)
@@ -140,12 +140,12 @@ def view_size(view):
     return (nb_rows, nb_columns)
 
 
-class ConsolePtyProcess(PtyProcess):
+class TerminalPtyProcess(PtyProcess):
 
     pass
 
 
-class ConsoleScreen(pyte.HistoryScreen):
+class TerminalScreen(pyte.HistoryScreen):
     offset = 0
     _alt_screen_mode = False
 
@@ -156,7 +156,7 @@ class ConsoleScreen(pyte.HistoryScreen):
         else:
             raise Exception("missing process")
         self._primary_buffer = {}
-        super(ConsoleScreen, self).__init__(*args, **kwargs)
+        super(TerminalScreen, self).__init__(*args, **kwargs)
 
     def write_process_input(self, data):
         self._process.write(data)
@@ -278,7 +278,7 @@ class ConsoleScreen(pyte.HistoryScreen):
         self.dirty.update(range(self.lines))
 
 
-class ConsoleStream(pyte.Stream):
+class TerminalStream(pyte.Stream):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -286,26 +286,26 @@ class ConsoleStream(pyte.Stream):
         self.csi["T"] = "scroll_down"
 
 
-class Console():
-    _consoles = {}
+class Terminal():
+    _terminals = {}
 
     def __init__(self, view):
         self.view = view
-        self._consoles[view.id()] = self
+        self._terminals[view.id()] = self
         self._cached_cursor = [0, 0]
         self._cached_cursor_is_hidden = [True]
 
     @classmethod
     def from_id(cls, vid):
-        if vid not in cls._consoles:
+        if vid not in cls._terminals:
             return None
-        return cls._consoles[vid]
+        return cls._terminals[vid]
 
     @classmethod
     def from_tag(cls, tag):
-        for console in cls._consoles.values():
-            if console.tag == tag:
-                return console
+        for terminal in cls._terminals.values():
+            if terminal.tag == tag:
+                return terminal
         return None
 
     def _need_to_render(self):
@@ -333,12 +333,12 @@ class Console():
         def view_is_attached():
             if self.panel_name:
                 window = self.view.window() or parent_window
-                console_view = window.find_output_panel(self.panel_name)
-                return console_view and console_view.id() == self.view.id()
+                subterm_view = window.find_output_panel(self.panel_name)
+                return subterm_view and subterm_view.id() == self.view.id()
             else:
                 return self.view.window()
 
-        console_is_alive = responsive(period=1, default=True)(
+        subterm_is_alive = responsive(period=1, default=True)(
             lambda: self.process.isalive() and view_is_attached())
 
         @responsive(period=1, default=False)
@@ -348,7 +348,7 @@ class Console():
 
         def reader():
             # run self.view.windows() via `view_is_attached` periodically to refresh gui
-            while console_is_alive() and view_is_attached():
+            while subterm_is_alive() and view_is_attached():
                 try:
                     temp = self.process.read(1024)
                 except EOFError:
@@ -360,7 +360,7 @@ class Console():
         threading.Thread(target=reader).start()
 
         def renderer():
-            while console_is_alive():
+            while subterm_is_alive():
                 with intermission(period=0.03):
                     with lock:
                         if len(data[0]) > 0:
@@ -372,7 +372,7 @@ class Console():
                         self.handle_resize()
 
                     if self._need_to_render():
-                        self.view.run_command("console_render")
+                        self.view.run_command("subterm_render")
 
             sublime.set_timeout(lambda: self.handle_end_loop())
 
@@ -388,16 +388,16 @@ class Console():
         if size == (1, 1):
             size = (24, 80)
         logger.debug("view size: {}".format(str(size)))
-        self.process = ConsolePtyProcess.spawn(cmd, cwd=cwd, env=_env, dimensions=size)
-        self.screen = ConsoleScreen(size[1], size[0], process=self.process, history=10000)
+        self.process = TerminalPtyProcess.spawn(cmd, cwd=cwd, env=_env, dimensions=size)
+        self.screen = TerminalScreen(size[1], size[0], process=self.process, history=10000)
         self.screen.offset = offset
-        self.stream = ConsoleStream(self.screen)
+        self.stream = TerminalStream(self.screen)
         self._start_rendering()
 
     def close(self):
         vid = self.view.id()
-        if vid in self._consoles:
-            del self._consoles[vid]
+        if vid in self._terminals:
+            del self._terminals[vid]
         self.process.terminate()
 
     def handle_end_loop(self):
@@ -467,16 +467,16 @@ def _get_incremental_key():
 get_incremental_key = _get_incremental_key()
 
 
-class ConsoleRender(sublime_plugin.TextCommand):
+class SubtermRender(sublime_plugin.TextCommand):
     def run(self, edit, force=False):
         self.force = force
         view = self.view
         startt = time.time()
-        console = Console.from_id(view.id())
-        if not console:
+        terminal = Terminal.from_id(view.id())
+        if not terminal:
             return
 
-        screen = console.screen
+        screen = terminal.screen
         self.update_lines(edit, screen)
         self.update_cursor(edit, screen)
         self.trim_trailing_spaces(edit, screen)
@@ -559,7 +559,7 @@ class ConsoleRender(sublime_plugin.TextCommand):
                 view.add_regions(
                     get_incremental_key(),
                     [sublime.Region(a, b)],
-                    "console.{}.{}".format(fg, bg))
+                    "subterm.{}.{}".format(fg, bg))
 
     def ensure_position(self, edit, row, col=0):
         view = self.view
@@ -617,7 +617,7 @@ class ConsoleRender(sublime_plugin.TextCommand):
             view.erase(edit, tail_region)
 
 
-class ConsoleOpen(sublime_plugin.WindowCommand):
+class SubtermOpen(sublime_plugin.WindowCommand):
 
     def run(
             self,
@@ -634,7 +634,7 @@ class ConsoleOpen(sublime_plugin.WindowCommand):
             config = self.get_config_by_name(config_name)
         elif cmd:
             config = {
-                "name": "Console",
+                "name": "Terminal",
                 "cmd": cmd,
                 "env": env,
                 "title": title
@@ -655,7 +655,7 @@ class ConsoleOpen(sublime_plugin.WindowCommand):
 
         else:
             if "TERM" not in _env:
-                settings = sublime.load_settings("Console.sublime-settings")
+                settings = sublime.load_settings("SublimelyTerminal.sublime-settings")
                 _env["TERM"] = settings.get("unix_term", "linux")
 
             if _env["TERM"] not in ["linux", "xterm", "xterm-16color", "xterm-256color"]:
@@ -682,12 +682,12 @@ class ConsoleOpen(sublime_plugin.WindowCommand):
 
         if panel_name:
             self.window.destroy_output_panel(panel_name)  # do not reuse
-            console_view = self.window.get_output_panel(panel_name)
+            subterm_view = self.window.get_output_panel(panel_name)
         else:
-            console_view = self.window.new_file()
+            subterm_view = self.window.new_file()
 
-        console_view.run_command(
-            "console_activate",
+        subterm_view.run_command(
+            "subterm_activate",
             {
                 "cmd": cmd,
                 "cwd": cwd,
@@ -699,10 +699,10 @@ class ConsoleOpen(sublime_plugin.WindowCommand):
 
         if panel_name:
             self.window.run_command("show_panel", {"panel": "output.{}".format(panel_name)})
-            self.window.focus_view(console_view)
+            self.window.focus_view(subterm_view)
 
     def show_configs(self):
-        settings = sublime.load_settings("Console.sublime-settings")
+        settings = sublime.load_settings("SublimelyTerminal.sublime-settings")
         configs = settings.get("shell_configs", [])
 
         ok_configs = []
@@ -746,14 +746,14 @@ class ConsoleOpen(sublime_plugin.WindowCommand):
             if index == 0:
                 self.run(config_name)
             elif index == 1:
-                self.run(config_name, panel_name="Console")
+                self.run(config_name, panel_name="Terminal")
 
     def get_config_by_name(self, name):
         default_config = self.default_config()
         if name == "Default":
             return default_config
 
-        settings = sublime.load_settings("Console.sublime-settings")
+        settings = sublime.load_settings("SublimelyTerminal.sublime-settings")
         configs = settings.get("shell_configs", [])
 
         platform = sublime.platform()
@@ -770,7 +770,7 @@ class ConsoleOpen(sublime_plugin.WindowCommand):
         raise Exception("Config {} not found".format(name))
 
     def default_config(self):
-        settings = sublime.load_settings("Console.sublime-settings")
+        settings = sublime.load_settings("SublimelyTerminal.sublime-settings")
         configs = settings.get("shell_configs", [])
 
         platform = sublime.platform()
@@ -804,19 +804,20 @@ class ConsoleOpen(sublime_plugin.WindowCommand):
             }
 
 
-class ConsoleActivate(sublime_plugin.TextCommand):
+class SubtermActivate(sublime_plugin.TextCommand):
 
     def run(self, _, **kwargs):
-        console_settings = sublime.load_settings("Console.sublime-settings")
+        subterm_settings = sublime.load_settings("SublimelyTerminal.sublime-settings")
 
         view = self.view
         settings = view.settings()
-        settings.set("console_view", True)
+        settings.set("subterm_view", True)
         if "panel_name" in kwargs:
-            settings.set("console_view.panel_name", kwargs["panel_name"])
-        settings.set("console_view.args", kwargs)
+            settings.set("subterm_view.panel_name", kwargs["panel_name"])
+        settings.set("subterm_view.args", kwargs)
         settings.set(
-            "console_view.nature_clipboard", console_settings.get("nature_clipboard", True))
+            "subterm_view.nature_clipboard",
+            subterm_settings.get("nature_clipboard", True))
         view.set_scratch(True)
         view.set_read_only(False)
         settings.set("gutter", False)
@@ -829,84 +830,85 @@ class ConsoleActivate(sublime_plugin.TextCommand):
         settings.set("draw_indent_guides", False)
         settings.set("caret_style", "blink")
         settings.set("scroll_past_end", True)
-        settings.set("color_scheme", "Console.sublime-color-scheme")
+        settings.set("color_scheme", "SublimelyTerminal.sublime-color-scheme")
 
-        console = Console(self.view)
-        console.open(**kwargs)
+        terminal = Terminal(self.view)
+        terminal.open(**kwargs)
 
 
-class ConsoleEventHandler(sublime_plugin.EventListener):
+class SubtermEventHandler(sublime_plugin.EventListener):
 
     def on_pre_close(self, view):
-        console = Console.from_id(view.id())
-        if console:
-            console.close()
+        terminal = Terminal.from_id(view.id())
+        if terminal:
+            terminal.close()
 
     def on_modified(self, view):
         # to catch unicode input
-        console = Console.from_id(view.id())
-        if not console or not console.process.isalive():
+        terminal = Terminal.from_id(view.id())
+        if not terminal or not terminal.process.isalive():
             return
         command, args, _ = view.command_history(0)
-        if command == "console_render":
+        if command == "subterm_render":
             return
         elif command == "insert" and "characters" in args:
             chars = args["characters"]
             logger.debug("char {} detected".format(chars))
-            console.send_string(chars)
+            terminal.send_string(chars)
         else:
             logger.debug("undo {}".format(command))
             view.run_command("soft_undo")
 
     def on_activated(self, view):
-        console = Console.from_id(view.id())
-        if console:
-            sublime.set_timeout(lambda: view.run_command("console_render", {"force": True}), 100)
+        terminal = Terminal.from_id(view.id())
+        if terminal:
+            sublime.set_timeout(
+                lambda: view.run_command("subterm_render", {"force": True}), 100)
             return
         settings = view.settings()
-        if not settings.has("console_view.args"):
+        if not settings.has("subterm_view.args"):
             return
 
-        kwargs = settings.get("console_view.args")
+        kwargs = settings.get("subterm_view.args")
         if "cmd" not in kwargs:
             return
 
         # pass offset so the previous output will not be erased
         kwargs["offset"] = view.rowcol(view.size())[0] + 1
-        view.run_command("console_activate", kwargs)
+        view.run_command("subterm_activate", kwargs)
 
 
-class ConsoleKeypress(sublime_plugin.TextCommand):
+class SubtermKeypress(sublime_plugin.TextCommand):
 
     def run(self, _, **kwargs):
-        console = Console.from_id(self.view.id())
-        if not console or not console.process.isalive():
+        terminal = Terminal.from_id(self.view.id())
+        if not terminal or not terminal.process.isalive():
             return
-        console.send_key(**kwargs)
-        self.view.run_command("console_render")
+        terminal.send_key(**kwargs)
+        self.view.run_command("subterm_render")
 
 
-class ConsolePaste(sublime_plugin.TextCommand):
+class SubtermPaste(sublime_plugin.TextCommand):
 
     def run(self, edit, bracketed=False):
         view = self.view
-        console = Console.from_id(view.id())
-        if not console:
+        terminal = Terminal.from_id(view.id())
+        if not terminal:
             return
 
-        bracketed = bracketed or console.bracketed_paste_mode_enabled()
+        bracketed = bracketed or terminal.bracketed_paste_mode_enabled()
         if bracketed:
-            console.send_key("bracketed_paste_mode_start")
+            terminal.send_key("bracketed_paste_mode_start")
 
         copied = sublime.get_clipboard()
         for char in copied:
-            console.send_string(char)
+            terminal.send_string(char)
 
         if bracketed:
-            console.send_key("bracketed_paste_mode_end")
+            terminal.send_key("bracketed_paste_mode_end")
 
 
-class ConsoleDeleteWord(sublime_plugin.TextCommand):
+class SubtermDeleteWord(sublime_plugin.TextCommand):
     """
     On Windows, ctrl+backspace and ctrl+delete are used to delete words
     However, there is no standard key to delete word with ctrl+backspace
@@ -915,8 +917,8 @@ class ConsoleDeleteWord(sublime_plugin.TextCommand):
 
     def run(self, edit, forward=False):
         view = self.view
-        console = Console.from_id(view.id())
-        if not console:
+        terminal = Terminal.from_id(view.id())
+        if not terminal:
             return
 
         if len(view.sel()) != 1 or not view.sel()[0].empty():
@@ -948,68 +950,68 @@ class ConsoleDeleteWord(sublime_plugin.TextCommand):
                 n = 1
             delete_code = get_key_code("backspace")
 
-        console.send_string(delete_code * n)
+        terminal.send_string(delete_code * n)
 
 
-class ToggleConsolePanel(sublime_plugin.WindowCommand):
+class ToggleSubtermPanel(sublime_plugin.WindowCommand):
 
     def run(self, **kwargs):
         window = self.window
         panel_name = kwargs["panel_name"]
-        console_view = window.find_output_panel(panel_name)
-        if console_view:
+        subterm_view = window.find_output_panel(panel_name)
+        if subterm_view:
             if window.active_panel() == "output.{}".format(panel_name):
                 window.run_command("hide_panel", {"panel": "output.{}".format(panel_name)})
             else:
                 window.run_command("show_panel", {"panel": "output.{}".format(panel_name)})
-                window.focus_view(console_view)
+                window.focus_view(subterm_view)
         else:
-            window.run_command("console_open", kwargs)
+            window.run_command("subterm_open", kwargs)
 
 
-class ConsoleSendString(sublime_plugin.WindowCommand):
+class SubtermSendString(sublime_plugin.WindowCommand):
     """
-    Send string to a (tagged) console
+    Send string to a (tagged) terminal
     """
 
     def run(self, string, tag=None):
         if tag:
-            console = Console.from_tag(tag)
-            self.bring_view_to_topmost(console.view)
+            terminal = Terminal.from_tag(tag)
+            self.bring_view_to_topmost(terminal.view)
         else:
-            view = self.get_console_panel()
+            view = self.get_subterm_panel()
             if view:
                 self.window.run_command("show_panel", {"panel": "output.{}".format(
-                    view.settings().get("console_view.panel_name")
+                    view.settings().get("subterm_view.panel_name")
                 )})
             else:
-                view = self.get_console_view()
+                view = self.get_subterm_view()
                 if view:
                     self.bring_view_to_topmost(view)
-            console = Console.from_id(view.id())
+            terminal = Terminal.from_id(view.id())
 
-        if not console:
-            raise Exception("no console found")
-        elif not console.process.isalive():
+        if not terminal:
+            raise Exception("no terminal found")
+        elif not terminal.process.isalive():
             raise Exception("process is terminated")
-        console.send_string(string)
-        console.view.run_command("console_render")
+        terminal.send_string(string)
+        terminal.view.run_command("subterm_render")
 
-    def get_console_panel(self):
+    def get_subterm_panel(self):
         window = self.window
         for panel in window.panels():
             panel_view = window.find_output_panel(panel.replace("output.", ""))
             if panel_view:
-                console = Console.from_id(panel_view.id())
-                if console:
+                terminal = Terminal.from_id(panel_view.id())
+                if terminal:
                     return panel_view
         return None
 
-    def get_console_view(self):
+    def get_subterm_view(self):
         window = self.window
         for v in window.views():
-            console = Console.from_id(v.id())
-            if console:
+            terminal = Terminal.from_id(v.id())
+            if terminal:
                 return v
 
     def bring_view_to_topmost(self, view):
@@ -1024,7 +1026,7 @@ class ConsoleSendString(sublime_plugin.WindowCommand):
 
 
 def plugin_loaded():
-    settings = sublime.load_settings("Console.sublime-settings")
+    settings = sublime.load_settings("SublimelyTerminal.sublime-settings")
 
     def on_change(debug):
         if debug:
@@ -1037,10 +1039,10 @@ def plugin_loaded():
 
 
 def plugin_unloaded():
-    # close all consoles
+    # close all terminals
     for w in sublime.windows():
-        w.destroy_output_panel("Console")
+        w.destroy_output_panel("Terminal")
         for view in w.views():
-            if view.settings().get("console_view"):
+            if view.settings().get("subterm_view"):
                 w.focus_view(view)
                 w.run_command("close")

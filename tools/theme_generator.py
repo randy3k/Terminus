@@ -19,7 +19,7 @@ def next_color(color_text):
     if hex_value == 255:  # ff
         return color_text[:5] + "fe"
     else:
-        return color_text[:5] + "{:2x}".format(hex_value+1).replace(" ", "0")
+        return color_text[:5] + "{:2x}".format(hex_value + 1).replace(" ", "0")
 
 
 ANSI_COLORS = [
@@ -102,7 +102,7 @@ def generate_theme_file(
             elif vcolor == "#default" or vcolor == background:
                 vcolor = "var(background)"
             rule = {}
-            rule["scope"] = "console.{}.{}".format(u, v)
+            rule["scope"] = "subterm.{}.{}".format(u, v)
             rule["foreground"] = ucolor
             rule["background"] = vcolor
             COLOR_SCHEME["rules"].append(rule)
@@ -117,7 +117,7 @@ def generate_theme_file(
 
 if __name__ == "__main__":
 
-    path = os.path.join(os.path.dirname(__file__), "..", "Console.sublime-color-scheme")
+    path = os.path.join(os.path.dirname(__file__), "..", "SublimelyTerminal.sublime-color-scheme")
     variables = {
         "background": "#262626",
         "foreground": "#ffffff",
