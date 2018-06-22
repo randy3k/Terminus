@@ -111,6 +111,15 @@ class StermGenerateTheme(sublime_plugin.WindowCommand):
 
 def plugin_loaded():
 
+    # this is a hack to remove the deprecated Console.sublime-color-scheme
+    deprecated_path = os.path.join(
+        sublime.packages_path(),
+        "User",
+        "Console.sublime-color-scheme"
+    )
+    if os.path.isfile(deprecated_path):
+        os.unlink(deprecated_path)
+
     settings = sublime.load_settings("SublimelyTerminal.sublime-settings")
 
     path = os.path.join(
