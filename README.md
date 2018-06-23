@@ -1,6 +1,6 @@
 # Bring a real terminal to Sublime Text
 
-It is a cross platform terminal for Sublime Text which works on Windows, macOS and Linux.
+The first cross platform terminal for Sublime Text.
 
 <table>
     <tr>
@@ -65,9 +65,9 @@ This package is not yet available via Package Control default channel, you have 
 
 ### User Key Bindings
 
-There are various key bindings which you may found useful.
+There are various key bindings which you may find useful.
 
-- run `Perferences: Terminus Key Bindings`
+- run `Preferences: Terminus Key Bindings`
 
 - toggle terminal panel
 ```js
@@ -116,7 +116,7 @@ A terminal could be opened using the command `terminus_open` with
 window.run_command(
     "terminus_open", {
         config_name=None,  # the shell config name, the default config is "Default"
-        cmd=None,          # the cmd to execuate if config_name is None
+        cmd=None,          # the cmd to execute if config_name is None
         cwd=None,          # the working directory
         env={},            # extra environmental variables
         title=None,        # title of the view
