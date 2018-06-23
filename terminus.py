@@ -9,8 +9,8 @@ import threading
 import logging
 
 
-from .te import TerminalPtyProcess, TerminalScreen, TerminalStream
-from .te import segment_buffer_line
+from .ptty import TerminalPtyProcess, TerminalScreen, TerminalStream
+from .ptty import segment_buffer_line
 from .key import get_key_code
 from .utils import rev_wcwidth, responsive, intermission, settings_on_change
 
@@ -236,7 +236,7 @@ class TerminusRender(sublime_plugin.TextCommand):
         logger.debug("mode: {}, cursor: {}.{}".format(
             [m >> 5 for m in screen.mode], screen.cursor.x, screen.cursor.y))
 
-    def show_offset_at_top(self, screen):
+    def scroll_to_cursor(self, screen):
         view = self.view
         layout = view.text_to_layout(view.text_point(screen.offset, 0))
         view.set_viewport_position(layout, True)
@@ -269,7 +269,7 @@ class TerminusRender(sublime_plugin.TextCommand):
         pt = view.text_point(cursor.y + offset, col)
 
         sel.add(sublime.Region(pt, pt))
-        self.show_offset_at_top(screen)
+        self.scroll_to_cursor(screen)
 
     def update_lines(self, edit, screen):
         # cursor = screen.cursor
