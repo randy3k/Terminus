@@ -80,7 +80,7 @@ class Terminal():
         data = [""]
         parent_window = self.view.window() or sublime.active_window()
 
-        @responsive(period=0.001, default=True)
+        @responsive(period=1, default=True)
         def view_is_attached():
             if self.panel_name:
                 window = self.view.window() or parent_window
@@ -89,8 +89,9 @@ class Terminal():
             else:
                 return self.view.window()
 
-        terminus_is_alive = responsive(period=1, default=True)(
-            lambda: self.process.isalive() and view_is_attached())
+        @responsive(period=1, default=True)
+        def process_is_alive():
+            return self.process.isalive()
 
         @responsive(period=1, default=False)
         def was_resized():
@@ -98,8 +99,10 @@ class Terminal():
             return self.screen.lines != size[0] or self.screen.columns != size[1]
 
         def reader():
-            # run self.view.windows() via `view_is_attached` periodically to refresh gui
-            while terminus_is_alive() and view_is_attached():
+            while process_is_alive() and view_is_attached():
+                # a trick to make window responsive when there is a lot of printings
+                # not sure why it works though
+                self.view.window()
                 try:
                     temp = self.process.read(1024)
                 except EOFError:
@@ -113,7 +116,7 @@ class Terminal():
         threading.Thread(target=reader).start()
 
         def renderer():
-            while terminus_is_alive():
+            while process_is_alive() and view_is_attached():
                 with intermission(period=0.03):
                     with lock:
                         if len(data[0]) > 0:
