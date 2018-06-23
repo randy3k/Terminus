@@ -74,15 +74,18 @@ There are various key bindings which you may found useful.
 { "keys": ["alt+`"], "command": "toggle_terminus_panel" }
 ```
 
-- close terminal in view or panel. It is particular useful for Window/Linux users who do not use `ctrl+w`; 
-macOS users could use `super+w` to close any terminal.
+- close terminal in view or panel. It is particular useful for Window/Linux
+  users who do not need to type `ctrl+w` in terminal (e.g., using vim). This
+  command could be triggered by `super+w` on macOS.
 ```js
-{ "keys": ["ctrl+w"], "command": "terminus_close" }
+{ "keys": ["ctrl+w"], "command": "terminus_close", "context": [{"key": "setting.terminus_view"}] }
 ```
 
-### Terminal Panel issue with DA UI
+### Terminal panel background issue
 
-If your terminal panel has weired background color, try playing with the setting `panel_background_color` in `DA UI: Theme Settings`.
+If you are using DA UI and your terminal panel has weired background color,
+try playing with the setting `panel_background_color` in `DA UI: Theme
+Settings`.
 
 <img src="https://user-images.githubusercontent.com/1690993/41728204-31a9a2a2-7544-11e8-9fb6-a37b59da852a.png" width="50%" />
 
