@@ -564,27 +564,29 @@ class TerminusActivate(sublime_plugin.TextCommand):
         terminus_settings = sublime.load_settings("Terminus.sublime-settings")
 
         view = self.view
-        settings = view.settings()
-        settings.set("terminus_view", True)
+        view_settings = view.settings()
+        view_settings.set("terminus_view", True)
         if "panel_name" in kwargs:
-            settings.set("terminus_view.panel_name", kwargs["panel_name"])
-        settings.set("terminus_view.args", kwargs)
-        settings.set(
+            view_settings.set("terminus_view.panel_name", kwargs["panel_name"])
+        view_settings.set("terminus_view.args", kwargs)
+        view_settings.set(
             "terminus_view.nature_clipboard",
             terminus_settings.get("nature_clipboard", True))
         view.set_scratch(True)
         view.set_read_only(False)
-        settings.set("gutter", False)
-        settings.set("highlight_line", False)
-        settings.set("auto_complete_commit_on_tab", False)
-        settings.set("draw_centered", False)
-        settings.set("word_wrap", False)
-        settings.set("auto_complete", False)
-        settings.set("draw_white_space", "none")
-        settings.set("draw_indent_guides", False)
-        settings.set("caret_style", "blink")
-        settings.set("scroll_past_end", True)
-        settings.set("color_scheme", "Terminus.sublime-color-scheme")
+        view_settings.set("gutter", False)
+        view_settings.set("highlight_line", False)
+        view_settings.set("auto_complete_commit_on_tab", False)
+        view_settings.set("draw_centered", False)
+        view_settings.set("word_wrap", False)
+        view_settings.set("auto_complete", False)
+        view_settings.set("draw_white_space", "none")
+        view_settings.set("draw_indent_guides", False)
+        view_settings.set("caret_style", "blink")
+        view_settings.set("scroll_past_end", True)
+        view_settings.set("color_scheme", "Terminus.sublime-color-scheme")
+        for key, value in terminus_settings.get("view_settings", {}).items():
+            view_settings.set(key, value)
 
         terminal = Terminal(self.view)
         terminal.open(**kwargs)

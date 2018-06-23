@@ -73,5 +73,12 @@
         // "13": "#ff00ff",  // light_magenta
         // "14": "#00ffff",  // light_cyan
         // "15": "#ffffff"   // light_white
+    },
+
+    "view_settings": {
+        // these are extra view settings which are passed to the terminus_view
+        // it might be necessary speicially for the output panel because Sublime
+        // Text doesn't pass the Plain Text specific settings to the output
+        // panel.
     }
 }
