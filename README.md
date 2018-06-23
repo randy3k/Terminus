@@ -95,6 +95,20 @@ Settings`.
 }
 ```
 
+### Alt-Left/Right to move between words (Unix)
+
+- Bash: add the following in `.bash_profile` or `.bashrc`
+```
+bind '"\e[1;3C": forward-word'
+bind '"\e[1;3D": backward-word'
+```
+
+- Zsh: add the following in `.zshrc`
+```
+bindkey "\e[1;3C" forward-word
+bindkey "\e[1;3D" backward-word
+```
+
 ### Note to other package developers
 
 A terminal could be opened using the command `terminus_open` with
