@@ -577,8 +577,8 @@ class TerminusActivate(sublime_plugin.TextCommand):
             view_settings.set("terminus_view.panel_name", kwargs["panel_name"])
         view_settings.set("terminus_view.args", kwargs)
         view_settings.set(
-            "terminus_view.nature_keyboard",
-            terminus_settings.get("nature_keyboard", True))
+            "terminus_view.natural_keyboard",
+            terminus_settings.get("natural_keyboard", True))
         view.set_scratch(True)
         view.set_read_only(False)
         view_settings.set("gutter", False)

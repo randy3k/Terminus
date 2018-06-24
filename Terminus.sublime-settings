@@ -47,7 +47,7 @@
     // use ctrl+c to copy
     // use ctrl+v to paste
     // use ctrl+w to close terminal
-    "nature_keyboard": true,
+    "natural_keyboard": true,
 
     // the name of the theme
     // change it to "user" if you want to use customized theme
