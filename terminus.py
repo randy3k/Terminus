@@ -159,6 +159,12 @@ class Terminal():
         # make sure the process is terminated
         self.close()
 
+        self.view.run_command(
+            "append",
+            {"characters": "\nprocess is terminated with return code {}.".format(
+                self.process.exitstatus)}),
+        self.view.set_read_only(True)
+
         if self.process.exitstatus == 0:
             if self.panel_name:
                 window = self.view.window()
@@ -169,12 +175,6 @@ class Terminal():
                 if window:
                     window.focus_view(self.view)
                     window.run_command("close")
-        else:
-            self.view.run_command(
-                "append",
-                {"characters": "\nprocess is terminated with return code {}.".format(
-                    self.process.exitstatus)}),
-            self.view.set_read_only(True)
 
     def handle_resize(self):
         size = view_size(self.view)
@@ -595,6 +595,10 @@ class TerminusActivate(sublime_plugin.TextCommand):
         for key, value in terminus_settings.get("view_settings", {}).items():
             view_settings.set(key, value)
 
+        if view.size() > 0:
+            kwargs["offset"] = view.rowcol(view.size())[0] + 2
+            logger.debug("activating with offset %s", kwargs["offset"])
+
         terminal = Terminal(self.view)
         terminal.open(**kwargs)
 
@@ -627,8 +631,9 @@ class TerminusEventHandler(sublime_plugin.EventListener):
         if terminal:
             # TODO: update cursor
             # sublime.set_timeout(
-                # lambda: view.run_command("terminus_render", {"force": True}), 100)
+            #     lambda: view.run_command("terminus_render", {"force": True}), 100)
             return
+
         settings = view.settings()
         if not settings.has("terminus_view.args"):
             return
@@ -637,9 +642,7 @@ class TerminusEventHandler(sublime_plugin.EventListener):
         if "cmd" not in kwargs:
             return
 
-        # pass offset so the previous output will not be erased
-        kwargs["offset"] = view.rowcol(view.size())[0] + 1
-        view.run_command("terminus_activate", kwargs)
+        sublime.set_timeout(lambda: view.run_command("terminus_activate", kwargs), 100)
 
 
 class TerminusClose(sublime_plugin.TextCommand):
