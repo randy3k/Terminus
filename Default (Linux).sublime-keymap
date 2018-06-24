@@ -5,7 +5,7 @@
         "context":
         [
             {"key": "setting.terminus_view"},
-            {"key": "setting.terminus_view.nature_clipboard"},
+            {"key": "setting.terminus_view.nature_keyboard"},
             {"key": "selection_empty", "operator": "equal", "operand": false, "match_all": true}
         ]
     },
@@ -13,9 +13,16 @@
         "context":
         [
             {"key": "setting.terminus_view"},
-            {"key": "setting.terminus_view.nature_clipboard"}
+            {"key": "setting.terminus_view.nature_keyboard"}
         ]
-    }
+    },
+    { "keys": ["ctrl+w"], "command": "terminus_close",
+        "context":
+        [
+            { "key": "setting.terminus_view" },
+            { "key": "setting.terminus_view.nature_keyboard" }
+        ]
+    },
 
     // { "keys": ["ctrl+w"], "command": "terminus_close", "context": [{"key": "setting.terminus_view"}] }
 ]

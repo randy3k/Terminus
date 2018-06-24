@@ -43,8 +43,11 @@
     // however, some features of xterm might not be supported here
     "unix_term": "linux",
 
-    // use ctrl+c and ctrl+v to copy and paste on Windows and Linux
-    "nature_clipboard": true,
+    // Windows and Linux only
+    // use ctrl+c to copy
+    // use ctrl+v to paste
+    // use ctrl+w to close terminal
+    "nature_keyboard": true,
 
     // the name of the theme
     // change it to "user" if you want to use customized theme

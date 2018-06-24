@@ -5,7 +5,7 @@ from collections import defaultdict, deque
 from wcwidth import wcwidth
 
 import pyte
-from pyte.screens import StaticDefaultDict, History, Cursor, Margins
+from pyte.screens import StaticDefaultDict, Cursor, Margins
 
 if sys.platform.startswith("win"):
     from winpty import PtyProcess
@@ -62,21 +62,35 @@ class TerminalPtyProcess(PtyProcess):
     pass
 
 
-class TerminalScreen(pyte.HistoryScreen):
-    offset = 0
-    _alt_screen_mode = False
-
+class TerminalScreen(pyte.Screen):
     def __init__(self, *args, **kwargs):
         if "process" in kwargs:
             self._process = kwargs["process"]
             del kwargs["process"]
         else:
             raise Exception("missing process")
-        self._primary_buffer = {}
-        super(TerminalScreen, self).__init__(*args, **kwargs)
 
-    def write_process_input(self, data):
-        self._process.write(data)
+        if "history" in kwargs:
+            history = kwargs["history"]
+            del kwargs["history"]
+        else:
+            history = 100
+
+        self.primary_buffer = {}
+        self.history = deque(maxlen=history)
+        self._alternate_buffer = False
+        super().__init__(*args, **kwargs)
+
+    # @property
+    # def display(self):
+    #     pass
+
+    def reset(self):
+        super().reset()
+        self.reset_history()
+
+    def reset_history(self):
+        self.history.clear()
 
     def resize(self, lines=None, columns=None):
         lines = lines or self.lines
@@ -93,7 +107,7 @@ class TerminalScreen(pyte.HistoryScreen):
             num_empty_lines = self.lines - 1 - bottom
             if line_diff > num_empty_lines:
                 line_diff = line_diff - num_empty_lines
-                self.push_screen_into_history(line_diff)
+                self.push_lines_into_history(line_diff)
                 self.scroll_up(line_diff)
                 self.cursor.y -= line_diff
 
@@ -114,47 +128,195 @@ class TerminalScreen(pyte.HistoryScreen):
 
     def set_mode(self, *modes, **kwargs):
         super().set_mode(*modes, **kwargs)
-        if 1049 << 5 in self.mode and not self._alt_screen_mode:
-            self._alt_screen_mode = True
+        if 1049 << 5 in self.mode and not self.alternate_buffer:
+            self.alternate_buffer = True
             self.switch_to_screen(alt=True)
 
     def reset_mode(self, *modes, **kwargs):
         super().reset_mode(*modes, **kwargs)
-        if 1049 << 5 not in self.mode and self._alt_screen_mode:
-            self._alt_screen_mode = False
+        if 1049 << 5 not in self.mode and self.alternate_buffer:
+            self.alternate_buffer = False
             self.switch_to_screen(alt=False)
 
-    def switch_to_screen(self, alt=False):
-        if alt:
-            self._primary_buffer["buffer"] = self.buffer
-            self._primary_buffer["history"] = self.history
-            self._primary_buffer["cursor"] = self.cursor
-            self.buffer = defaultdict(lambda: StaticDefaultDict(self.default_char))
-            self.history = History(deque(maxlen=0), deque(maxlen=0), 0.5, 0, 0)
-            self.cursor = Cursor(0, 0)
-        else:
-            self.buffer = self._primary_buffer["buffer"]
-            self.history = self._primary_buffer["history"]
-            self.cursor = self._primary_buffer["cursor"]
+    # def define_charset(self, code, mode):
+    #     pass
 
-        self.dirty.update(range(self.lines))
+    # def shift_in(self):
+    #     pass
 
-    def alt_screen_mode(self):
-        return self._alt_screen_mode
+    # def shift_out(self):
+    #     pass
+
+    def draw(self, data):
+        # TODO: soft wrap
+        super().draw(data)
+
+    # def set_title(self, param):
+    #     pass
+
+    # def set_icon_name(self, param):
+    #     pass
+
+    # def carriage_return(self):
+    #     pass
 
     def index(self):
-        if not self.alt_screen_mode() and self.cursor.y == self.lines - 1:
-            self.offset += 1
+        if not self.alternate_buffer and self.cursor.y == self.lines - 1:
+            self.push_lines_into_history(1)
         super().index()
+
+    # def reverse_index(self):
+    #     pass
+
+    # def linefeed(self):
+    #     pass
+
+    # def tab(self):
+    #     pass
+
+    # def backspace(self):
+    #    pass
+
+    # def save_cursor(self):
+    #     pass
+
+    # def restore_cursor(self):
+    #     pass
+
+    # def insert_lines(self, count=None):
+    #     pass
+
+    # def delete_lines(self, count=None):
+    #     pass
+
+    def insert_characters(self, count=None):
+        # TODO: soft wrap
+        super().insert_characters(count)
+
+    def delete_characters(self, count=None):
+        # TODO: soft wrap
+        super().delete_characters(count)
+
+    def erase_characters(self, count=None):
+        # TODO: soft wrap
+        super().erase_characters(count)
+
+    def erase_in_line(self, how=0, private=False):
+        # TODO: soft wrap
+        super().erase_in_line(how, private)
 
     def erase_in_display(self, how=0):
         # dump the screen to history
-        logger.debug("erase_in_display: %s", how)
-        if not self.alt_screen_mode() and \
+        if not self.alternate_buffer and \
                 (how == 2 or (how == 0 and self.cursor.x == 0 and self.cursor.y == 0)):
-            self.push_screen_into_history()
+            self.push_lines_into_history()
 
         super().erase_in_display(how)
+
+        if how == 3:
+            self.reset_history()
+
+    # def set_tab_stop(self):
+    #     pass
+
+    # def clear_tab_stop(self, how=0):
+    #     pass
+
+    # def ensure_hbounds(self):
+    #     pass
+
+    # def ensure_vbounds(self, use_margins=None):
+    #     pass
+
+    # def cursor_up(self, count=None):
+    #     pass
+
+    # def cursor_up1(self, count=None):
+    #     pass
+
+    # def cursor_down(self, count=None):
+    #     pass
+
+    # def cursor_down1(self, count=None):
+    #     pass
+
+    def cursor_back(self, count=None):
+        # TODO: soft wrap
+        super().cursor_back(count)
+
+    # def cursor_forward(self, count=None):
+    #     pass
+
+    # def cursor_position(self, line=None, column=None):
+    #     pass
+
+    # def cursor_to_column(self, column=None):
+    #     pass
+
+    # def cursor_to_line(self, line=None):
+    #     pass
+
+    # def bell(self, *args):
+    #     pass
+
+    # def alignment_display(self):
+    #     pass
+
+    # def select_graphic_rendition(self, *attrs):
+    #     pass
+
+    # def report_device_attributes(self, mode=0, **kwargs):
+    #     pass
+
+    # def report_device_status(self, mode):
+    #     pass
+
+    def write_process_input(self, data):
+        self._process.write(data)
+
+    # def debug(self, *args, **kwargs):
+    #     pass
+
+    def scroll_up(self, n):
+        top, bottom = self.margins or Margins(0, self.lines - 1)
+        for y in range(top, bottom + 1):
+            if y + n > bottom:
+                self.buffer[y].clear()
+            else:
+                self.buffer[y] = copy(self.buffer[y + n])
+        self.dirty.update(range(self.lines))
+
+    def scroll_down(self, n):
+        top, bottom = self.margins or Margins(0, self.lines - 1)
+        for y in reversed(range(top, bottom + 1)):
+            if y - n < top:
+                self.buffer[y].clear()
+            else:
+                self.buffer[y] = copy(self.buffer[y - n])
+        self.dirty.update(range(self.lines))
+
+    @property
+    def alternate_buffer(self):
+        return self._alternate_buffer
+
+    @alternate_buffer.setter
+    def alternate_buffer(self, value):
+        self._alternate_buffer = value
+
+    def switch_to_screen(self, alt=False):
+        if alt:
+            self.primary_buffer["buffer"] = self.buffer
+            self.primary_buffer["history"] = self.history
+            self.primary_buffer["cursor"] = self.cursor
+            self.buffer = defaultdict(lambda: StaticDefaultDict(self.default_char))
+            self.history = deque(maxlen=0)
+            self.cursor = Cursor(0, 0)
+        else:
+            self.buffer = self.primary_buffer["buffer"]
+            self.history = self.primary_buffer["history"]
+            self.cursor = self.primary_buffer["cursor"]
+
+        self.dirty.update(range(self.lines))
 
     def first_non_empty_line_from_bottom(self):
         found = -1
@@ -165,34 +327,13 @@ class TerminalScreen(pyte.HistoryScreen):
                 break
         return found
 
-    def push_screen_into_history(self, lines=None):
-        if self.alt_screen_mode():
+    def push_lines_into_history(self, count=None):
+        if self.alternate_buffer:
             return
-        if lines is None:
+        if count is None:
             # find the first non-empty line from the botton
-            lines = self.first_non_empty_line_from_bottom() + 1
-        self.history.top.extend(copy(self.buffer[y]) for y in range(lines))
-        self.offset += lines
-
-    def scroll_up(self, n):
-        logger.debug("scroll_up {}".format(n))
-        top, bottom = self.margins or Margins(0, self.lines - 1)
-        for y in range(top, bottom + 1):
-            if y + n > bottom:
-                self.buffer[y].clear()
-            else:
-                self.buffer[y] = copy(self.buffer[y + n])
-        self.dirty.update(range(self.lines))
-
-    def scroll_down(self, n):
-        logger.debug("scoll_down {}".format(n))
-        top, bottom = self.margins or Margins(0, self.lines - 1)
-        for y in reversed(range(top, bottom + 1)):
-            if y - n < top:
-                self.buffer[y].clear()
-            else:
-                self.buffer[y] = copy(self.buffer[y - n])
-        self.dirty.update(range(self.lines))
+            count = self.first_non_empty_line_from_bottom() + 1
+        self.history.extend(copy(self.buffer[y]) for y in range(count))
 
 
 class TerminalStream(pyte.Stream):
