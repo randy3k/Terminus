@@ -592,6 +592,8 @@ class TerminusActivate(sublime_plugin.TextCommand):
         view_settings.set("caret_style", "blink")
         view_settings.set("scroll_past_end", True)
         view_settings.set("color_scheme", "Terminus.sublime-color-scheme")
+        # disable vintageous
+        view_settings.set("__vi_external_disable", True)
         for key, value in terminus_settings.get("view_settings", {}).items():
             view_settings.set(key, value)
 
