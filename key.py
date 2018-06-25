@@ -1,7 +1,7 @@
 # adopted from TerminalView
 
 _KEY_MAP = {
-    "enter": "\r",
+    "enter": "\n",
     "backspace": "\x7f",
     "tab": "\t",
     "space": " ",
