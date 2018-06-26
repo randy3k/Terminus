@@ -108,13 +108,13 @@ A terminal could be opened using the command `terminus_open` with
 ```py
 window.run_command(
     "terminus_open", {
-        config_name=None,  # the shell config name, the default config is "Default"
-        cmd=None,          # the cmd to execute if config_name is None
-        cwd=None,          # the working directory
-        env={},            # extra environmental variables
-        title=None,        # title of the view
-        panel_name=None,   # the name of the panel if terminal should be opened in panel
-        tag=None           # a tag to identify the terminal
+        config_name: None,  # the shell config name, the default config is "Default"
+        cmd: None,          # the cmd to execute if config_name is None
+        cwd: None,          # the working directory
+        env: {},            # extra environmental variables
+        title: None,        # title of the view
+        panel_name: None,   # the name of the panel if terminal should be opened in panel
+        tag: None           # a tag to identify the terminal
     }
 )
 ```
