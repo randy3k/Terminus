@@ -624,6 +624,8 @@ class TerminusEventHandler(sublime_plugin.EventListener):
             chars = args["characters"]
             logger.debug("char {} detected".format(chars))
             terminal.send_string(chars)
+        elif command == "paste":
+            view.run_command("terminus_paste")
         else:
             logger.debug("undo {}".format(command))
             view.run_command("soft_undo")
@@ -686,8 +688,7 @@ class TerminusPaste(sublime_plugin.TextCommand):
             terminal.send_key("bracketed_paste_mode_start")
 
         copied = sublime.get_clipboard()
-        for char in copied:
-            terminal.send_string(char)
+        terminal.send_string(copied)
 
         if bracketed:
             terminal.send_key("bracketed_paste_mode_end")
