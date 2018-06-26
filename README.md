@@ -108,7 +108,7 @@ A terminal could be opened using the command `terminus_open` with
 ```py
 window.run_command(
     "terminus_open", {
-        config_name: None,  # the shell config name, the default config is "Default"
+        config_name: None,  # the shell config name, use "Default" for the default config
         cmd: None,          # the cmd to execute if config_name is None
         cwd: None,          # the working directory
         env: {},            # extra environmental variables
