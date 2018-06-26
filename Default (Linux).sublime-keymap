@@ -4,16 +4,16 @@
     { "keys": ["ctrl+c"], "command": "terminus_copy",
         "context":
         [
-            {"key": "setting.terminus_view"},
-            {"key": "setting.terminus_view.natural_keyboard"},
-            {"key": "selection_empty", "operator": "equal", "operand": false, "match_all": true}
+            { "key": "setting.terminus_view" },
+            { "key": "setting.terminus_view.natural_keyboard" },
+            { "key": "selection_empty", "operator": "equal", "operand": false, "match_all": true }
         ]
     },
     { "keys": ["ctrl+v"], "command": "terminus_paste",
         "context":
         [
-            {"key": "setting.terminus_view"},
-            {"key": "setting.terminus_view.natural_keyboard"}
+            { "key": "setting.terminus_view" },
+            { "key": "setting.terminus_view.natural_keyboard" }
         ]
     },
     { "keys": ["ctrl+w"], "command": "terminus_close",
@@ -22,7 +22,5 @@
             { "key": "setting.terminus_view" },
             { "key": "setting.terminus_view.natural_keyboard" }
         ]
-    },
-
-    // { "keys": ["ctrl+w"], "command": "terminus_close", "context": [{"key": "setting.terminus_view"}] }
+    }
 ]

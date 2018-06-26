@@ -24,8 +24,6 @@
         ]
     },
 
-    // { "keys": ["ctrl+w"], "command": "terminus_close", "context": [{"key": "setting.terminus_view"}] },
-
     { "keys": ["ctrl+backspace"], "command": "terminus_delete_word", "args": {"forward": false}, "context": [{"key": "setting.terminus_view"}] },
     { "keys": ["ctrl+delete"], "command": "terminus_delete_word", "args": {"forward": true}, "context": [{"key": "setting.terminus_view"}] }
 ]
