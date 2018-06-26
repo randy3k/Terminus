@@ -201,7 +201,7 @@ class Terminal():
     def send_string(self, string):
         logger.debug("sent {}".format(string))
         # process does not recognize "\n"
-        string = string.replace("\n\r", "\r")
+        string = string.replace("\r\n", "\n")
         string = string.replace("\n", "\r")
         self.process.write(string)
 
