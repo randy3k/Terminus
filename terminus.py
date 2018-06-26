@@ -607,6 +607,11 @@ class TerminusActivate(sublime_plugin.TextCommand):
 
 class TerminusEventHandler(sublime_plugin.EventListener):
 
+    @property
+    def g_clipboard_history(self):
+        import Default
+        return Default.paste_from_history.g_clipboard_history
+
     def on_pre_close(self, view):
         terminal = Terminal.from_id(view.id())
         if terminal:
@@ -624,11 +629,30 @@ class TerminusEventHandler(sublime_plugin.EventListener):
             chars = args["characters"]
             logger.debug("char {} detected".format(chars))
             terminal.send_string(chars)
-        elif command == "paste":
-            view.run_command("terminus_paste")
-        else:
+        elif command:
             logger.debug("undo {}".format(command))
             view.run_command("soft_undo")
+
+    def on_text_command(self, view, name, args):
+        if not view.settings().get('terminus_view'):
+            return
+
+        if name == "paste":
+            return ("terminus_paste", None)
+        elif name == "paste_from_history":
+            return ("terminus_paste_from_history", None)
+
+    def on_post_text_command(self, view, name, args):
+        """
+        help panel terminal to capture copied text
+        """
+        if not view.settings().get('terminus_view'):
+            return
+
+        if name == 'copy' or name == 'terminus_copy':
+            if not view.settings().get('is_widget'):
+                return
+            self.g_clipboard_history.push_text(sublime.get_clipboard())
 
     def on_activated(self, view):
         terminal = Terminal.from_id(view.id())
@@ -681,8 +705,7 @@ class TerminusCopy(sublime_plugin.TextCommand):
     """
     def run(self, edit):
         view = self.view
-        terminal = Terminal.from_id(view.id())
-        if not terminal:
+        if not view.settings().get("terminus_view"):
             return
         view.run_command("copy")
 
@@ -704,6 +727,34 @@ class TerminusPaste(sublime_plugin.TextCommand):
 
         if bracketed:
             terminal.send_key("bracketed_paste_mode_end")
+
+
+class TerminusPasteFromHistoryCommand(sublime_plugin.TextCommand):
+    @property
+    def g_clipboard_history(self):
+        import Default
+        return Default.paste_from_history.g_clipboard_history
+
+    def run(self, edit):
+        # provide paste choices
+        paste_list = self.g_clipboard_history.get()
+        keys = [x[0] for x in paste_list]
+        self.view.show_popup_menu(keys, lambda choice_index: self.paste_choice(choice_index))
+
+    def is_enabled(self):
+        return not self.g_clipboard_history.empty()
+
+    def paste_choice(self, choice_index):
+        if choice_index == -1:
+            return
+        # use normal paste command
+        text = self.g_clipboard_history.get()[choice_index][1]
+
+        # rotate to top
+        self.g_clipboard_history.push_text(text)
+
+        sublime.set_clipboard(text)
+        self.view.run_command("terminus_paste")
 
 
 class TerminusDeleteWord(sublime_plugin.TextCommand):
