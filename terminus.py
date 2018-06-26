@@ -200,10 +200,10 @@ class Terminal():
 
     def send_string(self, string):
         logger.debug("sent {}".format(string))
-        # process does not recognize "\n"
+        # normalize CR and CRLF to CR
         string = string.replace("\r\n", "\n")
         string = string.replace("\n", "\r")
-        self.process.write(string)
+        self.screen.write_process_input(string)
 
     def bracketed_paste_mode_enabled(self):
         return (2004 << 5) in self.screen.mode

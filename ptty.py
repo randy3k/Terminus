@@ -6,6 +6,8 @@ from wcwidth import wcwidth
 
 import pyte
 from pyte.screens import StaticDefaultDict, Cursor, Margins
+from pyte import modes as mo
+
 
 if sys.platform.startswith("win"):
     from winpty import PtyProcess
@@ -272,6 +274,8 @@ class TerminalScreen(pyte.Screen):
     #     pass
 
     def write_process_input(self, data):
+        if mo.LNM in self.mode:
+            data = data.replace("\r", "\r\n")
         self._process.write(data)
 
     # def debug(self, *args, **kwargs):
