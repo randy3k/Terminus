@@ -78,6 +78,7 @@ class Terminal():
     def _start_rendering(self):
         lock = threading.Lock()
         data = [""]
+        end_loop_handled = [False]
         parent_window = self.view.window() or sublime.active_window()
 
         @responsive(period=1, default=True)
@@ -98,6 +99,12 @@ class Terminal():
             size = view_size(self.view)
             return self.screen.lines != size[0] or self.screen.columns != size[1]
 
+        def cleanup():
+            with lock:
+                if not end_loop_handled[0]:
+                    end_loop_handled[0] = True
+                    sublime.set_timeout(lambda: self.cleanup())
+
         def reader():
             while process_is_alive() and view_is_attached():
                 # a trick to make window responsive when there is a lot of printings
@@ -111,7 +118,7 @@ class Terminal():
                 with lock:
                     data[0] += temp
 
-            sublime.set_timeout(lambda: self.handle_end_loop())
+            cleanup()
 
         threading.Thread(target=reader).start()
 
@@ -129,6 +136,8 @@ class Terminal():
 
                     if self._need_to_render():
                         self.view.run_command("terminus_render")
+
+            cleanup()
 
         threading.Thread(target=renderer).start()
 
@@ -154,7 +163,7 @@ class Terminal():
             del self._terminals[vid]
         self.process.terminate()
 
-    def handle_end_loop(self):
+    def cleanup(self):
         # process might be still alive but view was detached
         # make sure the process is terminated
         self.close()
@@ -677,6 +686,9 @@ class TerminusClose(sublime_plugin.TextCommand):
 
     def run(self, _):
         view = self.view
+        terminal = Terminal.from_id(view.id())
+        if terminal:
+            terminal.close()
         panel_name = view.settings().get("terminus_view.panel_name")
         if panel_name:
             window = view.window()
