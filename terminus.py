@@ -675,6 +675,18 @@ class TerminusKeypress(sublime_plugin.TextCommand):
         self.view.run_command("terminus_render")
 
 
+class TerminusCopy(sublime_plugin.TextCommand):
+    """
+    It does nothing special now, just `copy`.
+    """
+    def run(self, edit):
+        view = self.view
+        terminal = Terminal.from_id(view.id())
+        if not terminal:
+            return
+        view.run_command("copy")
+
+
 class TerminusPaste(sublime_plugin.TextCommand):
 
     def run(self, edit, bracketed=False):

@@ -1,4 +1,5 @@
 [
+    { "keys": ["super+c"], "command": "terminus_copy", "context": [{"key": "setting.terminus_view"}] },
     { "keys": ["super+v"], "command": "terminus_paste", "context": [{"key": "setting.terminus_view"}] },
     { "keys": ["super+w"], "command": "terminus_close", "context": [{"key": "setting.terminus_view"}] },
 

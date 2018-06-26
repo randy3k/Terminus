@@ -1,7 +1,7 @@
 [
-    { "keys": ["ctrl+shift+c"], "command": "copy", "context": [{"key": "setting.terminus_view"}] },
+    { "keys": ["ctrl+shift+c"], "command": "terminus_copy", "context": [{"key": "setting.terminus_view"}] },
     { "keys": ["ctrl+shift+v"], "command": "terminus_paste", "context": [{"key": "setting.terminus_view"}] },
-    { "keys": ["ctrl+c"], "command": "copy",
+    { "keys": ["ctrl+c"], "command": "terminus_copy",
         "context":
         [
             { "key": "setting.terminus_view" },
