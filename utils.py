@@ -41,6 +41,9 @@ def rev_wcwidth(text, width):
     """
     Given a text, return the location such that the substring has width `width`.
     """
+    if width == 0:
+        return -1
+
     w = 0
     i = -1
     # loop over to check for double width chars
