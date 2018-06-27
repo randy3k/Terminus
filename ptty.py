@@ -202,6 +202,7 @@ class TerminalScreen(pyte.Screen):
                 if pos:
                     normalized = unicodedata.normalize("NFC", last.data + char)
                     self.buffer[pos[0]][pos[1]] = last._replace(data=normalized)
+                    self.dirty.add(pos[0])
             else:
                 break
 
