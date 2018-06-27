@@ -102,7 +102,7 @@ bindkey "\e[1;3C" forward-word
 bindkey "\e[1;3D" backward-word
 ```
 
-### Note to other package developers
+### Note to advanced users
 
 A terminal could be opened using the command `terminus_open` with
 ```py
