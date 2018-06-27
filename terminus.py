@@ -603,6 +603,9 @@ class TerminusActivate(sublime_plugin.TextCommand):
         view_settings.set(
             "terminus_view.natural_keyboard",
             terminus_settings.get("natural_keyboard", True))
+        view_settings.set(
+            "terminus_view.ctrl+k",
+            terminus_settings.get("ctrl+k", True))
         view.set_scratch(True)
         view.set_read_only(False)
         view_settings.set("gutter", False)
