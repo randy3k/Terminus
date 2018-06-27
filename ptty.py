@@ -81,7 +81,7 @@ class TerminalScreen(pyte.Screen):
 
         self.primary_buffer = {}
         self.history = deque(maxlen=history)
-        self._alternate_buffer = False
+        self._alternate_buffer_mode = False
         super().__init__(*args, **kwargs)
 
     # @property
@@ -132,14 +132,14 @@ class TerminalScreen(pyte.Screen):
 
     def set_mode(self, *modes, **kwargs):
         super().set_mode(*modes, **kwargs)
-        if 1049 << 5 in self.mode and not self.alternate_buffer:
-            self.alternate_buffer = True
+        if 1049 << 5 in self.mode and not self.alternate_buffer_mode:
+            self.alternate_buffer_mode = True
             self.switch_to_screen(alt=True)
 
     def reset_mode(self, *modes, **kwargs):
         super().reset_mode(*modes, **kwargs)
-        if 1049 << 5 not in self.mode and self.alternate_buffer:
-            self.alternate_buffer = False
+        if 1049 << 5 not in self.mode and self.alternate_buffer_mode:
+            self.alternate_buffer_mode = False
             self.switch_to_screen(alt=False)
 
     # def define_charset(self, code, mode):
@@ -221,7 +221,7 @@ class TerminalScreen(pyte.Screen):
     #     pass
 
     def index(self):
-        if not self.alternate_buffer and self.cursor.y == self.lines - 1:
+        if not self.alternate_buffer_mode and self.cursor.y == self.lines - 1:
             self.push_lines_into_history(1)
         super().index()
 
@@ -263,7 +263,7 @@ class TerminalScreen(pyte.Screen):
 
     def erase_in_display(self, how=0):
         # dump the screen to history
-        if not self.alternate_buffer and \
+        if not self.alternate_buffer_mode and \
                 (how == 2 or (how == 0 and self.cursor.x == 0 and self.cursor.y == 0)):
             self.push_lines_into_history()
 
@@ -327,8 +327,6 @@ class TerminalScreen(pyte.Screen):
     #     pass
 
     def write_process_input(self, data):
-        if mo.LNM in self.mode:
-            data = data.replace("\r", "\r\n")
         self._process.write(data)
 
     # def debug(self, *args, **kwargs):
@@ -353,12 +351,12 @@ class TerminalScreen(pyte.Screen):
         self.dirty.update(range(self.lines))
 
     @property
-    def alternate_buffer(self):
-        return self._alternate_buffer
+    def alternate_buffer_mode(self):
+        return self._alternate_buffer_mode
 
-    @alternate_buffer.setter
-    def alternate_buffer(self, value):
-        self._alternate_buffer = value
+    @alternate_buffer_mode.setter
+    def alternate_buffer_mode(self, value):
+        self._alternate_buffer_mode = value
 
     def switch_to_screen(self, alt=False):
         if alt:
@@ -385,7 +383,7 @@ class TerminalScreen(pyte.Screen):
         return found
 
     def push_lines_into_history(self, count=None):
-        if self.alternate_buffer:
+        if self.alternate_buffer_mode:
             return
         if count is None:
             # find the first non-empty line from the botton

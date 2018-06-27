@@ -196,17 +196,30 @@ class Terminal():
         self.view.set_name(title)
 
     def send_key(self, *args, **kwargs):
-        self.send_string(get_key_code(*args, **kwargs))
+        kwargs["application_mode"] = self.application_mode_enabled()
+        kwargs["new_line_mode"] = self.new_line_mode_enabled()
+        self.send_string(get_key_code(*args, **kwargs), normalized=False)
 
-    def send_string(self, string):
+    def send_string(self, string, normalized=True):
+        if normalized:
+            # normalize CR and CRLF to CR (or CRLF if LNM)
+            string = string.replace("\r\n", "\n")
+            if self.new_line_mode_enabled():
+                string = string.replace("\n", "\r\n")
+            else:
+                string = string.replace("\n", "\r")
+
         logger.debug("sent {}".format(string))
-        # normalize CR and CRLF to CR
-        string = string.replace("\r\n", "\n")
-        string = string.replace("\n", "\r")
-        self.screen.write_process_input(string)
+        self.process.write(string)
 
     def bracketed_paste_mode_enabled(self):
         return (2004 << 5) in self.screen.mode
+
+    def new_line_mode_enabled(self):
+        return (20 << 5) in self.screen.mode
+
+    def application_mode_enabled(self):
+        return (1 << 5) in self.screen.mode
 
     def __del__(self):
         # make sure the process is terminated
@@ -864,6 +877,7 @@ class TerminusSendString(sublime_plugin.WindowCommand):
             raise Exception("no terminal found")
         elif not terminal.process.isalive():
             raise Exception("process is terminated")
+
         terminal.send_string(string)
         terminal.view.run_command("terminus_render")
 
