@@ -127,6 +127,7 @@ window.run_command(
     }
 )
 ```
+PS: For packages developers, the setting `view.settings().get("terminus_view.tag")` can be used to identify the terminal.
 
 Text can be sent to the terminal with
 ```py

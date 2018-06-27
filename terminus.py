@@ -584,6 +584,8 @@ class TerminusActivate(sublime_plugin.TextCommand):
         view_settings.set("terminus_view", True)
         if "panel_name" in kwargs:
             view_settings.set("terminus_view.panel_name", kwargs["panel_name"])
+        if "tag" in kwargs:
+            view_settings.set("terminus_view.tag", kwargs["tag"])
         view_settings.set("terminus_view.args", kwargs)
         view_settings.set(
             "terminus_view.natural_keyboard",
