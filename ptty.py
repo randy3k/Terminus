@@ -1,8 +1,9 @@
 import sys
 import logging
+import unicodedata
 from copy import copy
 from collections import defaultdict, deque
-from wcwidth import wcwidth
+from wcwidth import wcwidth, wcswidth
 
 import pyte
 from pyte.screens import StaticDefaultDict, Cursor, Margins
@@ -39,7 +40,7 @@ def segment_buffer_line(buffer_line):
             is_wide_char = False
             continue
         char = buffer_line[i]
-        is_wide_char = wcwidth(char.data) == 2
+        is_wide_char = wcswidth(char.data) >= 2
 
         if counter == 0:
             counter = i
@@ -151,8 +152,63 @@ class TerminalScreen(pyte.Screen):
     #     pass
 
     def draw(self, data):
-        # TODO: soft wrap
-        super().draw(data)
+        """
+        Terminus alters the logic to better support double width chars
+        """
+        data = data.translate(
+            self.g1_charset if self.charset else self.g0_charset)
+
+        for char in data:
+            char_width = wcwidth(char)
+
+            if (self.cursor.x == self.columns and char_width == 1)  \
+                    or (self.cursor.x == self.columns - 1 and char_width == 2):
+                if mo.DECAWM in self.mode:
+                    self.dirty.add(self.cursor.y)
+                    self.carriage_return()
+                    self.linefeed()
+                elif char_width > 0:
+                    self.cursor.x -= char_width
+
+            if mo.IRM in self.mode and char_width > 0:
+                self.insert_characters(char_width)
+
+            line = self.buffer[self.cursor.y]
+            if char_width == 1:
+                line[self.cursor.x] = self.cursor.attrs._replace(data=char)
+            elif char_width == 2:
+                line[self.cursor.x] = self.cursor.attrs._replace(data=char)
+                if self.cursor.x + 1 < self.columns:
+                    line[self.cursor.x + 1] = self.cursor.attrs \
+                        ._replace(data="")
+            elif char_width == 0 and unicodedata.combining(char):
+                # unfornately, sublime text doesn't render decomposed double char correctly
+                pos = None
+                for (row, col) in [
+                        (self.cursor.y, self.cursor.x),
+                        (self.cursor.y - 1, self.columns)]:
+                    if row < 0:
+                        continue
+                    if col >= 2:
+                        last = line[col - 2]
+                        if wcswidth(last.data) >= 2:
+                            pos = (row, col - 2)
+                            break
+                    if col >= 1:
+                        last = line[col - 1]
+                        pos = (row, col - 1)
+                        break
+
+                if pos:
+                    normalized = unicodedata.normalize("NFC", last.data + char)
+                    self.buffer[pos[0]][pos[1]] = last._replace(data=normalized)
+            else:
+                break
+
+            if char_width > 0:
+                self.cursor.x = min(self.cursor.x + char_width, self.columns)
+
+        self.dirty.add(self.cursor.y)
 
     # def set_title(self, param):
     #     pass
@@ -192,21 +248,17 @@ class TerminalScreen(pyte.Screen):
     # def delete_lines(self, count=None):
     #     pass
 
-    def insert_characters(self, count=None):
-        # TODO: soft wrap
-        super().insert_characters(count)
+    # def insert_characters(self, count=None):
+    #     pass
 
-    def delete_characters(self, count=None):
-        # TODO: soft wrap
-        super().delete_characters(count)
+    # def delete_characters(self, count=None):
+    #     pass
 
-    def erase_characters(self, count=None):
-        # TODO: soft wrap
-        super().erase_characters(count)
+    # def erase_characters(self, count=None):
+    #     pass
 
-    def erase_in_line(self, how=0, private=False):
-        # TODO: soft wrap
-        super().erase_in_line(how, private)
+    # def erase_in_line(self, how=0, private=False):
+    #     pass
 
     def erase_in_display(self, how=0):
         # dump the screen to history
@@ -243,9 +295,8 @@ class TerminalScreen(pyte.Screen):
     # def cursor_down1(self, count=None):
     #     pass
 
-    def cursor_back(self, count=None):
-        # TODO: soft wrap
-        super().cursor_back(count)
+    # def cursor_back(self, count=None):
+    #     pass
 
     # def cursor_forward(self, count=None):
     #     pass
