@@ -120,6 +120,7 @@ class TerminalScreen(pyte.Screen):
 
         self.lines, self.columns = lines, columns
         self.set_margins()
+        self.tabstops = set(range(8, self.columns, 8))
 
     def set_margins(self, top=None, bottom=None):
         if (top is None or top == 0) and bottom is None:
