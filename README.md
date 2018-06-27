@@ -102,6 +102,15 @@ bindkey "\e[1;3C" forward-word
 bindkey "\e[1;3D" backward-word
 ```
 
+Some programs, such as julia, does not recognize the standard keycodes for `alt+left` and `alt+right`. You could
+bind them to `alt+b` and `alt+f` respectively
+```
+[
+    { "keys": ["alt+left"], "command": "terminus_keypress", "args": {"key": "b", "alt": true}, "context": [{"key": "setting.terminus_view"}] },
+    { "keys": ["alt+right"], "command": "terminus_keypress", "args": {"key": "f", "alt": true}, "context": [{"key": "setting.terminus_view"}] }
+]
+```
+
 ### Note to advanced users
 
 A terminal could be opened using the command `terminus_open` with
