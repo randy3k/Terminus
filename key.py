@@ -79,7 +79,7 @@ _SHIFT_KEY_MAP = {
 }
 
 
-def _get_ctrl_combination_key_code(key, application_mode=False, new_line_mode=False):
+def _get_ctrl_combination_key_code(key):
     key = key.lower()
     if key in _CTRL_KEY_MAP:
         return _CTRL_KEY_MAP[key]
@@ -89,19 +89,19 @@ def _get_ctrl_combination_key_code(key, application_mode=False, new_line_mode=Fa
             c = c - ord('a') + 1
             return chr(c)
 
-    return _get_key_code(key, application_mode, new_line_mode)
+    return _get_key_code(key)
 
 
-def _get_alt_combination_key_code(key, application_mode=False, new_line_mode=False):
+def _get_alt_combination_key_code(key):
     key = key.lower()
     if key in _ALT_KEY_MAP:
         return _ALT_KEY_MAP[key]
 
-    code = _get_key_code(key, application_mode, new_line_mode)
+    code = _get_key_code(key)
     return "\x1b" + code
 
 
-def _get_shift_combination_key_code(key, application_mode=False, new_line_mode=False):
+def _get_shift_combination_key_code(key):
     key = key.lower()
     if key in _SHIFT_KEY_MAP:
         return _SHIFT_KEY_MAP[key]
@@ -129,11 +129,11 @@ def get_key_code(
     Send keypress to the shell
     """
     if ctrl:
-        keycode = _get_ctrl_combination_key_code(key, application_mode, new_line_mode)
+        keycode = _get_ctrl_combination_key_code(key)
     elif alt:
-        keycode = _get_alt_combination_key_code(key, application_mode, new_line_mode)
+        keycode = _get_alt_combination_key_code(key)
     elif shift:
-        keycode = _get_shift_combination_key_code(key, application_mode, new_line_mode)
+        keycode = _get_shift_combination_key_code(key)
     else:
         keycode = _get_key_code(key, application_mode, new_line_mode)
 
