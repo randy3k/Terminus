@@ -1,16 +1,4 @@
 {
     "schema_version": "3.0.0",
-    "packages": [
-        {
-            "name": "Terminus",
-            "details": "https://github.com/randy3k/Terminus",
-            "author": "randy3k",
-            "releases": [
-                {
-                    "sublime_text": ">=3000",
-                    "branch": "master"
-                }
-            ]
-        }
-    ]
+    "packages": []
 }
