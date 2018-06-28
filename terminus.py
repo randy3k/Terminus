@@ -295,7 +295,7 @@ class TerminusRender(sublime_plugin.TextCommand):
         pt = view.text_point(cursor.y + offset, col)
 
         sel.add(sublime.Region(pt, pt))
-        self.scroll_to_cursor(terminal)
+        sublime.set_timeout(lambda: self.scroll_to_cursor(terminal))
 
     def update_lines(self, edit, terminal):
         # cursor = screen.cursor
