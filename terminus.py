@@ -587,6 +587,11 @@ class TerminusOpen(sublime_plugin.WindowCommand):
             }
 
 
+KEYS = [
+    "ctrl+k"
+]
+
+
 class TerminusActivate(sublime_plugin.TextCommand):
 
     def run(self, _, **kwargs):
@@ -604,9 +609,9 @@ class TerminusActivate(sublime_plugin.TextCommand):
             "terminus_view.natural_keyboard",
             terminus_settings.get("natural_keyboard", True))
         ignore_keys = terminus_settings.get("ignore_keys", {})
-        for key in ignore_keys:
-            view_settings.set(
-                "terminus_view.ignore_keys.{}".format(key), True)
+        for key in KEYS:
+            if key not in ignore_keys:
+                view_settings.set("terminus_view.key.{}".format(key), True)
         view.set_scratch(True)
         view.set_read_only(False)
         view_settings.set("gutter", False)
