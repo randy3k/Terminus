@@ -198,7 +198,6 @@ class TerminalScreen(pyte.Screen):
                 self.insert_characters(char_width)
 
             line = self.buffer[self.cursor.y]
-            self.dirty.add(self.cursor.y)
             if char_width == 1:
                 line[self.cursor.x] = self.cursor.attrs._replace(data=char)
             elif char_width == 2:
@@ -233,6 +232,8 @@ class TerminalScreen(pyte.Screen):
 
             if char_width > 0:
                 self.cursor.x = min(self.cursor.x + char_width, self.columns)
+
+        self.dirty.add(self.cursor.y)
 
     # def set_title(self, param):
     #     pass
