@@ -8,6 +8,7 @@ from wcwidth import wcwidth, wcswidth
 import pyte
 from pyte.screens import StaticDefaultDict, Cursor, Margins
 from pyte import modes as mo
+from pyte import graphics as g
 
 
 if sys.platform.startswith("win"):
@@ -17,6 +18,29 @@ else:
 
 
 logger = logging.getLogger('Terminus')
+
+
+FG_AIXTERM = {
+    90: "light_black",
+    91: "light_red",
+    92: "light_green",
+    93: "light_brown",
+    94: "light_blue",
+    95: "light_magenta",
+    96: "light_cyan",
+    97: "light_white"
+}
+
+BG_AIXTERM = {
+    100: "light_black",
+    101: "light_red",
+    102: "light_green",
+    103: "light_brown",
+    104: "light_blue",
+    105: "light_magenta",
+    106: "light_cyan",
+    107: "light_white"
+}
 
 
 def segment_buffer_line(buffer_line):
@@ -316,8 +340,53 @@ class TerminalScreen(pyte.Screen):
     # def alignment_display(self):
     #     pass
 
-    # def select_graphic_rendition(self, *attrs):
-    #     pass
+    def select_graphic_rendition(self, *attrs):
+        """Set display attributes.
+
+        :param list attrs: a list of display attributes to set.
+        """
+        replace = {}
+
+        # Fast path for resetting all attributes.
+        if not attrs or attrs == (0, ):
+            self.cursor.attrs = self.default_char
+            return
+        else:
+            attrs = list(reversed(attrs))
+
+        while attrs:
+            attr = attrs.pop()
+            if attr == 0:
+                # Reset all attributes.
+                replace.update(self.default_char._asdict())
+            elif attr in g.FG_ANSI:
+                replace["fg"] = g.FG_ANSI[attr]
+            elif attr in g.BG:
+                replace["bg"] = g.BG_ANSI[attr]
+            elif attr in g.TEXT:
+                attr = g.TEXT[attr]
+                replace[attr[1:]] = attr.startswith("+")
+            elif attr in g.FG_AIXTERM:
+                replace.update(fg=FG_AIXTERM[attr])
+            elif attr in g.BG_AIXTERM:
+                replace.update(bg=BG_AIXTERM[attr])
+            elif attr in (g.FG_256, g.BG_256):
+                key = "fg" if attr == g.FG_256 else "bg"
+                try:
+                    n = attrs.pop()
+                    if n == 5:    # 256.
+                        m = attrs.pop()
+                        replace[key] = g.FG_BG_256[m]
+                    elif n == 2:  # 24bit.
+                        # This is somewhat non-standard but is nonetheless
+                        # supported in quite a few terminals. See discussion
+                        # here https://gist.github.com/XVilka/8346728.
+                        replace[key] = "{0:02x}{1:02x}{2:02x}".format(
+                            attrs.pop(), attrs.pop(), attrs.pop())
+                except IndexError:
+                    pass
+
+        self.cursor.attrs = self.cursor.attrs._replace(**replace)
 
     # def report_device_attributes(self, mode=0, **kwargs):
     #     pass
