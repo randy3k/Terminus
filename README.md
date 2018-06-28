@@ -46,17 +46,7 @@ This package is heavily inspired by [TerminalView](https://github.com/Wramberg/T
 
 ### Installation
 
-This package is not yet available via Package Control default channel, you have to add the following repository manually.
-
-- run `Package Control: Add Repository`
-- paste
-
-    ```
-    https://raw.githubusercontent.com/randy3k/Terminus/master/package_control.json
-    ```
-    and hit enter
-
-- then you could install it as usual - `Package Control: Install Package` and search for `Terminus`
+Via Package Control.
 
 ### Getting started
 
