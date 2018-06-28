@@ -49,9 +49,11 @@
     // use ctrl+w to close terminal
     "natural_keyboard": true,
 
-    // Windows and Linux users may want to turn this off because there are quite a few shortcuts
-    // depend uses "ctrl+k"
-    "ctrl+k": true,
+    // Windows and Linux users may want to ignore "ctrl+k" because there are quite a few shortcuts
+    // uses "ctrl+k". (Only "ctrl+k" is supported for now.)
+    "ignore_keys" : [
+        // "ctrl+k"
+    ],
 
     // the name of the theme
     // change it to "user" if you want to use customized theme

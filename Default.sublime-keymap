@@ -132,7 +132,7 @@
     { "keys": ["ctrl+k"], "command": "terminus_keypress", "args": {"key": "k", "ctrl": true}, "context":
         [
             { "key": "setting.terminus_view" },
-            { "key": "setting.terminus_view.ctrl+k" }
+            { "key": "setting.terminus_view.ignore_keys.ctrl+k", "operator": "not_equal", "operand": true }
         ]
     },
     { "keys": ["ctrl+l"], "command": "terminus_keypress", "args": {"key": "l", "ctrl": true}, "context": [{"key": "setting.terminus_view"}] },
