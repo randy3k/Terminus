@@ -650,7 +650,7 @@ class TerminusEventHandler(sublime_plugin.EventListener):
         if not terminal or not terminal.process.isalive():
             return
         command, args, _ = view.command_history(0)
-        if command == "terminus_render":
+        if command in ["terminus_render", "terminus_keypress"]:
             return
         elif command == "insert" and "characters" in args:
             chars = args["characters"]
