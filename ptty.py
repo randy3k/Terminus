@@ -2,11 +2,11 @@ import sys
 import logging
 import unicodedata
 from copy import copy
-from collections import defaultdict, deque
+from collections import defaultdict, deque, namedtuple
 from wcwidth import wcwidth, wcswidth
 
 import pyte
-from pyte.screens import StaticDefaultDict, Cursor, Margins
+from pyte.screens import StaticDefaultDict, Margins
 from pyte import modes as mo
 from pyte import graphics as g
 
@@ -65,6 +65,8 @@ def segment_buffer_line(buffer_line):
             is_wide_char = False
             continue
         char = buffer_line[i]
+        if char.linefeed:
+            print(char)
         is_wide_char = wcswidth(char.data) >= 2
 
         if counter == 0:
@@ -92,12 +94,49 @@ def segment_buffer_line(buffer_line):
     yield text, start, counter, fg, bg
 
 
+class Char(namedtuple("Char", [
+    "data",
+    "fg",
+    "bg",
+    "bold",
+    "italics",
+    "underscore",
+    "strikethrough",
+    "reverse",
+    "linefeed"
+])):
+
+    __slots__ = ()
+
+    def __new__(cls, data, fg="default", bg="default", bold=False,
+                italics=False, underscore=False,
+                strikethrough=False, reverse=False, linefeed=False):
+        return super(Char, cls).__new__(cls, data, fg, bg, bold, italics,
+                                        underscore, strikethrough, reverse, linefeed)
+
+
+class Cursor(object):
+    __slots__ = ("x", "y", "attrs", "hidden")
+
+    def __init__(self, x, y, attrs=Char(" ")):
+        self.x = x
+        self.y = y
+        self.attrs = attrs
+        self.hidden = False
+
+
 class TerminalPtyProcess(PtyProcess):
 
     pass
 
 
 class TerminalScreen(pyte.Screen):
+
+    @property
+    def default_char(self):
+        reverse = mo.DECSCNM in self.mode
+        return Char(data=" ", fg="default", bg="default", reverse=reverse)
+
     def __init__(self, *args, **kwargs):
         if "process" in kwargs:
             self._process = kwargs["process"]
@@ -123,6 +162,7 @@ class TerminalScreen(pyte.Screen):
     def reset(self):
         super().reset()
         self.reset_history()
+        self.cursor = Cursor(0, 0)
 
     def reset_history(self):
         self.history.clear()
@@ -192,10 +232,12 @@ class TerminalScreen(pyte.Screen):
 
         for char in data:
             char_width = wcwidth(char)
-
-            if (self.cursor.x == self.columns and char_width == 1)  \
-                    or (self.cursor.x == self.columns - 1 and char_width == 2):
+            if (self.cursor.x == self.columns and char_width >= 1)  \
+                    or (self.cursor.x == self.columns - 1 and char_width >= 2):
                 if mo.DECAWM in self.mode:
+                    last = self.buffer[self.cursor.y][self.columns - 1]
+                    self.buffer[self.cursor.y][self.columns - 1] = \
+                        last._replace(linefeed=True)
                     self.dirty.add(self.cursor.y)
                     self.carriage_return()
                     self.linefeed()
@@ -211,8 +253,7 @@ class TerminalScreen(pyte.Screen):
             elif char_width == 2:
                 line[self.cursor.x] = self.cursor.attrs._replace(data=char)
                 if self.cursor.x + 1 < self.columns:
-                    line[self.cursor.x + 1] = self.cursor.attrs \
-                        ._replace(data="")
+                    line[self.cursor.x + 1] = self.cursor.attrs._replace(data="")
             elif char_width == 0 and unicodedata.combining(char):
                 # unfornately, sublime text doesn't render decomposed double char correctly
                 pos = None

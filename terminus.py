@@ -8,12 +8,13 @@ import time
 import threading
 import logging
 
-
 from .ptty import TerminalPtyProcess, TerminalScreen, TerminalStream
 from .ptty import segment_buffer_line
 from .key import get_key_code
 from .utils import rev_wcwidth, responsive, intermission, settings_on_change
 
+
+CONTINUATION = "\u200b\u200c\u200b"
 
 logger = logging.getLogger('Terminus')
 
@@ -151,6 +152,7 @@ class Terminal():
         size = view_size(self.view)
         if size == (1, 1):
             size = (24, 80)
+        self.view.settings().set("wrap_width", size[1])
         logger.debug("view size: {}".format(str(size)))
         self.process = TerminalPtyProcess.spawn(cmd, cwd=cwd, env=_env, dimensions=size)
         self.screen = TerminalScreen(size[1], size[0], process=self.process, history=10000)
@@ -193,6 +195,7 @@ class Terminal():
             self.screen.lines, self.screen.columns, size[0], size[1]))
         self.process.setwinsize(*size)
         self.screen.resize(*size)
+        self.view.settings().set("wrap_width", size[1])
 
     def set_title(self, title):
         self.view.set_name(title)
@@ -259,6 +262,7 @@ class TerminusRender(sublime_plugin.TextCommand):
         self.update_cursor(edit, terminal)
         self.trim_trailing_spaces(edit, terminal)
         self.trim_history(edit, terminal)
+        screen.dirty.clear()
         logger.debug("updating lines takes {}s".format(str(time.time() - startt)))
         logger.debug("mode: {}, cursor: {}.{}".format(
             [m >> 5 for m in screen.mode], screen.cursor.x, screen.cursor.y))
@@ -302,7 +306,8 @@ class TerminusRender(sublime_plugin.TextCommand):
     def update_lines(self, edit, terminal):
         # cursor = screen.cursor
         screen = terminal.screen
-        dirty_lines = screen.dirty.copy()
+        columns = screen.columns
+        dirty_lines = sorted(screen.dirty)
         if dirty_lines:
             # replay history
             history = screen.history
@@ -312,23 +317,30 @@ class TerminusRender(sublime_plugin.TextCommand):
 
             for line in range(len(history)):
                 buffer_line = history.pop()
-                self.update_line(edit, offset - line - 1, buffer_line)
+                lf = buffer_line[columns - 1].linefeed
+                self.update_line(edit, offset - line - 1, buffer_line, lf)
 
             # update dirty line¡s
             logger.debug("screen is dirty: {}".format(str(dirty_lines)))
-            screen.dirty.clear()
             for line in dirty_lines:
                 buffer_line = screen.buffer[line]
-                self.update_line(edit, line + offset, buffer_line)
+                lf = buffer_line[columns - 1].linefeed
+                self.update_line(edit, line + offset, buffer_line, lf)
 
-    def update_line(self, edit, line, buffer_line):
+    def update_line(self, edit, line, buffer_line, lf):
         view = self.view
         # make sure the view has enough lines
         self.ensure_position(edit, line)
         line_region = view.line(view.text_point(line, 0))
         segments = list(segment_buffer_line(buffer_line))
         view.erase(edit, line_region)
-        view.insert(edit, line_region.begin(), "".join(s[0] for s in segments).rstrip())
+        text = "".join(s[0] for s in segments).rstrip()
+        if lf:
+            # append a zero width space if the the line ends with a linefeed
+            # we will use it to do non-break copying and searching
+            # this hack is much easier than rewraping the lines
+            text += CONTINUATION
+        view.insert(edit, line_region.begin(), text)
         self.colorize_line(edit, line, segments)
 
     def colorize_line(self, edit, line, segments):
@@ -684,7 +696,9 @@ class TerminusEventHandler(sublime_plugin.EventListener):
         if not view.settings().get('terminus_view'):
             return
 
-        if name == "paste":
+        if name == "copy":
+            return ("terminus_copy", None)
+        elif name == "paste":
             return ("terminus_paste", None)
         elif name == "paste_from_history":
             return ("terminus_paste_from_history", None)
@@ -757,7 +771,17 @@ class TerminusCopy(sublime_plugin.TextCommand):
         view = self.view
         if not view.settings().get("terminus_view"):
             return
-        view.run_command("copy")
+        text = ""
+        for s in view.sel():
+            if text:
+                text += "\n"
+            text += view.substr(s)
+
+        # remove the continuation marker
+        text = text.replace(CONTINUATION + "\n", "")
+        text = text.replace(CONTINUATION, "")
+
+        sublime.set_clipboard(text)
 
 
 class TerminusPaste(sublime_plugin.TextCommand):
