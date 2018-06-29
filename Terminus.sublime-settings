@@ -36,6 +36,14 @@
             "enable": true,
             "default": false,
             "platforms": ["windows"]
+        },
+        {
+            "name": "WSL Login Shell",
+            "cmd": "wsl.exe",
+            "env": {},
+            "enable": true,
+            "default": false,
+            "platforms": ["windows"]
         }
     ],
 
