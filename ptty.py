@@ -78,7 +78,6 @@ def segment_buffer_line(buffer_line):
             reverse = char.reverse
             if reverse:
                 fg, bg = bg, fg
-                # TODO: they should be really the background and foreground!?
                 if fg == "default":
                     fg = "revdefault"
                 if bg == "default":
