@@ -84,6 +84,7 @@ def generate_theme_file(
     if ansi_scopes:
         colors.update(_colors16)
         colors["default"] = "#default"
+        colors["revdefault"] = "#revdefault"
     if color256_scopes:
         for i, rgb in enumerate(pyte.graphics.FG_BG_256):
             colors[rgb] = "#{}".format(rgb)
@@ -97,10 +98,14 @@ def generate_theme_file(
                 ucolor = "var({})".format(u)
             elif ucolor == "#default":
                 ucolor = "var(foreground)"
+            elif ucolor == "#revdefault":
+                ucolor = "var(background)"
             if v in ANSI_COLORS:
                 vcolor = "var({})".format(v)
             elif vcolor == "#default" or vcolor == background:
                 vcolor = "var(background)"
+            elif vcolor == "#revdefault":
+                vcolor = "var(foreground)"
             rule = {}
             rule["scope"] = "terminus.{}.{}".format(u, v)
             rule["foreground"] = ucolor

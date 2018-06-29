@@ -53,6 +53,7 @@ def segment_buffer_line(buffer_line):
     counter = 0
     fg = "default"
     bg = "default"
+    reverse = False
 
     if buffer_line:
         last_index = max(buffer_line.keys()) + 1
@@ -70,10 +71,18 @@ def segment_buffer_line(buffer_line):
             counter = i
             text = " " * i
 
-        if fg != char.fg or bg != char.bg:
+        if fg != char.fg or bg != char.bg or reverse != char.reverse:
             yield text, start, counter, fg, bg
             fg = char.fg
             bg = char.bg
+            reverse = char.reverse
+            if reverse:
+                fg, bg = bg, fg
+                # TODO: they should be really the background and foreground!?
+                if fg == "default":
+                    fg = "revdefault"
+                if bg == "default":
+                    bg = "revdefault"
             text = char.data
             start = counter
         else:

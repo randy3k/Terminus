@@ -119,6 +119,11 @@
             "background": "var(background)"
         },
         {
+            "scope": "terminus.black.revdefault",
+            "foreground": "var(black)",
+            "background": "var(foreground)"
+        },
+        {
             "scope": "terminus.red.black",
             "foreground": "var(red)",
             "background": "var(black)"
@@ -202,6 +207,11 @@
             "scope": "terminus.red.default",
             "foreground": "var(red)",
             "background": "var(background)"
+        },
+        {
+            "scope": "terminus.red.revdefault",
+            "foreground": "var(red)",
+            "background": "var(foreground)"
         },
         {
             "scope": "terminus.green.black",
@@ -289,6 +299,11 @@
             "background": "var(background)"
         },
         {
+            "scope": "terminus.green.revdefault",
+            "foreground": "var(green)",
+            "background": "var(foreground)"
+        },
+        {
             "scope": "terminus.brown.black",
             "foreground": "var(brown)",
             "background": "var(black)"
@@ -372,6 +387,11 @@
             "scope": "terminus.brown.default",
             "foreground": "var(brown)",
             "background": "var(background)"
+        },
+        {
+            "scope": "terminus.brown.revdefault",
+            "foreground": "var(brown)",
+            "background": "var(foreground)"
         },
         {
             "scope": "terminus.blue.black",
@@ -459,6 +479,11 @@
             "background": "var(background)"
         },
         {
+            "scope": "terminus.blue.revdefault",
+            "foreground": "var(blue)",
+            "background": "var(foreground)"
+        },
+        {
             "scope": "terminus.magenta.black",
             "foreground": "var(magenta)",
             "background": "var(black)"
@@ -542,6 +567,11 @@
             "scope": "terminus.magenta.default",
             "foreground": "var(magenta)",
             "background": "var(background)"
+        },
+        {
+            "scope": "terminus.magenta.revdefault",
+            "foreground": "var(magenta)",
+            "background": "var(foreground)"
         },
         {
             "scope": "terminus.cyan.black",
@@ -629,6 +659,11 @@
             "background": "var(background)"
         },
         {
+            "scope": "terminus.cyan.revdefault",
+            "foreground": "var(cyan)",
+            "background": "var(foreground)"
+        },
+        {
             "scope": "terminus.white.black",
             "foreground": "var(white)",
             "background": "var(black)"
@@ -712,6 +747,11 @@
             "scope": "terminus.white.default",
             "foreground": "var(white)",
             "background": "var(background)"
+        },
+        {
+            "scope": "terminus.white.revdefault",
+            "foreground": "var(white)",
+            "background": "var(foreground)"
         },
         {
             "scope": "terminus.light_black.black",
@@ -799,6 +839,11 @@
             "background": "var(background)"
         },
         {
+            "scope": "terminus.light_black.revdefault",
+            "foreground": "var(light_black)",
+            "background": "var(foreground)"
+        },
+        {
             "scope": "terminus.light_red.black",
             "foreground": "var(light_red)",
             "background": "var(black)"
@@ -882,6 +927,11 @@
             "scope": "terminus.light_red.default",
             "foreground": "var(light_red)",
             "background": "var(background)"
+        },
+        {
+            "scope": "terminus.light_red.revdefault",
+            "foreground": "var(light_red)",
+            "background": "var(foreground)"
         },
         {
             "scope": "terminus.light_green.black",
@@ -969,6 +1019,11 @@
             "background": "var(background)"
         },
         {
+            "scope": "terminus.light_green.revdefault",
+            "foreground": "var(light_green)",
+            "background": "var(foreground)"
+        },
+        {
             "scope": "terminus.light_brown.black",
             "foreground": "var(light_brown)",
             "background": "var(black)"
@@ -1052,6 +1107,11 @@
             "scope": "terminus.light_brown.default",
             "foreground": "var(light_brown)",
             "background": "var(background)"
+        },
+        {
+            "scope": "terminus.light_brown.revdefault",
+            "foreground": "var(light_brown)",
+            "background": "var(foreground)"
         },
         {
             "scope": "terminus.light_blue.black",
@@ -1139,6 +1199,11 @@
             "background": "var(background)"
         },
         {
+            "scope": "terminus.light_blue.revdefault",
+            "foreground": "var(light_blue)",
+            "background": "var(foreground)"
+        },
+        {
             "scope": "terminus.light_magenta.black",
             "foreground": "var(light_magenta)",
             "background": "var(black)"
@@ -1222,6 +1287,11 @@
             "scope": "terminus.light_magenta.default",
             "foreground": "var(light_magenta)",
             "background": "var(background)"
+        },
+        {
+            "scope": "terminus.light_magenta.revdefault",
+            "foreground": "var(light_magenta)",
+            "background": "var(foreground)"
         },
         {
             "scope": "terminus.light_cyan.black",
@@ -1309,6 +1379,11 @@
             "background": "var(background)"
         },
         {
+            "scope": "terminus.light_cyan.revdefault",
+            "foreground": "var(light_cyan)",
+            "background": "var(foreground)"
+        },
+        {
             "scope": "terminus.light_white.black",
             "foreground": "var(light_white)",
             "background": "var(black)"
@@ -1394,6 +1469,11 @@
             "background": "var(background)"
         },
         {
+            "scope": "terminus.light_white.revdefault",
+            "foreground": "var(light_white)",
+            "background": "var(foreground)"
+        },
+        {
             "scope": "terminus.default.black",
             "foreground": "var(foreground)",
             "background": "var(black)"
@@ -1477,6 +1557,101 @@
             "scope": "terminus.default.default",
             "foreground": "var(foreground)",
             "background": "var(background)"
+        },
+        {
+            "scope": "terminus.default.revdefault",
+            "foreground": "var(foreground)",
+            "background": "var(foreground)"
+        },
+        {
+            "scope": "terminus.revdefault.black",
+            "foreground": "var(background)",
+            "background": "var(black)"
+        },
+        {
+            "scope": "terminus.revdefault.red",
+            "foreground": "var(background)",
+            "background": "var(red)"
+        },
+        {
+            "scope": "terminus.revdefault.green",
+            "foreground": "var(background)",
+            "background": "var(green)"
+        },
+        {
+            "scope": "terminus.revdefault.brown",
+            "foreground": "var(background)",
+            "background": "var(brown)"
+        },
+        {
+            "scope": "terminus.revdefault.blue",
+            "foreground": "var(background)",
+            "background": "var(blue)"
+        },
+        {
+            "scope": "terminus.revdefault.magenta",
+            "foreground": "var(background)",
+            "background": "var(magenta)"
+        },
+        {
+            "scope": "terminus.revdefault.cyan",
+            "foreground": "var(background)",
+            "background": "var(cyan)"
+        },
+        {
+            "scope": "terminus.revdefault.white",
+            "foreground": "var(background)",
+            "background": "var(white)"
+        },
+        {
+            "scope": "terminus.revdefault.light_black",
+            "foreground": "var(background)",
+            "background": "var(light_black)"
+        },
+        {
+            "scope": "terminus.revdefault.light_red",
+            "foreground": "var(background)",
+            "background": "var(light_red)"
+        },
+        {
+            "scope": "terminus.revdefault.light_green",
+            "foreground": "var(background)",
+            "background": "var(light_green)"
+        },
+        {
+            "scope": "terminus.revdefault.light_brown",
+            "foreground": "var(background)",
+            "background": "var(light_brown)"
+        },
+        {
+            "scope": "terminus.revdefault.light_blue",
+            "foreground": "var(background)",
+            "background": "var(light_blue)"
+        },
+        {
+            "scope": "terminus.revdefault.light_magenta",
+            "foreground": "var(background)",
+            "background": "var(light_magenta)"
+        },
+        {
+            "scope": "terminus.revdefault.light_cyan",
+            "foreground": "var(background)",
+            "background": "var(light_cyan)"
+        },
+        {
+            "scope": "terminus.revdefault.light_white",
+            "foreground": "var(background)",
+            "background": "var(light_white)"
+        },
+        {
+            "scope": "terminus.revdefault.default",
+            "foreground": "var(background)",
+            "background": "var(background)"
+        },
+        {
+            "scope": "terminus.revdefault.revdefault",
+            "foreground": "var(background)",
+            "background": "var(foreground)"
         }
     ]
 }
