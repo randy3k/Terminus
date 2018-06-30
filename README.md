@@ -55,13 +55,23 @@ Via Package Control.
 
 ### User Key Bindings
 
-There are various key bindings which you may find useful.
-
-- run `Preferences: Terminus Key Bindings`
+You may find these key bindings useful. To edit, run `Preferences: Terminus Key Bindings`.
 
 - toggle terminal panel
 ```js
-{ "keys": ["alt+`"], "command": "toggle_terminus_panel" }
+{ 
+    "keys": ["alt+`"], "command": "toggle_terminus_panel" 
+}
+```
+
+- open a terminal view at current file directory (check the details of `terminus_open` below)
+```js
+{ 
+    "keys": ["ctrl+alt+t"], "command": "terminus_open", "args": {
+        "config_name": "Default",
+        "cwd": "${file_path:${folder}}"
+    }
+}
 ```
 
 ### Terminal panel background issue
@@ -117,7 +127,7 @@ window.run_command(
     }
 )
 ```
-PS: For packages developers, the setting `view.settings().get("terminus_view.tag")` can be used to identify the terminal.
+PS: For packages developers, the setting `view.settings().get("terminus_view.tag")` can be used to identify the terminal. The fields `cmd` and `cwd` understand Sublime Text build system [variables](https://www.sublimetext.com/docs/3/build_systems.html#variables).
 
 Text can be sent to the terminal with
 ```py
