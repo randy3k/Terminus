@@ -97,7 +97,7 @@ bind them to `alt+b` and `alt+f` respectively
 ]
 ```
 
-## Note to advanced users
+## Note to advance users
 
 - A terminal could be opened using the command `terminus_open` with
 ```py
