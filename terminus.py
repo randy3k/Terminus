@@ -413,6 +413,8 @@ class TerminusOpen(sublime_plugin.WindowCommand):
             tag=None):
         config = None
 
+        st_vars = self.window.extract_variables()
+
         if config_name:
             config = self.get_config_by_name(config_name)
         elif cmd:
@@ -427,6 +429,8 @@ class TerminusOpen(sublime_plugin.WindowCommand):
             return
 
         cmd = config["cmd"]
+        if cmd:
+            cmd = sublime.expand_variables(cmd, st_vars)
 
         if "env" in config:
             _env = config["env"]
@@ -453,8 +457,9 @@ class TerminusOpen(sublime_plugin.WindowCommand):
         _env.update(env)
 
         if cwd:
-            pass
-        else:
+            cwd = sublime.expand_variables(cwd, st_vars)
+
+        if not cwd:
             if self.window.folders():
                 cwd = self.window.folders()[0]
             else:
