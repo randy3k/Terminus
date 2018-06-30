@@ -99,7 +99,7 @@ bind them to `alt+b` and `alt+f` respectively
 
 ## Note to advanced users
 
-A terminal could be opened using the command `terminus_open` with
+- A terminal could be opened using the command `terminus_open` with
 ```py
 window.run_command(
     "terminus_open", {
@@ -116,7 +116,7 @@ window.run_command(
 ```
 PS: For packages developers, the setting `view.settings().get("terminus_view.tag")` can be used to identify the terminal. The fields `cmd` and `cwd` understand Sublime Text build system [variables](https://www.sublimetext.com/docs/3/build_systems.html#variables).
 
-Text can be sent to the terminal with
+- text can be sent to the terminal with
 ```py
 window.run_command(
     "terminus_send_string", 
@@ -127,6 +127,26 @@ window.run_command(
 )
 ```
 If `tag` is not provided, the text will be sent to the first terminal found in the current window.
+
+- Terminus as a build system. For example, the following can be added to your project settings to allow
+"SSH to Remote" build system.
+
+```js
+{
+    "build_systems":
+    [
+        {
+            "cmd":
+            [
+                "bash", "-c", "ssh user@example.com"
+            ],
+            "name": "SSH to Remote",
+            "target": "terminus_open",
+            "working_dir": "$folder"
+        }
+    ]
+}
+```
 
 ## FAQ
 
