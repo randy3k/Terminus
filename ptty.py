@@ -79,9 +79,9 @@ def segment_buffer_line(buffer_line):
             if reverse:
                 fg, bg = bg, fg
                 if fg == "default":
-                    fg = "revdefault"
+                    fg = "reverse_default"
                 if bg == "default":
-                    bg = "revdefault"
+                    bg = "reverse_default"
             text = char.data
             start = counter
         else:
