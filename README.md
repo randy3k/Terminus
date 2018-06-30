@@ -44,16 +44,16 @@ This package is heavily inspired by [TerminalView](https://github.com/Wramberg/T
 - better xterm support
 - terminal panel
 
-### Installation
+## Installation
 
-Via Package Control.
+Package Control.
 
 ### Getting started
 
 - run `Terminus: Open Default Shell in View`
 
 
-### User Key Bindings
+## User Key Bindings
 
 You may find these key bindings useful. To edit, run `Preferences: Terminus Key Bindings`.
 
@@ -71,20 +71,6 @@ You may find these key bindings useful. To edit, run `Preferences: Terminus Key 
         "config_name": "Default",
         "cwd": "${file_path:${folder}}"
     }
-}
-```
-
-### Terminal panel background issue
-
-If you are using DA UI and your terminal panel has weired background color,
-try playing with the setting `panel_background_color` in `DA UI: Theme
-Settings`.
-
-<img src="https://user-images.githubusercontent.com/1690993/41728204-31a9a2a2-7544-11e8-9fb6-a37b59da852a.png" width="50%" />
-
-```js
-{
-    "panel_background_color": "$background_color"
 }
 ```
 
@@ -111,7 +97,7 @@ bind them to `alt+b` and `alt+f` respectively
 ]
 ```
 
-### Note to advanced users
+## Note to advanced users
 
 A terminal could be opened using the command `terminus_open` with
 ```py
@@ -141,6 +127,21 @@ window.run_command(
 ```
 If `tag` is not provided, the text will be sent to the first terminal found in the current window.
 
+## FAQ
+
+### Terminal panel background issue
+
+If you are using DA UI and your terminal panel has weired background color,
+try playing with the setting `panel_background_color` in `DA UI: Theme
+Settings`.
+
+<img src="https://user-images.githubusercontent.com/1690993/41728204-31a9a2a2-7544-11e8-9fb6-a37b59da852a.png" width="50%" />
+
+```js
+{
+    "panel_background_color": "$background_color"
+}
+```
 
 ### Acknowledgments
 
