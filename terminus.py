@@ -407,6 +407,7 @@ class TerminusOpen(sublime_plugin.WindowCommand):
             config_name=None,
             cmd=None,
             cwd=None,
+            working_dir=None,
             env={},
             title=None,
             panel_name=None,
@@ -455,6 +456,9 @@ class TerminusOpen(sublime_plugin.WindowCommand):
                     _env["LANG"] = "en_US.UTF-8"
 
         _env.update(env)
+
+        if not cwd and working_dir:
+            cwd = working_dir
 
         if cwd:
             cwd = sublime.expand_variables(cwd, st_vars)
