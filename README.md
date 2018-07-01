@@ -138,7 +138,7 @@ If `tag` is not provided, the text will be sent to the first terminal found in t
         {
             "cmd":
             [
-                "bash", "-c", "ssh user@example.com"
+                "ssh", "user@example.com"
             ],
             "name": "SSH to Remote",
             "target": "terminus_open",
