@@ -78,7 +78,7 @@ class Terminal():
     def _start_rendering(self):
         lock = threading.Lock()
         data = [""]
-        end_loop_handled = [False]
+        done = [False]
         parent_window = self.view.window() or sublime.active_window()
 
         @responsive(period=1, default=True)
@@ -90,46 +90,41 @@ class Terminal():
             else:
                 return self.view.window()
 
-        @responsive(period=1, default=True)
-        def process_is_alive():
-            return self.process.isalive()
-
         @responsive(period=1, default=False)
         def was_resized():
             size = view_size(self.view)
             return self.screen.lines != size[0] or self.screen.columns != size[1]
 
-        def cleanup():
+        def feed_data():
             with lock:
-                if not end_loop_handled[0]:
-                    end_loop_handled[0] = True
-                    sublime.set_timeout(lambda: self.cleanup())
+                if len(data[0]) > 0:
+                    logger.debug("receieved: {}".format(data[0]))
+                    self.stream.feed(data[0])
+                    data[0] = ""
 
         def reader():
-            while process_is_alive() and view_is_attached():
+            while True:
                 # a trick to make window responsive when there is a lot of printings
                 # not sure why it works though
                 self.view.window()
                 try:
                     temp = self.process.read(1024)
                 except EOFError:
-                    data[0] = ""
                     break
                 with lock:
                     data[0] += temp
 
-            cleanup()
+                if done[0] or not view_is_attached():
+                    break
+
+            done[0] = True
 
         threading.Thread(target=reader).start()
 
         def renderer():
-            while process_is_alive() and view_is_attached():
+            while True:
                 with intermission(period=0.03):
-                    with lock:
-                        if len(data[0]) > 0:
-                            logger.debug("receieved: {}".format(data[0]))
-                            self.stream.feed(data[0])
-                            data[0] = ""
+                    feed_data()
 
                     if was_resized():
                         self.handle_resize()
@@ -137,7 +132,12 @@ class Terminal():
                     if self._need_to_render():
                         self.view.run_command("terminus_render")
 
-            cleanup()
+                    if done[0] or not view_is_attached():
+                        break
+
+            feed_data()
+            done[0] = True
+            sublime.set_timeout(lambda: self.cleanup())
 
         threading.Thread(target=renderer).start()
 
@@ -164,6 +164,8 @@ class Terminal():
         self.process.terminate()
 
     def cleanup(self):
+        self.view.run_command("terminus_render")
+
         # process might be still alive but view was detached
         # make sure the process is terminated
         self.close()
