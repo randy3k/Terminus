@@ -469,6 +469,9 @@ class TerminusOpen(sublime_plugin.WindowCommand):
             else:
                 cwd = os.path.expanduser("~")
 
+        if not os.path.isdir(cwd):
+            raise Exception("{} does not exist".format(cwd))
+
         if not title:
             title = config["name"]
 
