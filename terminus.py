@@ -444,6 +444,9 @@ class TerminusOpen(sublime_plugin.WindowCommand):
             return
 
         cmd = config["cmd"]
+        if isinstance(cmd, str):
+            cmd = [cmd]
+
         if cmd:
             cmd = sublime.expand_variables(cmd, st_vars)
 
