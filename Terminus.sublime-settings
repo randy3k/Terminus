@@ -1,7 +1,4 @@
 {
-    "256color": false,
-    "debug": false,
-
     // a list of available shells to execute
     // the shell marked as "default" will the default shell
     "shell_configs": [
@@ -47,9 +44,15 @@
         }
     ],
 
+    // Note: for unix users, you will get better 256 color experience
+    // if you also set "unix_term" to "xterm-256color"
+    // 256 color is not working on Windows because of upstream winpty's issue
+    // https://github.com/rprichard/winpty/issues/108
+    "256color": false,
+
     // the default TERM variable of unix system. Possible values are
     // "linux", "xterm" and "xterm-256color"
-    "unix_term": "xterm-256color",
+    "unix_term": "linux",
 
     // Windows and Linux only
     // use ctrl+c to copy
@@ -98,5 +101,7 @@
         // it might be also necessary for the output panel because Sublime
         // Text doesn't pass the Plain Text specific settings to the output
         // panel.
-    }
+    },
+
+    "debug": false
 }
