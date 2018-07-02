@@ -13,8 +13,10 @@ from pyte import graphics as g
 
 if sys.platform.startswith("win"):
     from winpty import PtyProcess
+    is_windows = True
 else:
     from ptyprocess import PtyProcessUnicode as PtyProcess
+    is_windows = False
 
 
 logger = logging.getLogger('Terminus')
@@ -249,11 +251,18 @@ class TerminalScreen(pyte.Screen):
 
             line = self.buffer[self.cursor.y]
             if char_width == 1:
-                line[self.cursor.x] = self.cursor.attrs._replace(data=char)
+                if is_windows and self.cursor.x == self.columns - 1:
+                    line[self.cursor.x] = self.cursor.attrs._replace(data=char, linefeed=True)
+                else:
+                    line[self.cursor.x] = self.cursor.attrs._replace(data=char)
+
             elif char_width == 2:
                 line[self.cursor.x] = self.cursor.attrs._replace(data=char)
-                if self.cursor.x + 1 < self.columns:
+                if is_windows and self.cursor.x == self.columns - 2:
+                    line[self.cursor.x + 1] = self.cursor.attrs._replace(data="", linefeed=True)
+                elif self.cursor.x + 1 < self.columns:
                     line[self.cursor.x + 1] = self.cursor.attrs._replace(data="")
+
             elif char_width == 0 and unicodedata.combining(char):
                 # unfornately, sublime text doesn't render decomposed double char correctly
                 pos = None
