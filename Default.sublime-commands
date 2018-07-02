@@ -53,7 +53,6 @@
         "args":
         {
             "base_file": "${packages}/Terminus/Default.sublime-commands",
-            "user_file": "${packages}/User/Default (${platform}).sublime-commands",
             "default": "[\n\t$0\n]\n"
         }
     },
