@@ -640,6 +640,7 @@ class TerminusActivate(sublime_plugin.TextCommand):
                 view_settings.set("terminus_view.key.{}".format(key), True)
         view.set_scratch(True)
         view.set_read_only(False)
+        view_settings.set("is_widget", False)
         view_settings.set("gutter", False)
         view_settings.set("highlight_line", False)
         view_settings.set("auto_complete_commit_on_tab", False)
@@ -710,9 +711,7 @@ class TerminusEventHandler(sublime_plugin.EventListener):
         if not view.settings().get('terminus_view'):
             return
 
-        if name == 'copy' or name == 'terminus_copy':
-            if not view.settings().get('is_widget'):
-                return
+        if name == 'terminus_copy':
             self.g_clipboard_history.push_text(sublime.get_clipboard())
 
     def on_activated(self, view):
