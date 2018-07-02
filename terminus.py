@@ -640,7 +640,7 @@ class TerminusActivate(sublime_plugin.TextCommand):
                 view_settings.set("terminus_view.key.{}".format(key), True)
         view.set_scratch(True)
         view.set_read_only(False)
-        view_settings.set("is_widget", False)
+        view_settings.set("is_widget", True)
         view_settings.set("gutter", False)
         view_settings.set("highlight_line", False)
         view_settings.set("auto_complete_commit_on_tab", False)
