@@ -5,7 +5,7 @@
     //     "caption": "Terminus: Open iPython",
     //     "command": "terminus_open",
     //     "args"   : {
-    //         "cmd": "ipython",
+    //         "cmd": ["ipython"],
     //         "cwd": "${file_path:${folder}}",
     //         "title": "iPython"
     //     }
