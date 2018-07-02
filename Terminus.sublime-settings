@@ -47,9 +47,9 @@
         }
     ],
 
-    // the default TERM variable of unix system, you might set it to "xterm-256color"
-    // however, some features of xterm might not be supported here
-    "unix_term": "linux",
+    // the default TERM variable of unix system. Possible values are
+    // "linux", "xterm" and "xterm-256color"
+    "unix_term": "xterm-256color",
 
     // Windows and Linux only
     // use ctrl+c to copy
