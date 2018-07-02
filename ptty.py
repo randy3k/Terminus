@@ -227,7 +227,7 @@ class TerminalScreen(pyte.Screen):
 
     def draw(self, data):
         """
-        Terminus alters the logic to better support double width chars
+        Terminus alters the logic to better support double width chars and linefeed marker
         """
         data = data.translate(
             self.g1_charset if self.charset else self.g0_charset)
@@ -252,6 +252,7 @@ class TerminalScreen(pyte.Screen):
             line = self.buffer[self.cursor.y]
             if char_width == 1:
                 if is_windows and self.cursor.x == self.columns - 1:
+                    # always put a linefeed marker when cursor is at the last column
                     line[self.cursor.x] = self.cursor.attrs._replace(data=char, linefeed=True)
                 else:
                     line[self.cursor.x] = self.cursor.attrs._replace(data=char)
@@ -259,6 +260,7 @@ class TerminalScreen(pyte.Screen):
             elif char_width == 2:
                 line[self.cursor.x] = self.cursor.attrs._replace(data=char)
                 if is_windows and self.cursor.x == self.columns - 2:
+                    # always put a linefeed marker when the next char is at the last column
                     line[self.cursor.x + 1] = self.cursor.attrs._replace(data="", linefeed=True)
                 elif self.cursor.x + 1 < self.columns:
                     line[self.cursor.x + 1] = self.cursor.attrs._replace(data="")
