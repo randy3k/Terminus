@@ -58,14 +58,14 @@ Package Control.
 You may find these key bindings useful. To edit, run `Preferences: Terminus Key Bindings`.
 
 - toggle terminal panel
-```js
+```json
 { 
     "keys": ["alt+`"], "command": "toggle_terminus_panel" 
 }
 ```
 
-- open a terminal view at current file directory (check the details of `terminus_open` below)
-```js
+- open a terminal view at current file directory (check the details of the arguemtns of `terminus_open` below)
+```json
 { 
     "keys": ["ctrl+alt+t"], "command": "terminus_open", "args": {
         "config_name": "Default",
@@ -90,12 +90,31 @@ bindkey "\e[1;3D" backward-word
 
 Some programs, such as julia, does not recognize the standard keycodes for `alt+left` and `alt+right`. You could
 bind them to `alt+b` and `alt+f` respectively
-```
+```json
 [
     { "keys": ["alt+left"], "command": "terminus_keypress", "args": {"key": "b", "alt": true}, "context": [{"key": "setting.terminus_view"}] },
     { "keys": ["alt+right"], "command": "terminus_keypress", "args": {"key": "f", "alt": true}, "context": [{"key": "setting.terminus_view"}] }
 ]
 ```
+
+
+## User Commands in Palette
+
+- run `Preferences: Terminus Command Palette` and add, for example
+
+```json
+    {
+        "caption": "Terminus: Open iPython",
+        "command": "terminus_open",
+        "args"   : {
+            "cmd": "ipython",
+            "cwd": "${file_path:${folder}}",
+            "title": "iPython"
+        }
+    }
+```
+(check the details of the arguemtns of `terminus_open` below)
+
 
 ## Note to advance users
 

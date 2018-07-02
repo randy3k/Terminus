@@ -1,4 +1,15 @@
 [
+    // extra command can be added to Command Palette as
+    // read the details of the arguments of `terminus_open` in README
+    // {
+    //     "caption": "Terminus: Open iPython",
+    //     "command": "terminus_open",
+    //     "args"   : {
+    //         "cmd": "ipython",
+    //         "cwd": "${file_path:${folder}}",
+    //         "title": "iPython"
+    //     }
+    // },
     {
         "caption": "Terminus: Open Default Shell in View",
         "command": "terminus_open",
@@ -34,6 +45,16 @@
         {
             "base_file": "${packages}/Terminus/Terminus.sublime-settings",
             "default": "{\n\t$0\n}\n"
+        }
+    },
+    {
+        "caption": "Preferences: Terminus Command Palette",
+        "command": "terminus_edit_settings",
+        "args":
+        {
+            "base_file": "${packages}/Terminus/Default.sublime-commands",
+            "user_file": "${packages}/User/Default (${platform}).sublime-commands",
+            "default": "[\n\t$0\n]\n"
         }
     },
     {
