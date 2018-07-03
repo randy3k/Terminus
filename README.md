@@ -133,7 +133,20 @@ window.run_command(
     }
 )
 ```
-PS: For packages developers, the setting `view.settings().get("terminus_view.tag")` can be used to identify the terminal. The fields `cmd` and `cwd` understand Sublime Text build system [variables](https://www.sublimetext.com/docs/3/build_systems.html#variables).
+The fields `cmd` and `cwd` understand Sublime Text build system [variables](https://www.sublimetext.com/docs/3/build_systems.html#variables).
+
+
+- the setting `view.settings().get("terminus_view.tag")` can be used to identify the terminal and 
+
+- keybind can be binded with specific tagged terminal
+
+```json
+    {
+        "keys": ["ctrl+alt+w"], "command": "terminus_close", "context": [
+            { "key": "terminus_view.tag", "operator": "equal", "operand": "YOUR_TAG"}
+        ]
+    }
+```
 
 - text can be sent to the terminal with
 ```py
@@ -147,10 +160,10 @@ window.run_command(
 ```
 If `tag` is not provided, the text will be sent to the first terminal found in the current window.
 
-- Terminus as a build system. For example, the following can be added to your project settings to allow
+- `Terminus` as a build system. For example, the following can be added to your project settings to allow
 "SSH to Remote" build system.
 
-```js
+```json
 {
     "build_systems":
     [
@@ -177,7 +190,7 @@ Settings`.
 
 <img src="https://user-images.githubusercontent.com/1690993/41728204-31a9a2a2-7544-11e8-9fb6-a37b59da852a.png" width="50%" />
 
-```js
+```json
 {
     "panel_background_color": "$background_color"
 }
