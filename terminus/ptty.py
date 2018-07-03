@@ -67,8 +67,6 @@ def segment_buffer_line(buffer_line):
             is_wide_char = False
             continue
         char = buffer_line[i]
-        if char.linefeed:
-            print(char)
         is_wide_char = wcswidth(char.data) >= 2
 
         if counter == 0:
