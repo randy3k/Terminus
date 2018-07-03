@@ -51,6 +51,8 @@ class TerminusCommandsEventListener(sublime_plugin.EventListener):
             return ("terminus_paste", None)
         elif name == "paste_from_history":
             return ("terminus_paste_from_history", None)
+        elif name == "undo":
+            return ("noop", None)
 
     def on_post_text_command(self, view, name, args):
         """
