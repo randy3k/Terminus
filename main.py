@@ -4,7 +4,7 @@ import sys
 import logging
 
 from .terminus.commands import (
-    TerminusEventHandler,
+    TerminusCommandsEventListener,
     TerminusOpenCommand,
     TerminusCloseCommand,
     TerminusKeypressCommand,
@@ -20,9 +20,9 @@ from .terminus.edit_settings import (
     TerminusEditSettingsCommand
 )
 from .terminus.mouse import (
+    TerminusMouseEventListener,
     TerminusOpenContextUrlCommand,
-    TerminusClickCommand,
-    TerminusMouseEventHandler
+    TerminusClickCommand
 )
 from .terminus.query import TerminusQueryContextListener
 from .terminus.theme import (
@@ -31,19 +31,23 @@ from .terminus.theme import (
     plugin_loaded as theme_plugin_loaded
 )
 from .terminus.utils import settings_on_change
-from .terminus.view import TerminusActivateCommand, TerminusRenderCommand
+from .terminus.view import (
+    TerminusViewEventListener,
+    TerminusActivateCommand,
+    TerminusRenderCommand
+)
 
 
 __all__ = [
-    "TerminusEventHandler", "TerminusOpenCommand", "TerminusCloseCommand",
+    "TerminusCommandsEventListener", "TerminusOpenCommand", "TerminusCloseCommand",
     "TerminusKeypressCommand", "TerminusCopyCommand", "TerminusPasteCommand",
     "TerminusPasteFromHistoryCommand", "TerminusDeleteWordCommand", "ToggleTerminusPanelCommand",
     "TerminusSendStringCommand",
     "TerminusSelectThemeCommand", "TerminusGenerateThemeCommand",
     "TerminusEditSettingsListener", "TerminusEditSettingsCommand",
-    "TerminusOpenContextUrlCommand", "TerminusClickCommand", "TerminusMouseEventHandler",
+    "TerminusMouseEventListener", "TerminusOpenContextUrlCommand", "TerminusClickCommand",
     "TerminusQueryContextListener",
-    "TerminusActivateCommand", "TerminusRenderCommand"
+    "TerminusViewEventListener", "TerminusActivateCommand", "TerminusRenderCommand"
 ]
 
 

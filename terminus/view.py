@@ -17,6 +17,28 @@ KEYS = [
 ]
 
 
+class TerminusViewEventListener(sublime_plugin.EventListener):
+
+    def on_activated(self, view):
+        terminal = Terminal.from_id(view.id())
+        if terminal:
+            # a hack to fix a bracket highlighter bug
+            # https://github.com/facelessuser/BracketHighlighter/issues/488
+            # TODO: remove this hack for BH
+            view.settings().set("bracket_highlighter.clone_locations", {})
+            return
+
+        settings = view.settings()
+        if not settings.has("terminus_view.args"):
+            return
+
+        kwargs = settings.get("terminus_view.args")
+        if "cmd" not in kwargs:
+            return
+
+        sublime.set_timeout(lambda: view.run_command("terminus_activate", kwargs), 100)
+
+
 class TerminusActivateCommand(sublime_plugin.TextCommand):
 
     def run(self, _, **kwargs):

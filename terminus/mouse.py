@@ -19,6 +19,17 @@ rex = re.compile(
     ''')
 
 
+class TerminusMouseEventListener(sublime_plugin.EventListener):
+
+    def on_text_command(self, view, command_name, args):
+        terminal = Terminal.from_id(view.id())
+        if not terminal:
+            return
+        if command_name == "drag_select":
+            if len(args) == 1 and args["event"]["button"] == 1:  # simple click
+                return ("terminus_click", args)
+
+
 class TerminusOpenContextUrlCommand(sublime_plugin.TextCommand):
     def run(self, edit, event):
         url = self.find_url(event)
@@ -84,14 +95,3 @@ class TerminusClickCommand(sublime_plugin.TextCommand):
                 return
 
         view.run_command("drag_select", args)
-
-
-class TerminusMouseEventHandler(sublime_plugin.EventListener):
-
-    def on_text_command(self, view, command_name, args):
-        terminal = Terminal.from_id(view.id())
-        if not terminal:
-            return
-        if command_name == "drag_select":
-            if len(args) == 1 and args["event"]["button"] == 1:  # simple click
-                return ("terminus_click", args)

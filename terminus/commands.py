@@ -13,7 +13,7 @@ from .terminal import Terminal, CONTINUATION
 logger = logging.getLogger('Terminus')
 
 
-class TerminusEventHandler(sublime_plugin.EventListener):
+class TerminusCommandsEventListener(sublime_plugin.EventListener):
 
     @property
     def g_clipboard_history(self):
@@ -61,25 +61,6 @@ class TerminusEventHandler(sublime_plugin.EventListener):
 
         if name == 'terminus_copy':
             self.g_clipboard_history.push_text(sublime.get_clipboard())
-
-    def on_activated(self, view):
-        terminal = Terminal.from_id(view.id())
-        if terminal:
-            # a hack to fix a bracket highlighter bug
-            # https://github.com/facelessuser/BracketHighlighter/issues/488
-            # TODO: remove this hack for BH
-            view.settings().set("bracket_highlighter.clone_locations", {})
-            return
-
-        settings = view.settings()
-        if not settings.has("terminus_view.args"):
-            return
-
-        kwargs = settings.get("terminus_view.args")
-        if "cmd" not in kwargs:
-            return
-
-        sublime.set_timeout(lambda: view.run_command("terminus_activate", kwargs), 100)
 
 
 class TerminusOpenCommand(sublime_plugin.WindowCommand):
