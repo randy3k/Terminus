@@ -64,7 +64,7 @@ You may find these key bindings useful. To edit, run `Preferences: Terminus Key 
 }
 ```
 
-- open a terminal view at current file directory (check the details for the arguments of `terminus_open` below)
+- open a terminal view at current file directory
 ```json
 { 
     "keys": ["ctrl+alt+t"], "command": "terminus_open", "args": {
@@ -73,6 +73,17 @@ You may find these key bindings useful. To edit, run `Preferences: Terminus Key 
     }
 }
 ```
+or by passing a custom `cmd`
+```json
+{ 
+    "keys": ["ctrl+alt+t"], "command": "terminus_open", "args": {
+        "cmd": "ipython",
+        "cwd": "${file_path:${folder}}"
+    }
+}
+```
+
+(check the details for the arguments of `terminus_open` below)
 
 ### Alt-Left/Right to move between words (Unix)
 
@@ -102,6 +113,17 @@ bind them to `alt+b` and `alt+f` respectively
 
 - run `Preferences: Terminus Command Palette` and add, for example
 
+```json
+    {
+        "caption": "Terminus: Open Default Shell at Current Location",
+        "command": "terminus_open",
+        "args"   : {
+            "config_name": "Default",
+            "cwd": "${file_path:${folder}}"
+        }
+    }
+```
+or by passing custom `cmd`
 ```json
     {
         "caption": "Terminus: Open iPython",
