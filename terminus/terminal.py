@@ -147,7 +147,7 @@ class Terminal:
         size = view_size(self.view)
         if size == (1, 1):
             size = (24, 80)
-        self.view.settings().set("wrap_width", size[1])
+        # self.view.settings().set("wrap_width", size[1])
         logger.debug("view size: {}".format(str(size)))
         self.process = TerminalPtyProcess.spawn(cmd, cwd=cwd, env=_env, dimensions=size)
         self.screen = TerminalScreen(size[1], size[0], process=self.process, history=10000)
@@ -190,7 +190,7 @@ class Terminal:
             self.screen.lines, self.screen.columns, size[0], size[1]))
         self.process.setwinsize(*size)
         self.screen.resize(*size)
-        self.view.settings().set("wrap_width", size[1])
+        # self.view.settings().set("wrap_width", size[1])
 
     def set_title(self, title):
         self.view.set_name(title)
