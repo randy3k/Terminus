@@ -12,6 +12,60 @@ from .terminal import Terminal, CONTINUATION
 logger = logging.getLogger('Terminus')
 
 
+KEYS = [
+    "ctrl+k"
+]
+
+
+class TerminusActivateCommand(sublime_plugin.TextCommand):
+
+    def run(self, _, **kwargs):
+        terminus_settings = sublime.load_settings("Terminus.sublime-settings")
+
+        view = self.view
+        view_settings = view.settings()
+        view_settings.set("terminus_view", True)
+        if "panel_name" in kwargs:
+            view_settings.set("terminus_view.panel_name", kwargs["panel_name"])
+        if "tag" in kwargs:
+            view_settings.set("terminus_view.tag", kwargs["tag"])
+        view_settings.set("terminus_view.args", kwargs)
+        view_settings.set(
+            "terminus_view.natural_keyboard",
+            terminus_settings.get("natural_keyboard", True))
+        ignore_keys = terminus_settings.get("ignore_keys", {})
+        for key in KEYS:
+            if key not in ignore_keys:
+                view_settings.set("terminus_view.key.{}".format(key), True)
+        view.set_scratch(True)
+        view.set_read_only(False)
+        view_settings.set("is_widget", True)
+        view_settings.set("gutter", False)
+        view_settings.set("highlight_line", False)
+        view_settings.set("auto_complete_commit_on_tab", False)
+        view_settings.set("draw_centered", False)
+        view_settings.set("word_wrap", False)
+        view_settings.set("auto_complete", False)
+        view_settings.set("draw_white_space", "none")
+        view_settings.set("draw_indent_guides", False)
+        view_settings.set("caret_style", "blink")
+        view_settings.set("scroll_past_end", True)
+        view_settings.set("color_scheme", "Terminus.sublime-color-scheme")
+        # disable bracket highligher (not working)
+        view_settings.set("bracket_highlighter.ignore", True)
+        # disable vintageous
+        view_settings.set("__vi_external_disable", True)
+        for key, value in terminus_settings.get("view_settings", {}).items():
+            view_settings.set(key, value)
+
+        if view.size() > 0:
+            kwargs["offset"] = view.rowcol(view.size())[0] + 2
+            logger.debug("activating with offset %s", kwargs["offset"])
+
+        terminal = Terminal(self.view)
+        terminal.open(**kwargs)
+
+
 class TerminusRenderCommand(sublime_plugin.TextCommand):
     def run(self, edit):
         view = self.view

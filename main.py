@@ -3,7 +3,18 @@ import sublime
 import sys
 import logging
 
-
+from .terminus.commands import (
+    TerminusEventHandler,
+    TerminusOpenCommand,
+    TerminusCloseCommand,
+    TerminusKeypressCommand,
+    TerminusCopyCommand,
+    TerminusPasteCommand,
+    TerminusPasteFromHistoryCommand,
+    TerminusDeleteWordCommand,
+    ToggleTerminusPanelCommand,
+    TerminusSendStringCommand
+)
 from .terminus.edit_settings import (
     TerminusEditSettingsListener,
     TerminusEditSettingsCommand
@@ -14,37 +25,25 @@ from .terminus.mouse import (
     TerminusMouseEventHandler
 )
 from .terminus.query import TerminusQueryContextListener
-from .terminus.render import TerminusRenderCommand
-from .terminus.commands import (
-    TerminusOpenCommand,
-    TerminusActivateCommand,
-    TerminusEventHandler,
-    TerminusCloseCommand,
-    TerminusKeypressCommand,
-    TerminusCopyCommand,
-    TerminusPasteCommand,
-    TerminusPasteFromHistoryCommand,
-    TerminusDeleteWordCommand,
-    ToggleTerminusPanelCommand,
-    TerminusSendStringCommand
-)
 from .terminus.theme import (
     TerminusSelectThemeCommand,
     TerminusGenerateThemeCommand,
     plugin_loaded as theme_plugin_loaded
 )
 from .terminus.utils import settings_on_change
+from .terminus.view import TerminusActivateCommand, TerminusRenderCommand
 
 
 __all__ = [
+    "TerminusEventHandler", "TerminusOpenCommand", "TerminusCloseCommand",
+    "TerminusKeypressCommand", "TerminusCopyCommand", "TerminusPasteCommand",
+    "TerminusPasteFromHistoryCommand", "TerminusDeleteWordCommand", "ToggleTerminusPanelCommand",
+    "TerminusSendStringCommand",
+    "TerminusSelectThemeCommand", "TerminusGenerateThemeCommand",
     "TerminusEditSettingsListener", "TerminusEditSettingsCommand",
     "TerminusOpenContextUrlCommand", "TerminusClickCommand", "TerminusMouseEventHandler",
-    "TerminusQueryContextListener", "TerminusRenderCommand",
-    "TerminusOpenCommand", "TerminusActivateCommand",
-    "TerminusEventHandler", "TerminusCloseCommand", "TerminusKeypressCommand",
-    "TerminusCopyCommand", "TerminusPasteCommand", "TerminusPasteFromHistoryCommand",
-    "TerminusDeleteWordCommand", "ToggleTerminusPanelCommand", "TerminusSendStringCommand",
-    "TerminusSelectThemeCommand", "TerminusGenerateThemeCommand"
+    "TerminusQueryContextListener",
+    "TerminusActivateCommand", "TerminusRenderCommand"
 ]
 
 

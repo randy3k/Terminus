@@ -13,6 +13,75 @@ from .terminal import Terminal, CONTINUATION
 logger = logging.getLogger('Terminus')
 
 
+class TerminusEventHandler(sublime_plugin.EventListener):
+
+    @property
+    def g_clipboard_history(self):
+        import Default
+        return Default.paste_from_history.g_clipboard_history
+
+    def on_pre_close(self, view):
+        terminal = Terminal.from_id(view.id())
+        if terminal:
+            terminal.close()
+
+    def on_modified(self, view):
+        # to catch unicode input
+        terminal = Terminal.from_id(view.id())
+        if not terminal or not terminal.process.isalive():
+            return
+        command, args, _ = view.command_history(0)
+        if command in ["terminus_render", "terminus_keypress"]:
+            return
+        elif command == "insert" and "characters" in args:
+            chars = args["characters"]
+            logger.debug("char {} detected".format(chars))
+            terminal.send_string(chars)
+        elif command:
+            logger.debug("undo {}".format(command))
+            view.run_command("soft_undo")
+
+    def on_text_command(self, view, name, args):
+        if not view.settings().get('terminus_view'):
+            return
+
+        if name == "copy":
+            return ("terminus_copy", None)
+        elif name == "paste":
+            return ("terminus_paste", None)
+        elif name == "paste_from_history":
+            return ("terminus_paste_from_history", None)
+
+    def on_post_text_command(self, view, name, args):
+        """
+        help panel terminal to capture copied text
+        """
+        if not view.settings().get('terminus_view'):
+            return
+
+        if name == 'terminus_copy':
+            self.g_clipboard_history.push_text(sublime.get_clipboard())
+
+    def on_activated(self, view):
+        terminal = Terminal.from_id(view.id())
+        if terminal:
+            # a hack to fix a bracket highlighter bug
+            # https://github.com/facelessuser/BracketHighlighter/issues/488
+            # TODO: remove this hack for BH
+            view.settings().set("bracket_highlighter.clone_locations", {})
+            return
+
+        settings = view.settings()
+        if not settings.has("terminus_view.args"):
+            return
+
+        kwargs = settings.get("terminus_view.args")
+        if "cmd" not in kwargs:
+            return
+
+        sublime.set_timeout(lambda: view.run_command("terminus_activate", kwargs), 100)
+
+
 class TerminusOpenCommand(sublime_plugin.WindowCommand):
 
     def run(
@@ -213,129 +282,6 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
                 "cmd": cmd,
                 "env": {}
             }
-
-
-KEYS = [
-    "ctrl+k"
-]
-
-
-class TerminusActivateCommand(sublime_plugin.TextCommand):
-
-    def run(self, _, **kwargs):
-        terminus_settings = sublime.load_settings("Terminus.sublime-settings")
-
-        view = self.view
-        view_settings = view.settings()
-        view_settings.set("terminus_view", True)
-        if "panel_name" in kwargs:
-            view_settings.set("terminus_view.panel_name", kwargs["panel_name"])
-        if "tag" in kwargs:
-            view_settings.set("terminus_view.tag", kwargs["tag"])
-        view_settings.set("terminus_view.args", kwargs)
-        view_settings.set(
-            "terminus_view.natural_keyboard",
-            terminus_settings.get("natural_keyboard", True))
-        ignore_keys = terminus_settings.get("ignore_keys", {})
-        for key in KEYS:
-            if key not in ignore_keys:
-                view_settings.set("terminus_view.key.{}".format(key), True)
-        view.set_scratch(True)
-        view.set_read_only(False)
-        view_settings.set("is_widget", True)
-        view_settings.set("gutter", False)
-        view_settings.set("highlight_line", False)
-        view_settings.set("auto_complete_commit_on_tab", False)
-        view_settings.set("draw_centered", False)
-        view_settings.set("word_wrap", False)
-        view_settings.set("auto_complete", False)
-        view_settings.set("draw_white_space", "none")
-        view_settings.set("draw_indent_guides", False)
-        view_settings.set("caret_style", "blink")
-        view_settings.set("scroll_past_end", True)
-        view_settings.set("color_scheme", "Terminus.sublime-color-scheme")
-        # disable bracket highligher (not working)
-        view_settings.set("bracket_highlighter.ignore", True)
-        # disable vintageous
-        view_settings.set("__vi_external_disable", True)
-        for key, value in terminus_settings.get("view_settings", {}).items():
-            view_settings.set(key, value)
-
-        if view.size() > 0:
-            kwargs["offset"] = view.rowcol(view.size())[0] + 2
-            logger.debug("activating with offset %s", kwargs["offset"])
-
-        terminal = Terminal(self.view)
-        terminal.open(**kwargs)
-
-
-class TerminusEventHandler(sublime_plugin.EventListener):
-
-    @property
-    def g_clipboard_history(self):
-        import Default
-        return Default.paste_from_history.g_clipboard_history
-
-    def on_pre_close(self, view):
-        terminal = Terminal.from_id(view.id())
-        if terminal:
-            terminal.close()
-
-    def on_modified(self, view):
-        # to catch unicode input
-        terminal = Terminal.from_id(view.id())
-        if not terminal or not terminal.process.isalive():
-            return
-        command, args, _ = view.command_history(0)
-        if command in ["terminus_render", "terminus_keypress"]:
-            return
-        elif command == "insert" and "characters" in args:
-            chars = args["characters"]
-            logger.debug("char {} detected".format(chars))
-            terminal.send_string(chars)
-        elif command:
-            logger.debug("undo {}".format(command))
-            view.run_command("soft_undo")
-
-    def on_text_command(self, view, name, args):
-        if not view.settings().get('terminus_view'):
-            return
-
-        if name == "copy":
-            return ("terminus_copy", None)
-        elif name == "paste":
-            return ("terminus_paste", None)
-        elif name == "paste_from_history":
-            return ("terminus_paste_from_history", None)
-
-    def on_post_text_command(self, view, name, args):
-        """
-        help panel terminal to capture copied text
-        """
-        if not view.settings().get('terminus_view'):
-            return
-
-        if name == 'terminus_copy':
-            self.g_clipboard_history.push_text(sublime.get_clipboard())
-
-    def on_activated(self, view):
-        terminal = Terminal.from_id(view.id())
-        if terminal:
-            # a hack to fix a bracket highlighter bug
-            # https://github.com/facelessuser/BracketHighlighter/issues/488
-            # TODO: remove this hack for BH
-            view.settings().set("bracket_highlighter.clone_locations", {})
-            return
-
-        settings = view.settings()
-        if not settings.has("terminus_view.args"):
-            return
-
-        kwargs = settings.get("terminus_view.args")
-        if "cmd" not in kwargs:
-            return
-
-        sublime.set_timeout(lambda: view.run_command("terminus_activate", kwargs), 100)
 
 
 class TerminusCloseCommand(sublime_plugin.TextCommand):
