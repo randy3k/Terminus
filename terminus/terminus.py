@@ -30,8 +30,7 @@ get_incremental_key = _get_incremental_key()
 
 
 class TerminusRenderCommand(sublime_plugin.TextCommand):
-    def run(self, edit, force=False):
-        self.force = force
+    def run(self, edit):
         view = self.view
         startt = time.time()
         terminal = Terminal.from_id(view.id())
@@ -66,7 +65,7 @@ class TerminusRenderCommand(sublime_plugin.TextCommand):
         cursor = screen.cursor
         offset = terminal.offset
 
-        if not self.force and len(view.sel()) > 0 and view.sel()[0].empty():
+        if len(view.sel()) > 0 and view.sel()[0].empty():
             row, col = view.rowcol(view.sel()[0].end())
             if row == offset + cursor.y and col == cursor.x:
                 return
@@ -436,6 +435,8 @@ class TerminusActivateCommand(sublime_plugin.TextCommand):
         view_settings.set("caret_style", "blink")
         view_settings.set("scroll_past_end", True)
         view_settings.set("color_scheme", "Terminus.sublime-color-scheme")
+        # disable bracket highligher (not working)
+        view_settings.set("bracket_highlighter.ignore", True)
         # disable vintageous
         view_settings.set("__vi_external_disable", True)
         for key, value in terminus_settings.get("view_settings", {}).items():
@@ -501,9 +502,6 @@ class TerminusEventHandler(sublime_plugin.EventListener):
     def on_activated(self, view):
         terminal = Terminal.from_id(view.id())
         if terminal:
-            # TODO: update cursor
-            # sublime.set_timeout(
-            #     lambda: view.run_command("terminus_render", {"force": True}), 100)
             return
 
         settings = view.settings()

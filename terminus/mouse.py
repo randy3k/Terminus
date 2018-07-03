@@ -1,10 +1,13 @@
-import re
-import webbrowser
-
+import sublime
 import sublime_plugin
+
+import re
+import logging
+import webbrowser
 
 from .terminal import Terminal, CONTINUATION
 
+logger = logging.getLogger('Terminus')
 
 rex = re.compile(
     r'''(?x)
@@ -61,9 +64,25 @@ class TerminusOpenContextUrlCommand(sublime_plugin.TextCommand):
 
 
 class TerminusClickCommand(sublime_plugin.TextCommand):
+    """`
+    Reset cursor position if the click is occured below the last row
+    """
 
     def run_(self, edit, args):
-        self.view.run_command("drag_select", args)
+        view = self.view
+        window = view.window()
+        if not window:
+            return
+
+        event = args["event"]
+        pt = view.window_to_text((event["x"], event["y"]))
+        if pt == view.size():
+            if view.text_to_window(self.view.size())[1] + view.line_height() < event["y"]:
+                window.focus_view(view)
+                view.run_command("terminus_render")
+                return
+
+        view.run_command("drag_select", args)
 
 
 class TerminusMouseEventHandler(sublime_plugin.EventListener):
