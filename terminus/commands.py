@@ -321,6 +321,10 @@ class TerminusEventHandler(sublime_plugin.EventListener):
     def on_activated(self, view):
         terminal = Terminal.from_id(view.id())
         if terminal:
+            # a hack to fix a bracket highlighter bug
+            # https://github.com/facelessuser/BracketHighlighter/issues/488
+            # TODO: remove this hack for BH
+            view.settings().set("bracket_highlighter.clone_locations", {})
             return
 
         settings = view.settings()
