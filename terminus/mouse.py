@@ -76,7 +76,9 @@ class TerminusClickCommand(sublime_plugin.TextCommand):
         event = args["event"]
         pt = view.window_to_text((event["x"], event["y"]))
         if pt == view.size():
-            if view.text_to_window(self.view.size())[1] + view.line_height() < event["y"]:
+            if view.text_to_window(view.size())[1] + view.line_height() < event["y"]:
+                logger.debug("reset cursor")
+                window.focus_group(window.active_group())
                 window.focus_view(view)
                 view.run_command("terminus_render")
                 return
