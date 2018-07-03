@@ -4,16 +4,20 @@ from functools import wraps
 from contextlib import contextmanager
 
 
-def _get_incremental_key():
-    _counter = [0]
+def highlight_key(view):
+    """
+    make region keys incremental and recyclable
+    """
+    value = view.settings().get("terminus.highlight_counter", 0)
 
-    def _():
-        _counter[0] += 1
-        return "#{}".format(_counter)
-    return _
-
-
-get_incremental_key = _get_incremental_key()
+    while value >= 1:
+        regions = view.get_regions("terminus#{}".format(value))
+        if regions and not regions[0].empty():
+            break
+        value -= 1
+    value += 1
+    view.settings().set("terminus.highlight_counter", value)
+    return "terminus#{}".format(value)
 
 
 def responsive(period=0.1, default=True):

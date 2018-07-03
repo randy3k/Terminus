@@ -5,7 +5,7 @@ import time
 import logging
 
 from .ptty import segment_buffer_line
-from .utils import rev_wcwidth, get_incremental_key
+from .utils import rev_wcwidth, highlight_key
 from .terminal import Terminal, CONTINUATION
 
 
@@ -169,7 +169,7 @@ class TerminusRenderCommand(sublime_plugin.TextCommand):
                 a = view.text_point(line, s[1])
                 b = view.text_point(line, s[2])
                 view.add_regions(
-                    get_incremental_key(),
+                    highlight_key(view),
                     [sublime.Region(a, b)],
                     "terminus.{}.{}".format(fg, bg))
 
