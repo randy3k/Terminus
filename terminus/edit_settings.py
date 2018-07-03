@@ -22,7 +22,7 @@ class TerminusEditSettingsListener(sublime_plugin.EventListener):
                 base_view.settings().set("terminus_edit_keybindings_view", 'base')
                 base_view.set_read_only(True)
                 w.focus_group(1)
-            else:
+            elif "/Terminus/Default" in base:
                 w.focus_group(0)
                 base_view = w.active_view()
                 base_view.set_read_only(True)

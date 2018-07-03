@@ -3,7 +3,7 @@ import webbrowser
 
 import sublime_plugin
 
-from .terminus import Terminal, CONTINUATION
+from .terminal import Terminal, CONTINUATION
 
 
 rex = re.compile(
@@ -58,3 +58,20 @@ class TerminusOpenContextUrlCommand(sublime_plugin.TextCommand):
 
     def want_event(self):
         return True
+
+
+class TerminusClickCommand(sublime_plugin.TextCommand):
+
+    def run_(self, edit, args):
+        self.view.run_command("drag_select", args)
+
+
+class TerminusMouseEventHandler(sublime_plugin.EventListener):
+
+    def on_text_command(self, view, command_name, args):
+        terminal = Terminal.from_id(view.id())
+        if not terminal:
+            return
+        if command_name == "drag_select":
+            if len(args) == 1 and args["event"]["button"] == 1:  # simple click
+                return ("terminus_click", args)

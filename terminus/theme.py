@@ -4,14 +4,14 @@ import sublime_plugin
 import os
 import json
 
-from .tools.theme_generator import generate_theme_file, ANSI_COLORS
+from Terminus.tools.theme_generator import generate_theme_file, ANSI_COLORS
 from .utils import settings_on_change
 
 
-THEMES = os.path.join(os.path.dirname(__file__), "themes")
+THEMES = os.path.join(os.path.dirname(__file__), "..", "themes")
 
 
-class TerminusSelectTheme(sublime_plugin.WindowCommand):
+class TerminusSelectThemeCommand(sublime_plugin.WindowCommand):
     def run(self, theme=None):
         if theme:
             if theme not in ["default", "user"]:
@@ -48,7 +48,7 @@ class TerminusSelectTheme(sublime_plugin.WindowCommand):
         self.window.run_command("terminus_select_theme", {"theme": theme})
 
 
-class TerminusGenerateTheme(sublime_plugin.WindowCommand):
+class TerminusGenerateThemeCommand(sublime_plugin.WindowCommand):
     def run(self, theme=None, remove=False, force=False):
         settings = sublime.load_settings("Terminus.sublime-settings")
 
@@ -110,7 +110,6 @@ class TerminusGenerateTheme(sublime_plugin.WindowCommand):
 
 
 def plugin_loaded():
-
     # this is a hack to remove the deprecated sublime-color-scheme files
     deprecated_paths = [
         os.path.join(sublime.packages_path(), "User", "Console.sublime-color-scheme"),
