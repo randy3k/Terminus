@@ -1,8 +1,8 @@
 [
-    { "keys": ["super+c"], "command": "terminus_copy", "context": [{"key": "setting.terminus_view"}] },
-    { "keys": ["super+v"], "command": "terminus_paste", "context": [{"key": "setting.terminus_view"}] },
-    { "keys": ["super+w"], "command": "terminus_close", "context": [{"key": "setting.terminus_view"}] },
+    { "keys": ["super+c"], "command": "terminus_copy", "context": [{"key": "terminus_view"}] },
+    { "keys": ["super+v"], "command": "terminus_paste", "context": [{"key": "terminus_view"}] },
+    { "keys": ["super+w"], "command": "terminus_close", "context": [{"key": "terminus_view"}] },
 
-    { "keys": ["super+left"], "command": "terminus_keypress", "args": {"key": "a", "ctrl": true}, "context": [{"key": "setting.terminus_view"}] },
-    { "keys": ["super+right"], "command": "terminus_keypress", "args": {"key": "e", "ctrl": true}, "context": [{"key": "setting.terminus_view"}] }
+    { "keys": ["super+left"], "command": "terminus_keypress", "args": {"key": "a", "ctrl": true}, "context": [{"key": "terminus_view"}] },
+    { "keys": ["super+right"], "command": "terminus_keypress", "args": {"key": "e", "ctrl": true}, "context": [{"key": "terminus_view"}] }
 ]

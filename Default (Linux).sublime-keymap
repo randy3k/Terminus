@@ -1,28 +1,28 @@
 [
-    { "keys": ["ctrl+shift+n"], "command": "new_file", "context": [{"key": "setting.terminus_view"}] },
-    { "keys": ["ctrl+shift+c"], "command": "terminus_copy", "context": [{"key": "setting.terminus_view"}] },
-    { "keys": ["ctrl+shift+v"], "command": "terminus_paste", "context": [{"key": "setting.terminus_view"}] },
-    { "keys": ["ctrl+shift+w"], "command": "terminus_close", "context": [{"key": "setting.terminus_view"}] },
+    { "keys": ["ctrl+shift+n"], "command": "new_file", "context": [{"key": "terminus_view"}] },
+    { "keys": ["ctrl+shift+c"], "command": "terminus_copy", "context": [{"key": "terminus_view"}] },
+    { "keys": ["ctrl+shift+v"], "command": "terminus_paste", "context": [{"key": "terminus_view"}] },
+    { "keys": ["ctrl+shift+w"], "command": "terminus_close", "context": [{"key": "terminus_view"}] },
     { "keys": ["ctrl+c"], "command": "terminus_copy",
         "context":
         [
-            { "key": "setting.terminus_view" },
-            { "key": "setting.terminus_view.natural_keyboard" },
+            { "key": "terminus_view" },
+            { "key": "terminus_view.natural_keyboard" },
             { "key": "selection_empty", "operator": "equal", "operand": false, "match_all": true }
         ]
     },
     { "keys": ["ctrl+v"], "command": "terminus_paste",
         "context":
         [
-            { "key": "setting.terminus_view" },
-            { "key": "setting.terminus_view.natural_keyboard" }
+            { "key": "terminus_view" },
+            { "key": "terminus_view.natural_keyboard" }
         ]
     },
     { "keys": ["ctrl+w"], "command": "terminus_close",
         "context":
         [
-            { "key": "setting.terminus_view" },
-            { "key": "setting.terminus_view.natural_keyboard" }
+            { "key": "terminus_view" },
+            { "key": "terminus_view.natural_keyboard" }
         ]
     }
 ]

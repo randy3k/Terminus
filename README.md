@@ -92,8 +92,8 @@ Some programs, such as julia, does not recognize the standard keycodes for `alt+
 bind them to `alt+b` and `alt+f` respectively
 ```json
 [
-    { "keys": ["alt+left"], "command": "terminus_keypress", "args": {"key": "b", "alt": true}, "context": [{"key": "setting.terminus_view"}] },
-    { "keys": ["alt+right"], "command": "terminus_keypress", "args": {"key": "f", "alt": true}, "context": [{"key": "setting.terminus_view"}] }
+    { "keys": ["alt+left"], "command": "terminus_keypress", "args": {"key": "b", "alt": true}, "context": [{"key": "terminus_view"}] },
+    { "keys": ["alt+right"], "command": "terminus_keypress", "args": {"key": "f", "alt": true}, "context": [{"key": "terminus_view"}] }
 ]
 ```
 
