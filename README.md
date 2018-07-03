@@ -64,7 +64,7 @@ You may find these key bindings useful. To edit, run `Preferences: Terminus Key 
 }
 ```
 
-- open a terminal view at current file directory (check the details of the arguemtns of `terminus_open` below)
+- open a terminal view at current file directory (check the details for the arguments of `terminus_open` below)
 ```json
 { 
     "keys": ["ctrl+alt+t"], "command": "terminus_open", "args": {
@@ -113,7 +113,7 @@ bind them to `alt+b` and `alt+f` respectively
         }
     }
 ```
-(check the details of the arguemtns of `terminus_open` below)
+(check the details for the arguments of `terminus_open` below)
 
 
 ## Note to advance users
