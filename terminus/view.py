@@ -162,10 +162,12 @@ class TerminusRenderCommand(sublime_plugin.TextCommand):
 
     def colorize_line(self, edit, line, segments):
         view = self.view
+        if segments:
+            # ensure the last segement's position exists
+            self.ensure_position(edit, line, segments[-1][2])
         for s in segments:
             fg, bg = s[3:]
             if fg != "default" or bg != "default":
-                self.ensure_position(edit, line, s[2])
                 a = view.text_point(line, s[1])
                 b = view.text_point(line, s[2])
                 view.add_regions(
