@@ -151,12 +151,14 @@ class TerminusRenderCommand(sublime_plugin.TextCommand):
         line_region = view.line(view.text_point(line, 0))
         segments = list(segment_buffer_line(buffer_line))
         view.erase(edit, line_region)
-        text = "".join(s[0] for s in segments).rstrip()
+        text = "".join(s[0] for s in segments)
         if lf:
             # append a zero width space if the the line ends with a linefeed
             # we will use it to do non-break copying and searching
             # this hack is much easier than rewraping the lines
             text += CONTINUATION
+        else:
+            text = text.rstrip()
         view.insert(edit, line_region.begin(), text)
         self.colorize_line(edit, line, segments)
 
