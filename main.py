@@ -14,8 +14,8 @@ from .terminus.mouse import (
     TerminusMouseEventHandler
 )
 from .terminus.query import TerminusQueryContextListener
-from .terminus.terminus import (
-    TerminusRenderCommand,
+from .terminus.render import TerminusRenderCommand
+from .terminus.commands import (
     TerminusOpenCommand,
     TerminusActivateCommand,
     TerminusEventHandler,
@@ -39,8 +39,8 @@ from .terminus.utils import settings_on_change
 __all__ = [
     "TerminusEditSettingsListener", "TerminusEditSettingsCommand",
     "TerminusOpenContextUrlCommand", "TerminusClickCommand", "TerminusMouseEventHandler",
-    "TerminusQueryContextListener",
-    "TerminusRenderCommand", "TerminusOpenCommand", "TerminusActivateCommand",
+    "TerminusQueryContextListener", "TerminusRenderCommand",
+    "TerminusOpenCommand", "TerminusActivateCommand",
     "TerminusEventHandler", "TerminusCloseCommand", "TerminusKeypressCommand",
     "TerminusCopyCommand", "TerminusPasteCommand", "TerminusPasteFromHistoryCommand",
     "TerminusDeleteWordCommand", "ToggleTerminusPanelCommand", "TerminusSendStringCommand",

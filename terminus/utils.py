@@ -4,6 +4,18 @@ from functools import wraps
 from contextlib import contextmanager
 
 
+def _get_incremental_key():
+    _counter = [0]
+
+    def _():
+        _counter[0] += 1
+        return "#{}".format(_counter)
+    return _
+
+
+get_incremental_key = _get_incremental_key()
+
+
 def responsive(period=0.1, default=True):
     """
     make a function more responsive
