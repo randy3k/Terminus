@@ -179,8 +179,8 @@ class TerminusRenderCommand(sublime_plugin.TextCommand):
             # we will use it to do non-break copying and searching
             # this hack is much easier than rewraping the lines
             text += CONTINUATION
-        else:
-            text = text.rstrip()
+
+        text = text.rstrip()
         view.insert(edit, line_region.begin(), text)
         self.colorize_line(edit, line, segments)
 
