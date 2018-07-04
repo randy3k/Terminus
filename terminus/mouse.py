@@ -7,6 +7,7 @@ import webbrowser
 
 from .terminal import Terminal, CONTINUATION
 from .utils import highlight_key
+from . import images
 
 logger = logging.getLogger('Terminus')
 
@@ -21,18 +22,24 @@ rex = re.compile(
     ''')
 
 URL_POPUP = """
-<body id="terminus_url_popup">
 <style>
-a {
-    color: var(--foreground);
-    text-decoration: none
-}
+body {{
+    margin: 0px;
+}}
+div {{
+    border: 1px;
+    border-style: solid;
+    border-color: grey;
+}}
 </style>
+<body>
 <div>
-<a href="open">[Open]</a>
+<a href="open">
+<img width="20%" height="20%" src="{}" />
+</a>
 </div>
 </body>
-"""
+""".format(images.link)
 
 
 def find_url(view, event=None, pt=None):
@@ -123,7 +130,8 @@ class TerminusMouseEventListener(sublime_plugin.EventListener):
         view.show_popup(
             URL_POPUP,
             sublime.HIDE_ON_MOUSE_MOVE_AWAY,
-            location=point, on_navigate=on_navigate, on_hide=on_hide)
+            location=point,
+            on_navigate=on_navigate, on_hide=on_hide)
 
 
 class TerminusOpenContextUrlCommand(sublime_plugin.TextCommand):
