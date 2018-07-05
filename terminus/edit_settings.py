@@ -7,7 +7,7 @@ class TerminusEditSettingsListener(sublime_plugin.EventListener):
         if command == "edit_settings":
             base = args.get("base_file", "")
             w = sublime.active_window()
-            if base.endswith("sublime-keymap") and "/Terminus/Default" in base:
+            if base.endswith("sublime-keymap") and "/Terminus/" in base:
                 user_view = w.active_view()
                 user_view.settings().erase("edit_settings_view")
                 user_view.settings().set("terminus_edit_keybindings_view", 'user')
@@ -22,7 +22,7 @@ class TerminusEditSettingsListener(sublime_plugin.EventListener):
                 base_view.settings().set("terminus_edit_keybindings_view", 'base')
                 base_view.set_read_only(True)
                 w.focus_group(1)
-            elif "/Terminus/Default" in base:
+            elif "/Terminus/" in base:
                 w.focus_group(0)
                 base_view = w.active_view()
                 base_view.set_read_only(True)
