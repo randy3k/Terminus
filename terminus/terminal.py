@@ -1,6 +1,10 @@
 import sublime
 
 import os
+import base64
+import tempfile
+import struct
+import imghdr
 import logging
 import threading
 
@@ -10,6 +14,20 @@ from .key import get_key_code
 
 
 CONTINUATION = "\u200b\u200c\u200b"
+
+IMAGE = """
+<style>
+body {{
+    margin: 0px;
+}}
+div {{
+    margin: 0px;
+}}
+</style>
+<div>
+<img src="file://{image_file}" width="{width}" height="{height}"/>
+</div>
+"""
 
 logger = logging.getLogger('Terminus')
 
@@ -33,6 +51,87 @@ def view_size(view):
     return (nb_rows, nb_columns)
 
 
+def image_resize(img_size, width, height, em_width, max_width, preserve_ratio=1):
+
+    if width:
+        if width.isdigit():
+            width = int(width) * em_width
+        elif width[-1] == "%":
+            width = int(img_size[0] * int(width[:-1]) / 100)
+    else:
+        width = img_size[0]
+
+    if height:
+        if height.isdigit():
+            height = int(height) * em_width
+        elif height[-1] == "%":
+            height = int(img_size[1] * int(height[:-1]) / 100)
+    else:
+        height = img_size[1]
+
+    ratio = img_size[0] / img_size[1]
+
+    if preserve_ratio == 1 or preserve_ratio == "true":
+        area = width * height
+        height = int((area / ratio) ** 0.5)
+        width = int(area / height)
+
+    if width > max_width:
+        height = int(height * max_width / width)
+        width = max_width
+
+    return (width, height)
+
+
+# see https://bugs.python.org/issue16512#msg198034
+# not added to imghdr.tests because of potential issues with reloads
+def _is_jpg(h):
+    return h.startswith(b'\xff\xd8')
+
+
+# from LaTeXTools @st_preview/preview_image.py#L134
+def get_image_size(image_path):
+    '''Determine the image type of image_path and return its size.
+    from draco'''
+    with open(image_path, 'rb') as fhandle:
+        # read 32 as we pass this to imghdr
+        head = fhandle.read(32)
+        if len(head) != 32:
+            return
+        what = imghdr.what(image_path, head)
+        if what == 'png':
+            check = struct.unpack('>i', head[4:8])[0]
+            if check != 0x0d0a1a0a:
+                return
+            width, height = struct.unpack('>ii', head[16:24])
+        elif what == 'gif':
+            width, height = struct.unpack('<HH', head[6:10])
+        elif what == 'jpeg' or _is_jpg(head):
+            try:
+                fhandle.seek(0)  # Read 0xff next
+                size = 2
+                ftype = 0
+                while not 0xc0 <= ftype <= 0xcf or ftype in (0xc4, 0xc8, 0xcc):
+                    fhandle.seek(size, 1)
+                    byte = fhandle.read(1)
+                    while ord(byte) == 0xff:
+                        byte = fhandle.read(1)
+                    ftype = ord(byte)
+                    size = struct.unpack('>H', fhandle.read(2))[0] - 2
+                # We are at a SOFn block
+                fhandle.seek(1, 1)  # Skip `precision' byte.
+                height, width = struct.unpack('>HH', fhandle.read(4))
+            except Exception:  # IGNORE:W0703
+                return
+        elif what == "bmp":
+            if head[0:2].decode() != "BM":
+                return
+            width, height = struct.unpack('II', head[18:26])
+        else:
+            return
+        return width, height
+
+
 class Terminal:
     _terminals = {}
 
@@ -41,6 +140,7 @@ class Terminal:
         self._terminals[view.id()] = self
         self._cached_cursor = [0, 0]
         self._cached_cursor_is_hidden = [True]
+        self.image_count = 0
 
     @classmethod
     def from_id(cls, vid):
@@ -152,6 +252,9 @@ class Terminal:
         self.process = TerminalPtyProcess.spawn(cmd, cwd=cwd, env=_env, dimensions=size)
         self.screen = TerminalScreen(size[1], size[0], process=self.process, history=10000)
         self.stream = TerminalStream(self.screen)
+
+        self.screen.set_show_image_callback(self.show_image)
+
         self._start_rendering()
 
     def close(self):
@@ -220,6 +323,46 @@ class Terminal:
 
     def application_mode_enabled(self):
         return (1 << 5) in self.screen.mode
+
+    def show_image(self, data, args):
+        view = self.view
+
+        if "inline" not in args or not args["inline"]:
+            return
+
+        cursor = self.screen.cursor
+        pt = view.text_point(self.offset + cursor.y, cursor.x)
+
+        _, image_file = tempfile.mkstemp()
+        with open(image_file, "wb") as f:
+            f.write(base64.decodebytes(data.encode()))
+
+        img_size = get_image_size(image_file)
+        if not img_size:
+            logger.error("cannot get image size")
+            return
+
+        width, height = image_resize(
+            img_size,
+            args["width"] if "width" in args else None,
+            args["height"] if "height" in args else None,
+            view.em_width(),
+            view.viewport_extent()[0] - 3 * view.em_width(),
+            args["preserveAspectRatio"] if "preserveAspectRatio" in args else 1
+        )
+
+        def callback(link):
+            view.erase_phantoms("terminus_image#{}".format(link))
+
+        self.image_count += 1
+        view.add_phantom(
+            "terminus_image#{}".format(self.image_count),
+            sublime.Region(pt, pt),
+            IMAGE.format(image_file=image_file, width=width, height=height, count=self.image_count),
+            sublime.LAYOUT_INLINE,
+            callback)
+
+        self.screen.index()
 
     def __del__(self):
         # make sure the process is terminated

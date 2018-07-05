@@ -269,5 +269,7 @@ class TerminusShowCursor(sublime_plugin.TextCommand, TerminusViewMixinx):
 
     def scroll_to_cursor(self, terminal):
         view = self.view
-        layout = view.text_to_layout(view.text_point(terminal.offset, 0))
-        view.set_viewport_position(layout, True)
+        last_y = view.text_to_layout(view.size())[1]
+        viewport_y = last_y - view.viewport_extent()[1] + view.line_height()
+        offset_y = view.text_to_layout(view.text_point(terminal.offset, 0))[1]
+        view.set_viewport_position((0, max(offset_y, viewport_y)), True)

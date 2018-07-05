@@ -1,3 +1,4 @@
+import re
 import sys
 import logging
 import unicodedata
@@ -9,6 +10,7 @@ import pyte
 from pyte.screens import StaticDefaultDict, Margins
 from pyte import modes as mo
 from pyte import graphics as g
+from pyte import control as ctrl
 
 
 if sys.platform.startswith("win"):
@@ -43,6 +45,11 @@ BG_AIXTERM = {
     106: "light_cyan",
     107: "light_white"
 }
+
+
+IMGCAT_PARAM_PATTERN = re.compile(
+    r"^File=(?P<arguments>[^:]*?):(?P<data>.*)$"
+)
 
 
 def segment_buffer_line(buffer_line):
@@ -477,6 +484,24 @@ class TerminalScreen(pyte.Screen):
                 self.buffer[y] = copy(self.buffer[y - n])
         self.dirty.update(range(self.lines))
 
+    def show_image(self, param):
+        m = IMGCAT_PARAM_PATTERN.match(param)
+        if not m:
+            return
+        arguments = {}
+        for pair in m.group("arguments").split(";"):
+            if "=" not in pair:
+                continue
+            key, value = pair.split("=", 1)
+            arguments[key] = value
+
+        data = m.group("data")
+
+        self.show_image_callback(data, arguments)
+
+    def set_show_image_callback(self, callback):
+        self.show_image_callback = callback
+
     @property
     def alternate_buffer_mode(self):
         return self._alternate_buffer_mode
@@ -521,6 +546,161 @@ class TerminalScreen(pyte.Screen):
 class TerminalStream(pyte.Stream):
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
         self.csi["S"] = "scroll_up"
         self.csi["T"] = "scroll_down"
+        self.osc = {
+            "01": "set_icon_name",
+            "02": "set_title",
+            "1337": "show_image"
+        }
+        super().__init__(*args, **kwargs)
+
+    def _parser_fsm(self):
+        """
+        Override to support "imgcat"
+        """
+        basic = self.basic
+        listener = self.listener
+        draw = listener.draw
+        debug = listener.debug
+
+        ESC, CSI_C1 = ctrl.ESC, ctrl.CSI_C1
+        OSC_C1 = ctrl.OSC_C1
+        SP_OR_GT = ctrl.SP + ">"
+        NUL_OR_DEL = ctrl.NUL + ctrl.DEL
+        CAN_OR_SUB = ctrl.CAN + ctrl.SUB
+        ALLOWED_IN_CSI = "".join([ctrl.BEL, ctrl.BS, ctrl.HT, ctrl.LF,
+                                  ctrl.VT, ctrl.FF, ctrl.CR])
+        OSC_TERMINATORS = set([ctrl.ST_C0, ctrl.ST_C1, ctrl.BEL])
+
+        def create_dispatcher(mapping):
+            return defaultdict(lambda: debug, dict(
+                (event, getattr(listener, attr))
+                for event, attr in mapping.items()))
+
+        basic_dispatch = create_dispatcher(basic)
+        sharp_dispatch = create_dispatcher(self.sharp)
+        escape_dispatch = create_dispatcher(self.escape)
+        csi_dispatch = create_dispatcher(self.csi)
+        osc_dispatch = create_dispatcher(self.osc)
+
+        while True:
+            # ``True`` tells ``Screen.feed`` that it is allowed to send
+            # chunks of plain text directly to the listener, instead
+            # of this generator.
+            char = yield True
+
+            if char == ESC:
+                # Most non-VT52 commands start with a left-bracket after the
+                # escape and then a stream of parameters and a command; with
+                # a single notable exception -- :data:`escape.DECOM` sequence,
+                # which starts with a sharp.
+                #
+                # .. versionchanged:: 0.4.10
+                #
+                #    For compatibility with Linux terminal stream also
+                #    recognizes ``ESC % C`` sequences for selecting control
+                #    character set. However, in the current version these
+                #    are noop.
+                char = yield
+                if char == "[":
+                    char = CSI_C1  # Go to CSI.
+                elif char == "]":
+                    char = OSC_C1  # Go to OSC.
+                else:
+                    if char == "#":
+                        sharp_dispatch[(yield)]()
+                    if char == "%":
+                        self.select_other_charset((yield))
+                    elif char in "()":
+                        code = yield
+                        if self.use_utf8:
+                            continue
+
+                        # See http://www.cl.cam.ac.uk/~mgk25/unicode.html#term
+                        # for the why on the UTF-8 restriction.
+                        listener.define_charset(code, mode=char)
+                    else:
+                        escape_dispatch[char]()
+                    continue    # Don't go to CSI.
+
+            if char in basic:
+                # Ignore shifts in UTF-8 mode. See
+                # http://www.cl.cam.ac.uk/~mgk25/unicode.html#term for
+                # the why on UTF-8 restriction.
+                if (char == ctrl.SI or char == ctrl.SO) and self.use_utf8:
+                    continue
+
+                basic_dispatch[char]()
+            elif char == CSI_C1:
+                # All parameters are unsigned, positive decimal integers, with
+                # the most significant digit sent first. Any parameter greater
+                # than 9999 is set to 9999. If you do not specify a value, a 0
+                # value is assumed.
+                #
+                # .. seealso::
+                #
+                #    `VT102 User Guide <http://vt100.net/docs/vt102-ug/>`_
+                #        For details on the formatting of escape arguments.
+                #
+                #    `VT220 Programmer Ref. <http://vt100.net/docs/vt220-rm/>`_
+                #        For details on the characters valid for use as
+                #        arguments.
+                params = []
+                current = ""
+                private = False
+                while True:
+                    char = yield
+                    if char == "?":
+                        private = True
+                    elif char in ALLOWED_IN_CSI:
+                        basic_dispatch[char]()
+                    elif char in SP_OR_GT:
+                        pass  # Secondary DA is not supported atm.
+                    elif char in CAN_OR_SUB:
+                        # If CAN or SUB is received during a sequence, the
+                        # current sequence is aborted; terminal displays
+                        # the substitute character, followed by characters
+                        # in the sequence received after CAN or SUB.
+                        draw(char)
+                        break
+                    elif char.isdigit():
+                        current += char
+                    else:
+                        params.append(min(int(current or 0), 9999))
+
+                        if char == ";":
+                            current = ""
+                        else:
+                            if private:
+                                csi_dispatch[char](*params, private=True)
+                            else:
+                                csi_dispatch[char](*params)
+                            break  # CSI is finished.
+            elif char == OSC_C1:
+                code = ""
+                while True:
+                    char = yield
+                    if char == ";":
+                        break
+                    code += char
+
+                if code == "R":
+                    continue  # Reset palette. Not implemented.
+                elif code == "P":
+                    continue  # Set palette. Not implemented.
+
+                param = ""
+                while True:
+                    char = yield
+                    if char == ESC:
+                        char += yield
+                    if char in OSC_TERMINATORS:
+                        break
+                    else:
+                        param += char
+
+                osc_dispatch[code](param)
+
+            elif char not in NUL_OR_DEL:
+                draw(char)
