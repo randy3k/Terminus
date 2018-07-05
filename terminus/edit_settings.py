@@ -64,16 +64,21 @@ class TerminusEditSettingsListener(sublime_plugin.EventListener):
 
         views = window.views()
         for other in views:
-            if other.settings().get("terminus_edit_keybindings_view"):
-                def close_view():
-                    window.focus_view(other)
-                    window.run_command("close")
-                    if len(window.views()) == 0 and len(window.folders()) < 1:
-                        if window.id() == sublime.active_window().id():
-                            window.run_command("close_window")
+            if other.settings().get("terminus_edit_keybindings_view", False):
+
+                def close_this_view(view):
+                    def _():
+                        window.focus_view(view)
+                        window.run_command("close")
+                        if len(window.views()) == 0 and len(window.folders()) < 1:
+                            if window.id() == sublime.active_window().id():
+                                window.run_command("close_window")
+                    return _
+
+                other.settings().erase("terminus_edit_keybindings_view")
 
                 # Run after timeout so the UI doesn't block with the view half closed
-                sublime.set_timeout(close_view, 10)
+                sublime.set_timeout(close_this_view(other), 10)
 
 
 class TerminusEditSettingsCommand(sublime_plugin.WindowCommand):
