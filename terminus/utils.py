@@ -10,6 +10,9 @@ def highlight_key(view):
     """
     value = view.settings().get("terminus.highlight_counter", 0)
 
+    if value == 1e8:
+        value = 0
+
     while value >= 1:
         regions = view.get_regions("terminus#{}".format(value))
         if regions and not regions[0].empty():
