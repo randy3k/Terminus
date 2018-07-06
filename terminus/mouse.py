@@ -7,7 +7,6 @@ import webbrowser
 
 from .terminal import Terminal, CONTINUATION
 from .utils import highlight_key
-from . import images
 
 logger = logging.getLogger('Terminus')
 
@@ -23,23 +22,23 @@ rex = re.compile(
 
 URL_POPUP = """
 <style>
-body {{
+body {
     margin: 0px;
-}}
-div {{
+}
+div {
     border: 1px;
     border-style: solid;
     border-color: grey;
-}}
+}
 </style>
 <body>
 <div>
 <a href="open">
-<img width="20%" height="20%" src="{}" />
+<img width="20%" height="20%" src="res://Packages/Terminus/images/link.png" />
 </a>
 </div>
 </body>
-""".format(images.link)
+"""
 
 
 def find_url(view, event=None, pt=None):
