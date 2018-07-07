@@ -2,7 +2,6 @@ import sublime
 
 import os
 import base64
-import tempfile
 import struct
 import imghdr
 import logging
@@ -25,7 +24,7 @@ div {{
 }}
 </style>
 <div>
-<img src="file://{image_file}" width="{width}" height="{height}"/>
+<img src="data:image/{what};base64,{data}" width="{width}" height="{height}"/>
 </div>
 """
 
@@ -51,25 +50,25 @@ def view_size(view):
     return (nb_rows, nb_columns)
 
 
-def image_resize(img_size, width, height, em_width, max_width, preserve_ratio=1):
+def image_resize(img_width, img_height, width, height, em_width, max_width, preserve_ratio=1):
 
     if width:
         if width.isdigit():
             width = int(width) * em_width
         elif width[-1] == "%":
-            width = int(img_size[0] * int(width[:-1]) / 100)
+            width = int(img_width * int(width[:-1]) / 100)
     else:
-        width = img_size[0]
+        width = img_width
 
     if height:
         if height.isdigit():
             height = int(height) * em_width
         elif height[-1] == "%":
-            height = int(img_size[1] * int(height[:-1]) / 100)
+            height = int(img_height * int(height[:-1]) / 100)
     else:
-        height = img_size[1]
+        height = img_height
 
-    ratio = img_size[0] / img_size[1]
+    ratio = img_width / img_height
 
     if preserve_ratio == 1 or preserve_ratio == "true":
         area = width * height
@@ -89,47 +88,44 @@ def _is_jpg(h):
     return h.startswith(b'\xff\xd8')
 
 
-# from LaTeXTools @st_preview/preview_image.py#L134
-def get_image_size(image_path):
-    '''Determine the image type of image_path and return its size.
-    from draco'''
-    with open(image_path, 'rb') as fhandle:
-        # read 32 as we pass this to imghdr
-        head = fhandle.read(32)
-        if len(head) != 32:
+def get_image_info(data):
+    databytes = base64.decodebytes(data[0:48].encode())
+    head = databytes[0:32]
+    if len(head) != 32:
+        return
+    what = imghdr.what(None, head)
+    if what == 'png':
+        check = struct.unpack('>i', head[4:8])[0]
+        if check != 0x0d0a1a0a:
             return
-        what = imghdr.what(image_path, head)
-        if what == 'png':
-            check = struct.unpack('>i', head[4:8])[0]
-            if check != 0x0d0a1a0a:
-                return
-            width, height = struct.unpack('>ii', head[16:24])
-        elif what == 'gif':
-            width, height = struct.unpack('<HH', head[6:10])
-        elif what == 'jpeg' or _is_jpg(head):
-            try:
-                fhandle.seek(0)  # Read 0xff next
-                size = 2
-                ftype = 0
-                while not 0xc0 <= ftype <= 0xcf or ftype in (0xc4, 0xc8, 0xcc):
-                    fhandle.seek(size, 1)
-                    byte = fhandle.read(1)
-                    while ord(byte) == 0xff:
-                        byte = fhandle.read(1)
-                    ftype = ord(byte)
-                    size = struct.unpack('>H', fhandle.read(2))[0] - 2
-                # We are at a SOFn block
-                fhandle.seek(1, 1)  # Skip `precision' byte.
-                height, width = struct.unpack('>HH', fhandle.read(4))
-            except Exception:  # IGNORE:W0703
-                return
-        elif what == "bmp":
-            if head[0:2].decode() != "BM":
-                return
-            width, height = struct.unpack('II', head[18:26])
-        else:
+        width, height = struct.unpack('>ii', head[16:24])
+    elif what == 'gif':
+        width, height = struct.unpack('<HH', head[6:10])
+    elif what == 'jpeg' or _is_jpg(head):
+            databytes = base64.decodebytes(data.encode())
+            pos = 0
+            size = 2
+            ftype = 0
+            while not 0xc0 <= ftype <= 0xcf or ftype in (0xc4, 0xc8, 0xcc):
+                pos += size
+                byte = databytes[pos:pos + 1]
+                while ord(byte) == 0xff:
+                    byte = databytes[pos:pos + 1]
+                    pos += 1
+                ftype = ord(byte)
+                size = struct.unpack('>H', databytes[pos:pos + 2])[0] - 2
+                pos += 2
+            # We are at a SOFn block
+            pos += 1  # Skip `precision' byte.
+            height, width = struct.unpack('>HH', databytes[pos:pos + 4])
+
+    elif what == "bmp":
+        if head[0:2].decode() != "BM":
             return
-        return width, height
+        width, height = struct.unpack('II', head[18:26])
+    else:
+        return
+    return what, width, height
 
 
 class Terminal:
@@ -333,17 +329,16 @@ class Terminal:
         cursor = self.screen.cursor
         pt = view.text_point(self.offset + cursor.y, cursor.x)
 
-        _, image_file = tempfile.mkstemp()
-        with open(image_file, "wb") as f:
-            f.write(base64.decodebytes(data.encode()))
-
-        img_size = get_image_size(image_file)
-        if not img_size:
-            logger.error("cannot get image size")
+        image_info = get_image_info(data)
+        if not image_info:
+            logger.error("cannot get image info")
             return
 
+        what, width, height = image_info
+
         width, height = image_resize(
-            img_size,
+            width,
+            height,
             args["width"] if "width" in args else None,
             args["height"] if "height" in args else None,
             view.em_width(),
@@ -358,7 +353,12 @@ class Terminal:
         view.add_phantom(
             "terminus_image#{}".format(self.image_count),
             sublime.Region(pt, pt),
-            IMAGE.format(image_file=image_file, width=width, height=height, count=self.image_count),
+            IMAGE.format(
+                what=what,
+                data=data,
+                width=width,
+                height=height,
+                count=self.image_count),
             sublime.LAYOUT_INLINE,
             callback)
 

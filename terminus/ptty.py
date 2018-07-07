@@ -47,8 +47,8 @@ BG_AIXTERM = {
 }
 
 
-IMGCAT_PARAM_PATTERN = re.compile(
-    r"^File=(?P<arguments>[^:]*?):(?P<data>.*)$"
+FILE_PARAM_PATTERN = re.compile(
+    r"^File=(?P<arguments>[^:]*?):(?P<data>[a-zA-Z0-9\+/=]*)\r?$"
 )
 
 
@@ -484,20 +484,19 @@ class TerminalScreen(pyte.Screen):
                 self.buffer[y] = copy(self.buffer[y - n])
         self.dirty.update(range(self.lines))
 
-    def show_image(self, param):
-        m = IMGCAT_PARAM_PATTERN.match(param)
-        if not m:
-            return
-        arguments = {}
-        for pair in m.group("arguments").split(";"):
-            if "=" not in pair:
-                continue
-            key, value = pair.split("=", 1)
-            arguments[key] = value
+    def handle_iterm_protocol(self, param):
+        m = FILE_PARAM_PATTERN.match(param)
+        if m:
+            arguments = {}
+            for pair in m.group("arguments").split(";"):
+                if "=" not in pair:
+                    continue
+                key, value = pair.split("=", 1)
+                arguments[key] = value
 
-        data = m.group("data")
+            data = m.group("data")
 
-        self.show_image_callback(data, arguments)
+            self.show_image_callback(data, arguments)
 
     def set_show_image_callback(self, callback):
         self.show_image_callback = callback
@@ -551,7 +550,7 @@ class TerminalStream(pyte.Stream):
         self.osc = {
             "01": "set_icon_name",
             "02": "set_title",
-            "1337": "show_image"
+            "1337": "handle_iterm_protocol"
         }
         super().__init__(*args, **kwargs)
 
