@@ -320,7 +320,7 @@ class Terminal:
     def application_mode_enabled(self):
         return (1 << 5) in self.screen.mode
 
-    def show_image(self, data, args):
+    def show_image(self, data, args, cr=None):
         view = self.view
 
         if "inline" not in args or not args["inline"]:
@@ -362,7 +362,8 @@ class Terminal:
             sublime.LAYOUT_INLINE,
             callback)
 
-        self.screen.index()
+        if cr:
+            self.screen.index()
 
     def __del__(self):
         # make sure the process is terminated

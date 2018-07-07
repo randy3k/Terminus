@@ -48,7 +48,7 @@ BG_AIXTERM = {
 
 
 FILE_PARAM_PATTERN = re.compile(
-    r"^File=(?P<arguments>[^:]*?):(?P<data>[a-zA-Z0-9\+/=]*)\r?$"
+    r"^File=(?P<arguments>[^:]*?):(?P<data>[a-zA-Z0-9\+/=]*)(?P<cr>\r?)$"
 )
 
 
@@ -495,8 +495,9 @@ class TerminalScreen(pyte.Screen):
                 arguments[key] = value
 
             data = m.group("data")
+            cr = m.group("cr")
 
-            self.show_image_callback(data, arguments)
+            self.show_image_callback(data, arguments, cr)
 
     def set_show_image_callback(self, callback):
         self.show_image_callback = callback
