@@ -88,7 +88,20 @@ class TerminusActivateCommand(sublime_plugin.TextCommand):
         terminal.open(**kwargs)
 
 
-class TerminusRenderCommand(sublime_plugin.TextCommand):
+class TerminusViewMixinx:
+
+    def ensure_position(self, edit, row, col=0):
+        view = self.view
+        lastrow = view.rowcol(view.size())[0]
+        if lastrow < row:
+            view.insert(edit, view.size(), "\n" * (row - lastrow))
+        line_region = view.line(view.text_point(row, 0))
+        lastcol = view.rowcol(line_region.end())[1]
+        if lastcol < col:
+            view.insert(edit, line_region.end(), " " * (col - lastcol))
+
+
+class TerminusRenderCommand(sublime_plugin.TextCommand, TerminusViewMixinx):
     def run(self, edit):
         view = self.view
         startt = time.time()
@@ -98,49 +111,13 @@ class TerminusRenderCommand(sublime_plugin.TextCommand):
 
         screen = terminal.screen
         self.update_lines(edit, terminal)
-        self.update_cursor(edit, terminal)
         self.trim_trailing_spaces(edit, terminal)
         self.trim_history(edit, terminal)
+        view.run_command("terminus_show_cursor")
         screen.dirty.clear()
         logger.debug("updating lines takes {}s".format(str(time.time() - startt)))
         logger.debug("mode: {}, cursor: {}.{}".format(
             [m >> 5 for m in screen.mode], screen.cursor.x, screen.cursor.y))
-
-    def scroll_to_cursor(self, terminal):
-        view = self.view
-        layout = view.text_to_layout(view.text_point(terminal.offset, 0))
-        view.set_viewport_position(layout, True)
-
-    def update_cursor(self, edit, terminal):
-        view = self.view
-
-        sel = view.sel()
-        sel.clear()
-
-        screen = terminal.screen
-        if screen.cursor.hidden:
-            return
-
-        cursor = screen.cursor
-        offset = terminal.offset
-
-        if len(view.sel()) > 0 and view.sel()[0].empty():
-            row, col = view.rowcol(view.sel()[0].end())
-            if row == offset + cursor.y and col == cursor.x:
-                return
-
-        # make sure the view has enough lines
-        self.ensure_position(edit, cursor.y + offset)
-
-        line_region = view.line(view.text_point(cursor.y + offset, 0))
-        text = view.substr(line_region)
-        col = rev_wcwidth(text, cursor.x) + 1
-
-        self.ensure_position(edit, cursor.y + offset, col)
-        pt = view.text_point(cursor.y + offset, col)
-
-        sel.add(sublime.Region(pt, pt))
-        sublime.set_timeout(lambda: self.scroll_to_cursor(terminal))
 
     def update_lines(self, edit, terminal):
         # cursor = screen.cursor
@@ -199,16 +176,6 @@ class TerminusRenderCommand(sublime_plugin.TextCommand):
                     [sublime.Region(a, b)],
                     "terminus.{}.{}".format(fg, bg))
 
-    def ensure_position(self, edit, row, col=0):
-        view = self.view
-        lastrow = view.rowcol(view.size())[0]
-        if lastrow < row:
-            view.insert(edit, view.size(), "\n" * (row - lastrow))
-        line_region = view.line(view.text_point(row, 0))
-        lastcol = view.rowcol(line_region.end())[1]
-        if lastcol < col:
-            view.insert(edit, line_region.end(), " " * (col - lastcol))
-
     def trim_trailing_spaces(self, edit, terminal):
         view = self.view
         screen = terminal.screen
@@ -255,3 +222,52 @@ class TerminusRenderCommand(sublime_plugin.TextCommand):
                 view.size()
             )
             view.erase(edit, tail_region)
+
+
+class TerminusShowCursor(sublime_plugin.TextCommand, TerminusViewMixinx):
+
+    def run(self, edit, focus=True, scroll=True):
+        view = self.view
+        terminal = Terminal.from_id(view.id())
+        if not terminal:
+            return
+
+        if focus:
+            self.focus_cursor(edit, terminal)
+        if scroll:
+            sublime.set_timeout(lambda: self.scroll_to_cursor(terminal))
+
+    def focus_cursor(self, edit, terminal):
+        view = self.view
+
+        sel = view.sel()
+        sel.clear()
+
+        screen = terminal.screen
+        if screen.cursor.hidden:
+            return
+
+        cursor = screen.cursor
+        offset = terminal.offset
+
+        if len(view.sel()) > 0 and view.sel()[0].empty():
+            row, col = view.rowcol(view.sel()[0].end())
+            if row == offset + cursor.y and col == cursor.x:
+                return
+
+        # make sure the view has enough lines
+        self.ensure_position(edit, cursor.y + offset)
+
+        line_region = view.line(view.text_point(cursor.y + offset, 0))
+        text = view.substr(line_region)
+        col = rev_wcwidth(text, cursor.x) + 1
+
+        self.ensure_position(edit, cursor.y + offset, col)
+        pt = view.text_point(cursor.y + offset, col)
+
+        sel.add(sublime.Region(pt, pt))
+
+    def scroll_to_cursor(self, terminal):
+        view = self.view
+        layout = view.text_to_layout(view.text_point(terminal.offset, 0))
+        view.set_viewport_position(layout, True)

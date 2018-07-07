@@ -34,7 +34,8 @@ from .terminus.utils import settings_on_change
 from .terminus.view import (
     TerminusViewEventListener,
     TerminusActivateCommand,
-    TerminusRenderCommand
+    TerminusRenderCommand,
+    TerminusShowCursor
 )
 
 
@@ -47,7 +48,8 @@ __all__ = [
     "TerminusEditSettingsListener", "TerminusEditSettingsCommand",
     "TerminusMouseEventListener", "TerminusOpenContextUrlCommand", "TerminusClickCommand",
     "TerminusQueryContextListener",
-    "TerminusViewEventListener", "TerminusActivateCommand", "TerminusRenderCommand"
+    "TerminusViewEventListener", "TerminusActivateCommand", "TerminusRenderCommand",
+    "TerminusShowCursor"
 ]
 
 

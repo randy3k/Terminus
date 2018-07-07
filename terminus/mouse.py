@@ -173,7 +173,7 @@ class TerminusClickCommand(sublime_plugin.TextCommand):
                 logger.debug("reset cursor")
                 window.focus_group(window.active_group())
                 window.focus_view(view)
-                view.run_command("terminus_render")
+                view.run_command("terminus_show_cursor", {"scroll": False})
                 return
 
         view.run_command("drag_select", args)
