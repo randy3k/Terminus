@@ -362,6 +362,7 @@ class Terminal:
             sublime.LAYOUT_INLINE,
             callback)
 
+        view.run_command("terminus_insert", {"point": pt + 1, "character": "\n"})
         self.screen.index()
 
     def __del__(self):

@@ -35,7 +35,8 @@ from .terminus.view import (
     TerminusViewEventListener,
     TerminusActivateCommand,
     TerminusRenderCommand,
-    TerminusShowCursor
+    TerminusShowCursor,
+    TerminusInsert
 )
 
 
@@ -49,7 +50,7 @@ __all__ = [
     "TerminusMouseEventListener", "TerminusOpenContextUrlCommand", "TerminusClickCommand",
     "TerminusQueryContextListener",
     "TerminusViewEventListener", "TerminusActivateCommand", "TerminusRenderCommand",
-    "TerminusShowCursor"
+    "TerminusShowCursor", "TerminusInsert"
 ]
 
 
