@@ -216,6 +216,12 @@ class TerminusRenderCommand(sublime_plugin.TextCommand, TerminusViewMixinx):
             terminal.offset -= m
             lastrow -= m
 
+            # delete outdated images
+            for pid in terminal.images:
+                region = view.query_phantom(pid)[0]
+                if region.empty() and region.begin() == 0:
+                    view.erase_phantom_by_id(pid)
+
         if lastrow > terminal.offset + screen.lines:
             tail_region = sublime.Region(
                 view.text_point(terminal.offset + screen.lines, 0),

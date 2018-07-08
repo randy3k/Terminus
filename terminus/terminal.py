@@ -137,6 +137,7 @@ class Terminal:
         self._cached_cursor = [0, 0]
         self._cached_cursor_is_hidden = [True]
         self.image_count = 0
+        self.images = []
 
     @classmethod
     def from_id(cls, vid):
@@ -346,11 +347,8 @@ class Terminal:
             args["preserveAspectRatio"] if "preserveAspectRatio" in args else 1
         )
 
-        def callback(link):
-            view.erase_phantoms("terminus_image#{}".format(link))
-
         self.image_count += 1
-        view.add_phantom(
+        p = view.add_phantom(
             "terminus_image#{}".format(self.image_count),
             sublime.Region(pt, pt),
             IMAGE.format(
@@ -360,7 +358,8 @@ class Terminal:
                 height=height,
                 count=self.image_count),
             sublime.LAYOUT_INLINE,
-            callback)
+        )
+        self.images.append(p)
 
         if cr:
             self.screen.index()
