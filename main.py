@@ -22,7 +22,8 @@ from .terminus.edit_settings import (
 from .terminus.mouse import (
     TerminusMouseEventListener,
     TerminusOpenContextUrlCommand,
-    TerminusClickCommand
+    TerminusClickCommand,
+    TerminusOpenImageCommand
 )
 from .terminus.query import TerminusQueryContextListener
 from .terminus.theme import (
@@ -47,6 +48,7 @@ __all__ = [
     "TerminusSelectThemeCommand", "TerminusGenerateThemeCommand",
     "TerminusEditSettingsListener", "TerminusEditSettingsCommand",
     "TerminusMouseEventListener", "TerminusOpenContextUrlCommand", "TerminusClickCommand",
+    "TerminusOpenImageCommand",
     "TerminusQueryContextListener",
     "TerminusViewEventListener", "TerminusActivateCommand", "TerminusRenderCommand",
     "TerminusShowCursor"

@@ -5,6 +5,7 @@ import base64
 import struct
 import imghdr
 import logging
+import tempfile
 import threading
 
 from .ptty import TerminalPtyProcess, TerminalScreen, TerminalStream
@@ -88,8 +89,7 @@ def _is_jpg(h):
     return h.startswith(b'\xff\xd8')
 
 
-def get_image_info(data):
-    databytes = base64.decodebytes(data[0:48].encode())
+def get_image_info(databytes):
     head = databytes[0:32]
     if len(head) != 32:
         return
@@ -102,7 +102,6 @@ def get_image_info(data):
     elif what == 'gif':
         width, height = struct.unpack('<HH', head[6:10])
     elif what == 'jpeg' or _is_jpg(head):
-            databytes = base64.decodebytes(data.encode())
             pos = 0
             size = 2
             ftype = 0
@@ -137,7 +136,7 @@ class Terminal:
         self._cached_cursor = [0, 0]
         self._cached_cursor_is_hidden = [True]
         self.image_count = 0
-        self.images = []
+        self.images = {}
 
     @classmethod
     def from_id(cls, vid):
@@ -330,12 +329,18 @@ class Terminal:
         cursor = self.screen.cursor
         pt = view.text_point(self.offset + cursor.y, cursor.x)
 
-        image_info = get_image_info(data)
+        databytes = base64.decodebytes(data.encode())
+
+        image_info = get_image_info(databytes)
         if not image_info:
             logger.error("cannot get image info")
             return
 
         what, width, height = image_info
+
+        _, image_path = tempfile.mkstemp(suffix="." + what)
+        with open(image_path, "wb") as f:
+            f.write(databytes)
 
         width, height = image_resize(
             width,
@@ -359,7 +364,7 @@ class Terminal:
                 count=self.image_count),
             sublime.LAYOUT_INLINE,
         )
-        self.images.append(p)
+        self.images[p] = image_path
 
         if cr:
             self.screen.index()
