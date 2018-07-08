@@ -18,15 +18,10 @@ CONTINUATION = "\u200b\u200c\u200b"
 IMAGE = """
 <style>
 body {{
-    margin: 0px;
-}}
-div {{
-    margin: 0px;
+    margin: 1px;
 }}
 </style>
-<div>
 <img src="data:image/{what};base64,{data}" width="{width}" height="{height}"/>
-</div>
 """
 
 logger = logging.getLogger('Terminus')
