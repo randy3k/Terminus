@@ -343,8 +343,10 @@ class TerminalScreen(pyte.Screen):
     # def erase_in_line(self, how=0, private=False):
     #     pass
 
-    def erase_in_display(self, how=0):
+    def erase_in_display(self, how=0, *args, **kwargs):
         # dump the screen to history
+        # check also https://github.com/selectel/pyte/pull/108
+
         if not self.alternate_buffer_mode and \
                 (how == 2 or (how == 0 and self.cursor.x == 0 and self.cursor.y == 0)):
             self.push_lines_into_history()
