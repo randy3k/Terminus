@@ -177,3 +177,45 @@ class TerminusClickCommand(sublime_plugin.TextCommand):
                 return
 
         view.run_command("drag_select", args)
+
+
+class TerminusOpenImageCommand(sublime_plugin.TextCommand):
+    def want_event(self):
+        return True
+
+    def is_enable(self, *args, **kwargs):
+        terminal = Terminal.from_id(self.view.id())
+        return terminal is not None
+
+    def is_visible(self, event):
+        return self.find_phantom(event) is not None
+
+    def find_phantom(self, event):
+        view = self.view
+        terminal = Terminal.from_id(view.id())
+        pt = view.window_to_text((event["x"], event["y"]))
+        cord = view.text_to_window(pt)
+        if cord[1] < event["y"]:
+            for pid in terminal.images:
+                region = view.query_phantom(pid)[0]
+                if region.end() == pt:
+                    return pid
+        else:
+            # the right click happens at the lower half of the images
+            row, col = view.rowcol(pt)
+            cord = view.text_to_window(view.text_point(row - 1, 0))
+            pt = view.window_to_text((event["x"], cord[1]))
+            for pid in terminal.images:
+                region = view.query_phantom(pid)[0]
+                if region.end() == pt:
+                    return pid
+        return None
+
+    def run(self, edit, event):
+        view = self.view
+        terminal = Terminal.from_id(view.id())
+        image_url = terminal.images[self.find_phantom(event)]
+        webbrowser.open_new_tab("file://{}".format(image_url))
+
+    def description(self, event):
+        return "Open Image"

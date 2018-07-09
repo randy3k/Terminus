@@ -218,6 +218,14 @@ class TerminusRenderCommand(sublime_plugin.TextCommand, TerminusViewMixinx):
             terminal.offset -= m
             lastrow -= m
 
+            # delete outdated images
+            for pid in list(terminal.images.keys()):
+                region = view.query_phantom(pid)[0]
+                if region.empty() and region.begin() == 0:
+                    view.erase_phantom_by_id(pid)
+                    if pid in terminal.images:
+                        del terminal.images[pid]
+
         if lastrow > terminal.offset + screen.lines:
             tail_region = sublime.Region(
                 view.text_point(terminal.offset + screen.lines, 0),
@@ -271,5 +279,13 @@ class TerminusShowCursor(sublime_plugin.TextCommand, TerminusViewMixinx):
 
     def scroll_to_cursor(self, terminal):
         view = self.view
-        layout = view.text_to_layout(view.text_point(terminal.offset, 0))
-        view.set_viewport_position(layout, True)
+        last_y = view.text_to_layout(view.size())[1]
+        viewport_y = last_y - view.viewport_extent()[1] + view.line_height()
+        offset_y = view.text_to_layout(view.text_point(terminal.offset, 0))[1]
+        view.set_viewport_position((0, max(offset_y, viewport_y)), True)
+
+
+class TerminusInsertCommand(sublime_plugin.TextCommand):
+
+    def run(self, edit, point, character):
+        self.view.insert(edit, point, character)
