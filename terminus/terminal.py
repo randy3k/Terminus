@@ -315,6 +315,14 @@ class Terminal:
     def application_mode_enabled(self):
         return (1 << 5) in self.screen.mode
 
+    def find_image(self, pt):
+        view = self.view
+        for pid in self.images:
+            region = view.query_phantom(pid)[0]
+            if region.end() == pt:
+                return pid
+        return None
+
     def show_image(self, data, args, cr=None):
         view = self.view
 
@@ -346,6 +354,10 @@ class Terminal:
             view.viewport_extent()[0] - 3 * view.em_width(),
             args["preserveAspectRatio"] if "preserveAspectRatio" in args else 1
         )
+
+        if self.find_image(pt):
+            self.view.run_command("terminus_insert", {"point": pt, "character": " "})
+            pt += 1
 
         self.image_count += 1
         p = view.add_phantom(

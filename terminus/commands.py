@@ -31,13 +31,13 @@ class TerminusCommandsEventListener(sublime_plugin.EventListener):
         if not terminal or not terminal.process.isalive():
             return
         command, args, _ = view.command_history(0)
-        if command in ["terminus_render", "terminus_keypress"]:
+        if command in ["terminus_render", "terminus_keypress", "terminus_insert"]:
             return
         elif command == "insert" and "characters" in args:
             chars = args["characters"]
             logger.debug("char {} detected".format(chars))
             terminal.send_string(chars)
-        elif command:
+        else:
             logger.debug("undo {}".format(command))
             view.run_command("soft_undo")
 

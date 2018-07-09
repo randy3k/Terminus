@@ -216,3 +216,6 @@ class TerminusOpenImageCommand(sublime_plugin.TextCommand):
         terminal = Terminal.from_id(view.id())
         image_url = terminal.images[self.find_phantom(event)]
         webbrowser.open_new_tab("file://{}".format(image_url))
+
+    def description(self, event):
+        return "Open Image"

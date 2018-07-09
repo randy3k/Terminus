@@ -281,3 +281,9 @@ class TerminusShowCursor(sublime_plugin.TextCommand, TerminusViewMixinx):
         viewport_y = last_y - view.viewport_extent()[1] + view.line_height()
         offset_y = view.text_to_layout(view.text_point(terminal.offset, 0))[1]
         view.set_viewport_position((0, max(offset_y, viewport_y)), True)
+
+
+class TerminusInsertCommand(sublime_plugin.TextCommand):
+
+    def run(self, edit, point, character):
+        self.view.insert(edit, point, character)
