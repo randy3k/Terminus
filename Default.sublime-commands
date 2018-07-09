@@ -25,6 +25,10 @@
         "command": "terminus_open"
     },
     {
+        "caption": "Terminus: Toggle Panel",
+        "command": "toggle_terminus_panel"
+    },
+    {
         "caption": "Terminus Utilities: Select Theme",
         "command": "terminus_select_theme"
     },
