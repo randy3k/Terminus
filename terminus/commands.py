@@ -438,32 +438,43 @@ class TerminusSendStringCommand(sublime_plugin.WindowCommand):
         if tag:
             terminal = Terminal.from_tag(tag)
             if terminal:
-                self.bring_view_to_topmost(terminal.view)
+                view = terminal.view
         else:
-            view = self.get_terminus_panel()
-            terminal = None
+            view = self.get_terminus_panel(True)
+            if not view:
+                view = self.get_terminus_view(True)
+            if not view:
+                view = self.get_terminus_panel()
+            if not view:
+                view = self.get_terminus_view()
             if view:
-                self.window.run_command("show_panel", {"panel": "output.{}".format(
-                    view.settings().get("terminus_view.panel_name")
-                )})
                 terminal = Terminal.from_id(view.id())
             else:
-                view = self.get_terminus_view()
-                if view:
-                    self.bring_view_to_topmost(view)
-                    terminal = Terminal.from_id(view.id())
+                terminal = None
 
         if not terminal:
             raise Exception("no terminal found")
         elif not terminal.process.isalive():
             raise Exception("process is terminated")
 
+        if view.settings().get("terminus_view.panel_name", None):
+            self.window.run_command("show_panel", {
+                "panel": "output.{}".format(view.settings().get("terminus_view.panel_name"))
+            })
+        else:
+            self.bring_view_to_topmost(view)
+
         terminal.send_string(string)
         terminal.view.run_command("terminus_render")
 
-    def get_terminus_panel(self):
+    def get_terminus_panel(self, visible=False):
         window = self.window
-        for panel in window.panels():
+        if visible:
+            active_panel = window.active_panel()
+            panels = [active_panel] if active_panel else []
+        else:
+            panels = window.panels()
+        for panel in panels:
             panel_view = window.find_output_panel(panel.replace("output.", ""))
             if panel_view:
                 terminal = Terminal.from_id(panel_view.id())
@@ -471,19 +482,22 @@ class TerminusSendStringCommand(sublime_plugin.WindowCommand):
                     return panel_view
         return None
 
-    def get_terminus_view(self):
+    def get_terminus_view(self, visible=False):
         window = self.window
-        for v in window.views():
-            terminal = Terminal.from_id(v.id())
+        for view in window.views():
+            if visible:
+                group, _ = window.get_view_index(view)
+                if window.active_view_in_group(group) != view:
+                    continue
+            terminal = Terminal.from_id(view.id())
             if terminal:
-                return v
+                return view
 
     def bring_view_to_topmost(self, view):
         # move the view to the top of the group
         window = view.window()
-        group, index = window.get_view_index(view)
-        group_active_view = window.active_view_in_group(group)
-        if group_active_view != view:
+        group, _ = window.get_view_index(view)
+        if window.active_view_in_group(group) != view:
             window_active_view = window.active_view()
             window.focus_view(view)
             window.focus_view(window_active_view)
