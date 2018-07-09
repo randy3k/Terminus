@@ -43,6 +43,7 @@ This package is heavily inspired by [TerminalView](https://github.com/Wramberg/T
 - 256 colors support
 - better xterm support
 - terminal panel
+- [imgcat](https://www.iterm2.com/documentation-images.html) support (PS: it also works on Linux / WSL)
 
 ## Installation
 
