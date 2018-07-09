@@ -125,6 +125,7 @@ bind them to `alt+b` and `alt+f` respectively
     }
 ```
 or by passing custom `cmd`
+
 ```json
     {
         "caption": "Terminus: Open iPython",
@@ -136,6 +137,7 @@ or by passing custom `cmd`
         }
     }
 ```
+
 (check the details for the arguments of `terminus_open` below)
 
 
@@ -172,6 +174,7 @@ The fields `cmd` and `cwd` understand Sublime Text build system [variables](http
 ```
 
 - text can be sent to the terminal with
+
 ```py
 window.run_command(
     "terminus_send_string", 
@@ -181,6 +184,7 @@ window.run_command(
     }
 )
 ```
+
 If `tag` is not provided, the text will be sent to the first terminal found in the current window.
 
 - `Terminus` as a build system. For example, the following can be added to your project settings to allow
