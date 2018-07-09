@@ -77,6 +77,7 @@ class TerminusActivateCommand(sublime_plugin.TextCommand):
         view_settings.set("color_scheme", "Terminus.sublime-color-scheme")
         # disable bracket highligher (not working)
         view_settings.set("bracket_highlighter.ignore", True)
+        view_settings.set("bracket_highlighter.clone_locations", {})
         # disable vintageous
         view_settings.set("__vi_external_disable", True)
         for key, value in terminus_settings.get("view_settings", {}).items():

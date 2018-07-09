@@ -149,7 +149,7 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
         else:
             terminus_view = self.window.new_file()
 
-        terminus_view.run_command(
+        sublime.set_timeout(lambda: terminus_view.run_command(
             "terminus_activate",
             {
                 "cmd": cmd,
@@ -158,7 +158,7 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
                 "title": title,
                 "panel_name": panel_name,
                 "tag": tag
-            })
+            }))
 
         if panel_name:
             self.window.run_command("show_panel", {"panel": "output.{}".format(panel_name)})
