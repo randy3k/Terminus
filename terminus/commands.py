@@ -43,7 +43,7 @@ class TerminusCommandsEventListener(sublime_plugin.EventListener):
             self.cursor = current_cursor
             logger.debug("text {} detected".format(text))
             terminal.send_string(text)
-        else:
+        elif command:
             logger.debug("undo {}".format(command))
             view.run_command("soft_undo")
 

@@ -176,6 +176,10 @@ class TerminusClickCommand(sublime_plugin.TextCommand):
                 view.run_command("terminus_show_cursor", {"scroll": False})
                 return
 
+        if any(s.contains(pt) for s in view.sel()):
+            # disable dragging text
+            return
+
         view.run_command("drag_select", args)
 
 
