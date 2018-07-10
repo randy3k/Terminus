@@ -177,8 +177,8 @@ class TerminusClickCommand(sublime_plugin.TextCommand):
                 return
 
         if any(s.contains(pt) for s in view.sel()):
-            # disable dragging text
-            return
+            # disable dragging
+            view.sel().clear()
 
         view.run_command("drag_select", args)
 
