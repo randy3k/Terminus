@@ -3,15 +3,11 @@
     // { "keys": ["alt+`"], "command": "toggle_terminus_panel" },
 
     // Basic keys
-    { "keys": ["up"], "command": "terminus_keypress", "args": {"key": "up"}, "context": [{"key": "terminus_view"}] },
-    { "keys": ["down"], "command": "terminus_keypress", "args": {"key": "down"}, "context": [{"key": "terminus_view"}] },
-    { "keys": ["right"], "command": "terminus_keypress", "args": {"key": "right"}, "context": [{"key": "terminus_view"}] },
-    { "keys": ["left"], "command": "terminus_keypress", "args": {"key": "left"}, "context": [{"key": "terminus_view"}] },
+    // on_text_command is used to handle arrows keys, pageup and page down
+    // in this way, system key bindings will be respected
 
     { "keys": ["insert"], "command": "terminus_keypress", "args": {"key": "insert"}, "context": [{"key": "terminus_view"}] },
     { "keys": ["delete"], "command": "terminus_keypress", "args": {"key": "delete"}, "context": [{"key": "terminus_view"}] },
-    { "keys": ["pageup"], "command": "terminus_keypress", "args": {"key": "pageup"}, "context": [{"key": "terminus_view"}] },
-    { "keys": ["pagedown"], "command": "terminus_keypress", "args": {"key": "pagedown"}, "context": [{"key": "terminus_view"}] },
     { "keys": ["home"], "command": "terminus_keypress", "args": {"key": "home"}, "context": [{"key": "terminus_view"}] },
     { "keys": ["end"], "command": "terminus_keypress", "args": {"key": "end"}, "context": [{"key": "terminus_view"}] },
 
