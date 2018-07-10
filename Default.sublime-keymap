@@ -3,9 +3,8 @@
     // { "keys": ["alt+`"], "command": "toggle_terminus_panel" },
 
     // Basic keys
-
-    // arrows keys, pageup/pagedown and enter would be used by the system
-    // we use TerminusCommandsEventListener to handle them
+    // on_text_command is used to handle arrows keys, pageup and page down
+    // in this way, system key bindings will be respected
 
     { "keys": ["insert"], "command": "terminus_keypress", "args": {"key": "insert"}, "context": [{"key": "terminus_view"}] },
     { "keys": ["delete"], "command": "terminus_keypress", "args": {"key": "delete"}, "context": [{"key": "terminus_view"}] },
@@ -16,6 +15,7 @@
     { "keys": ["tab"], "command": "terminus_keypress", "args": {"key": "tab"}, "context": [{"key": "terminus_view"}] },
     { "keys": ["space"], "command": "terminus_keypress", "args": {"key": "space"}, "context": [{"key": "terminus_view"}] },
     { "keys": ["backspace"], "command": "terminus_keypress", "args": {"key": "backspace"}, "context": [{"key": "terminus_view"}] },
+    { "keys": ["enter"], "command": "terminus_keypress", "args": {"key": "enter"}, "context": [{"key": "terminus_view"}] },
 
     // Basic keys
     { "keys": ["A"], "command": "terminus_keypress", "args": {"key": "A"}, "context": [{"key": "terminus_view"}] },
