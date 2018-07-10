@@ -58,23 +58,8 @@ class TerminusCommandsEventListener(sublime_plugin.EventListener):
     def on_text_command(self, view, name, args):
         if not view.settings().get('terminus_view'):
             return
-        if name == "move":
-            by = args["by"]
-            forward = args["forward"]
-            if by == "characters" and forward:
-                return ("terminus_keypress", {"key": "right"})
-            elif by == "characters" and not forward:
-                return ("terminus_keypress", {"key": "left"})
-            elif by == "lines" and forward:
-                return ("terminus_keypress", {"key": "down"})
-            elif by == "lines" and not forward:
-                return ("terminus_keypress", {"key": "up"})
-            elif by == "pages" and forward:
-                return ("terminus_keypress", {"key": "pagedown"})
-            elif by == "pages" and not forward:
-                return ("terminus_keypress", {"key": "pageup"})
 
-        elif name == "copy":
+        if name == "copy":
             return ("terminus_copy", None)
         elif name == "paste":
             return ("terminus_paste", None)
