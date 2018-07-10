@@ -31,15 +31,29 @@ class TerminusCommandsEventListener(sublime_plugin.EventListener):
         if not terminal or not terminal.process.isalive():
             return
         command, args, _ = view.command_history(0)
-        if command in ["terminus_render", "terminus_keypress", "terminus_insert"]:
+        if command.startswith("terminus"):
             return
-        elif command == "insert" and "characters" in args:
+        elif command == "insert" and "characters" in args and \
+                len(view.sel()) == 1 and view.sel()[0].empty():
             chars = args["characters"]
-            logger.debug("char {} detected".format(chars))
-            terminal.send_string(chars)
+            current_cursor = view.sel()[0].end()
+            region = sublime.Region(
+                max(current_cursor - len(chars), self.cursor), current_cursor)
+            text = view.substr(region)
+            self.cursor = current_cursor
+            logger.debug("text {} detected".format(text))
+            terminal.send_string(text)
         else:
             logger.debug("undo {}".format(command))
             view.run_command("soft_undo")
+
+    def on_selection_modified(self, view):
+        terminal = Terminal.from_id(view.id())
+        if not terminal or not terminal.process.isalive():
+            return
+        if len(view.sel()) != 1 or not view.sel()[0].empty():
+            return
+        self.cursor = view.sel()[0].end()
 
     def on_text_command(self, view, name, args):
         if not view.settings().get('terminus_view'):
