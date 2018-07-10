@@ -17,7 +17,7 @@ if sys.platform.startswith("win"):
     from winpty import PtyProcess
     is_windows = True
 else:
-    from ptyprocess import PtyProcessUnicode as PtyProcess
+    from ptyprocess import PtyProcess
     is_windows = False
 
 
@@ -132,9 +132,23 @@ class Cursor(object):
         self.hidden = False
 
 
-class TerminalPtyProcess(PtyProcess):
+if is_windows:
 
-    pass
+    class TerminalPtyProcess(PtyProcess):
+
+        pass
+
+else:
+
+    class TerminalPtyProcess(PtyProcess):
+
+        def read(self, size):
+            b = super().read(size)
+            return b.decode("utf-8", "ignore")
+
+        def write(self, s):
+            b = s.encode("utf-8", "backslashreplace")
+            return super().write(b)
 
 
 class TerminalScreen(pyte.Screen):
