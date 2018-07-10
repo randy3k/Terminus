@@ -376,6 +376,15 @@ class Terminal:
         if cr:
             self.screen.index()
 
+    def clean_images(self):
+        view = self.view
+        for pid in list(self.images.keys()):
+            region = view.query_phantom(pid)[0]
+            if region.empty() and region.begin() == 0:
+                view.erase_phantom_by_id(pid)
+                if pid in self.images:
+                    del self.images[pid]
+
     def __del__(self):
         # make sure the process is terminated
         self.process.terminate(force=True)
