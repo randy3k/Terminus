@@ -54,6 +54,10 @@
     // "linux", "xterm" and "xterm-256color"
     "unix_term": "linux",
 
+    // the default LANG variable of unix system.
+    "unix_lang": "en_US.UTF-8",
+
+
     // Windows and Linux only
     // use ctrl+c to copy
     // use ctrl+v to paste

@@ -124,8 +124,8 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
             pass
 
         else:
+            settings = sublime.load_settings("Terminus.sublime-settings")
             if "TERM" not in _env:
-                settings = sublime.load_settings("Terminus.sublime-settings")
                 _env["TERM"] = settings.get("unix_term", "linux")
 
             if _env["TERM"] not in ["linux", "xterm", "xterm-16color", "xterm-256color"]:
@@ -135,7 +135,7 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
                 if "LANG" in os.environ:
                     _env["LANG"] = os.environ["LANG"]
                 else:
-                    _env["LANG"] = "en_US.UTF-8"
+                    _env["LANG"] = settings.get("unix_lang", "en_US.UTF-8")
 
         _env.update(env)
 
