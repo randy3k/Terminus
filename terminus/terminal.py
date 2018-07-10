@@ -2,15 +2,14 @@ import sublime
 
 import os
 import base64
-import struct
-import imghdr
 import logging
 import tempfile
 import threading
 
 from .ptty import TerminalPtyProcess, TerminalScreen, TerminalStream
-from .utils import responsive, intermission
+from .utils import view_size, responsive, intermission
 from .key import get_key_code
+from .image import get_image_info, image_resize
 
 
 CONTINUATION = "\u200b\u200c\u200b"
@@ -25,101 +24,6 @@ body {{
 """
 
 logger = logging.getLogger('Terminus')
-
-
-def view_size(view):
-    pixel_width, pixel_height = view.viewport_extent()
-    pixel_per_line = view.line_height()
-    pixel_per_char = view.em_width()
-
-    if pixel_per_line == 0 or pixel_per_char == 0:
-        return (0, 0)
-
-    nb_columns = int(pixel_width / pixel_per_char) - 3
-    if nb_columns < 1:
-        nb_columns = 1
-
-    nb_rows = int(pixel_height / pixel_per_line)
-    if nb_rows < 1:
-        nb_rows = 1
-
-    return (nb_rows, nb_columns)
-
-
-def image_resize(img_width, img_height, width, height, em_width, max_width, preserve_ratio=1):
-
-    if width:
-        if width.isdigit():
-            width = int(width) * em_width
-        elif width[-1] == "%":
-            width = int(img_width * int(width[:-1]) / 100)
-    else:
-        width = img_width
-
-    if height:
-        if height.isdigit():
-            height = int(height) * em_width
-        elif height[-1] == "%":
-            height = int(img_height * int(height[:-1]) / 100)
-    else:
-        height = img_height
-
-    ratio = img_width / img_height
-
-    if preserve_ratio == 1 or preserve_ratio == "true":
-        area = width * height
-        height = int((area / ratio) ** 0.5)
-        width = int(area / height)
-
-    if width > max_width:
-        height = int(height * max_width / width)
-        width = max_width
-
-    return (width, height)
-
-
-# see https://bugs.python.org/issue16512#msg198034
-# not added to imghdr.tests because of potential issues with reloads
-def _is_jpg(h):
-    return h.startswith(b'\xff\xd8')
-
-
-def get_image_info(databytes):
-    head = databytes[0:32]
-    if len(head) != 32:
-        return
-    what = imghdr.what(None, head)
-    if what == 'png':
-        check = struct.unpack('>i', head[4:8])[0]
-        if check != 0x0d0a1a0a:
-            return
-        width, height = struct.unpack('>ii', head[16:24])
-    elif what == 'gif':
-        width, height = struct.unpack('<HH', head[6:10])
-    elif what == 'jpeg' or _is_jpg(head):
-            pos = 0
-            size = 2
-            ftype = 0
-            while not 0xc0 <= ftype <= 0xcf or ftype in (0xc4, 0xc8, 0xcc):
-                pos += size
-                byte = databytes[pos:pos + 1]
-                while ord(byte) == 0xff:
-                    byte = databytes[pos:pos + 1]
-                    pos += 1
-                ftype = ord(byte)
-                size = struct.unpack('>H', databytes[pos:pos + 2])[0] - 2
-                pos += 2
-            # We are at a SOFn block
-            pos += 1  # Skip `precision' byte.
-            height, width = struct.unpack('>HH', databytes[pos:pos + 4])
-
-    elif what == "bmp":
-        if head[0:2].decode() != "BM":
-            return
-        width, height = struct.unpack('II', head[18:26])
-    else:
-        return
-    return what, width, height
 
 
 class Terminal:
