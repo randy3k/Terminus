@@ -4,7 +4,7 @@
     "shell_configs": [
         {
             "name": "Bash",
-            "cmd": ["/bin/bash", "-i", "-l"],
+            "cmd": ["bash", "-i", "-l"],
             "env": {},
             "enable": true,
             "default": false,
@@ -12,7 +12,7 @@
         },
         {
             "name": "Zsh",
-            "cmd": ["/bin/zsh", "-i", "-l"],
+            "cmd": ["zsh", "-i", "-l"],
             "env": {},
             "enable": true,
             "default": false,
