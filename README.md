@@ -144,6 +144,7 @@ or by passing custom `cmd`
 ## Note to advance users
 
 - A terminal could be opened using the command `terminus_open` with
+
 ```py
 window.run_command(
     "terminus_open", {
@@ -158,6 +159,7 @@ window.run_command(
     }
 )
 ```
+
 The fields `cmd` and `cwd` understand Sublime Text build system [variables](https://www.sublimetext.com/docs/3/build_systems.html#variables).
 
 
