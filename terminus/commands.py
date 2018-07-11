@@ -152,7 +152,9 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
                 cwd = os.path.expanduser("~")
 
         if not os.path.isdir(cwd):
-            raise Exception("{} does not exist".format(cwd))
+            # raise Exception("{} does not exist".format(cwd))
+            from os.path import expanduser
+            cwd = expanduser("~")
 
         if not title:
             title = config["name"]
@@ -314,6 +316,7 @@ class TerminusCopyCommand(sublime_plugin.TextCommand):
     """
     It does nothing special now, just `copy`.
     """
+
     def run(self, edit):
         view = self.view
         if not view.settings().get("terminus_view"):
