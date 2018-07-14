@@ -697,7 +697,7 @@ class TerminalStream(pyte.Stream):
                 code = ""
                 while True:
                     char = yield
-                    if char == ";":
+                    if not char.isdigit():
                         break
                     code += char
 
@@ -707,15 +707,16 @@ class TerminalStream(pyte.Stream):
                     continue  # Set palette. Not implemented.
 
                 param = ""
-                while True:
+                if char == ";":
+                    char = yield
+
+                while char not in OSC_TERMINATORS:
+                    param += char
                     char = yield
                     if char == ESC:
                         char += yield
-                    if char in OSC_TERMINATORS:
-                        break
-                    else:
-                        param += char
 
+                print(code, param)
                 osc_dispatch[code](param)
 
             elif char not in NUL_OR_DEL:
