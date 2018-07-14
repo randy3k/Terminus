@@ -51,7 +51,8 @@
     "256color": false,
 
     // the default TERM variable of unix system. Possible values are
-    // "linux", "xterm" and "xterm-256color"
+    // "linux", "xterm" and "xterm-256color".
+    // However, please aware that not all xterm features are supported.
     "unix_term": "linux",
 
     // the default LANG variable of unix system.
