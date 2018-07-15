@@ -90,7 +90,10 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
             env={},
             title=None,
             panel_name=None,
-            tag=None):
+            tag=None,
+            pre_window_hooks=[],
+            post_window_hooks=[],
+            post_view_hooks=[]):
         config = None
 
         st_vars = self.window.extract_variables()
@@ -157,6 +160,10 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
         if not title:
             title = config["name"]
 
+        # pre_window_hooks
+        for hook in pre_window_hooks:
+            self.window.run_command(*hook)
+
         if panel_name:
             self.window.destroy_output_panel(panel_name)  # do not reuse
             terminus_view = self.window.get_output_panel(panel_name)
@@ -177,6 +184,14 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
         if panel_name:
             self.window.run_command("show_panel", {"panel": "output.{}".format(panel_name)})
             self.window.focus_view(terminus_view)
+
+        # post_window_hooks
+        for hook in post_window_hooks:
+            self.window.run_command(*hook)
+
+        # post_view_hooks
+        for hook in post_view_hooks:
+            terminus_view.run_command(*hook)
 
     def show_configs(self):
         settings = sublime.load_settings("Terminus.sublime-settings")
