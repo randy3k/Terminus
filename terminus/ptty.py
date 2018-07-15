@@ -697,7 +697,7 @@ class TerminalStream(pyte.Stream):
                 code = ""
                 while True:
                     char = yield
-                    if not char.isdigit():
+                    if char in OSC_TERMINATORS or char == ";":
                         break
                     code += char
 
@@ -716,7 +716,6 @@ class TerminalStream(pyte.Stream):
                     if char == ESC:
                         char += yield
 
-                print(code, param)
                 osc_dispatch[code](param)
 
             elif char not in NUL_OR_DEL:
