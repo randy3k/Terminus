@@ -112,7 +112,7 @@ or by passing a custom `cmd`, say `ipython`
 ]
 ```
 
-or by applying [Origam](https://github.com/SublimeText/Origami)'s `carry_file_to_pane`
+or by applying [Origami](https://github.com/SublimeText/Origami)'s `carry_file_to_pane`
 
 ```json
 [
@@ -183,7 +183,7 @@ or by passing custom `cmd`, say `ipython`
 ]
 ```
 
-or by applying [Origam](https://github.com/SublimeText/Origami)'s `carry_file_to_pane`
+or by applying [Origami](https://github.com/SublimeText/Origami)'s `carry_file_to_pane`
 
 ```json
 [
