@@ -84,6 +84,41 @@ or by passing a custom `cmd`
 }
 ```
 
+- create and focus to a bottom group before opening a terminal
+
+```json
+    {
+        "keys": ["ctrl+alt+t"],
+        "command": "terminus_open",
+        "args": {
+            "config_name": "Default",
+            "pre_window_hooks": [
+                ["set_layout", {
+                    "cols": [0.0, 1.0],
+                    "rows": [0.0, 0.5, 1.0],
+                    "cells": [[0, 0, 1, 1], [0, 1, 1, 2]]
+                }],
+                ["focus_group", {"group": 1}]
+            ]
+        }
+    }
+```
+
+- apply [Origam](https://github.com/SublimeText/Origami)'s `carry_file_to_pane` after opening a terminal
+
+```json
+    {
+        "keys": ["ctrl+alt+t"],
+        "command": "terminus_open",
+        "args": {
+            "config_name": "Default",
+            "post_window_hooks": [
+                ["carry_file_to_pane", {"direction": "down"}]
+            ]
+        }
+    }
+```
+
 (check the details for the arguments of `terminus_open` below)
 
 ### Alt-Left/Right to move between words (Unix)
@@ -148,14 +183,17 @@ or by passing custom `cmd`
 ```py
 window.run_command(
     "terminus_open", {
-        "config_name": None,  # the shell config name, use "Default" for the default config
-        "cmd": None,          # the cmd to execute if config_name is None
-        "cwd": None,          # the working directory
-        "working_dir": None,  # alias of "cwd"
-        "env": {},            # extra environmental variables
-        "title": None,        # title of the view
-        "panel_name": None,   # the name of the panel if terminal should be opened in panel
-        "tag": None           # a tag to identify the terminal
+        "config_name": None,     # the shell config name, use "Default" for the default config
+        "cmd": None,             # the cmd to execute if config_name is None
+        "cwd": None,             # the working directory
+        "working_dir": None,     # alias of "cwd"
+        "env": {},               # extra environmental variables
+        "title": None,           # title of the view
+        "panel_name": None,      # the name of the panel if terminal should be opened in panel
+        "tag": None,             # a tag to identify the terminal
+        "pre_window_hooks": [],  # a list of window hooks before opening temrinal
+        "post_window_hooks": []  # a list of window hooks after opening temrinal
+        "post_view_hooks": []    # a list of view hooks after opening temrinal
     }
 )
 ```
