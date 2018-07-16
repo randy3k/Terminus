@@ -57,36 +57,43 @@ Package Control.
 ## User Key Bindings
 
 You may find these key bindings useful. To edit, run `Preferences: Terminus Key Bindings`.
+Check the details for the arguments of `terminus_open` below.
+
 
 - toggle terminal panel
 ```json
-{ 
-    "keys": ["alt+`"], "command": "toggle_terminus_panel" 
-}
+[
+    { "keys": ["alt+`"], "command": "toggle_terminus_panel" }
+]
 ```
 
 - open a terminal view at current file directory
 ```json
-{ 
-    "keys": ["ctrl+alt+t"], "command": "terminus_open", "args": {
-        "config_name": "Default",
-        "cwd": "${file_path:${folder}}"
+[
+    { 
+        "keys": ["ctrl+alt+t"], "command": "terminus_open", "args": {
+            "config_name": "Default",
+            "cwd": "${file_path:${folder}}"
+        }
     }
-}
+]
 ```
-or by passing a custom `cmd`
+or by passing a custom `cmd`, say `ipython`
 ```json
-{ 
-    "keys": ["ctrl+alt+t"], "command": "terminus_open", "args": {
-        "cmd": "ipython",
-        "cwd": "${file_path:${folder}}"
+[
+    { 
+        "keys": ["ctrl+alt+t"], "command": "terminus_open", "args": {
+            "cmd": "ipython",
+            "cwd": "${file_path:${folder}}"
+        }
     }
-}
+]
 ```
 
-- create and focus to a bottom group before opening a terminal
+- open temrinal in a split view
 
 ```json
+[
     {
         "keys": ["ctrl+alt+t"],
         "command": "terminus_open",
@@ -102,11 +109,13 @@ or by passing a custom `cmd`
             ]
         }
     }
+]
 ```
 
-- apply [Origam](https://github.com/SublimeText/Origami)'s `carry_file_to_pane` after opening a terminal
+or by applying [Origam](https://github.com/SublimeText/Origami)'s `carry_file_to_pane`
 
 ```json
+[
     {
         "keys": ["ctrl+alt+t"],
         "command": "terminus_open",
@@ -117,11 +126,103 @@ or by passing a custom `cmd`
             ]
         }
     }
+]
 ```
 
-(check the details for the arguments of `terminus_open` below)
+## User Commands in Palette
 
-### Alt-Left/Right to move between words (Unix)
+- run `Preferences: Terminus Command Palette`. Check the details for the arguments of `terminus_open` below
+
+```json
+[
+    {
+        "caption": "Terminus: Open Default Shell at Current Location",
+        "command": "terminus_open",
+        "args"   : {
+            "config_name": "Default",
+            "cwd": "${file_path:${folder}}"
+        }
+    }
+]
+```
+or by passing custom `cmd`, say `ipython`
+
+```json
+[
+    {
+        "caption": "Terminus: Open iPython",
+        "command": "terminus_open",
+        "args"   : {
+            "cmd": "ipython",
+            "cwd": "${file_path:${folder}}",
+            "title": "iPython"
+        }
+    }
+]
+```
+
+- open temrinal in a split view
+
+```json
+[
+    {
+        "caption": "Terminus: Open Default Shell in Split View",
+        "command": "terminus_open",
+        "args": {
+            "config_name": "Default",
+            "pre_window_hooks": [
+                ["set_layout", {
+                    "cols": [0.0, 1.0],
+                    "rows": [0.0, 0.5, 1.0],
+                    "cells": [[0, 0, 1, 1], [0, 1, 1, 2]]
+                }],
+                ["focus_group", {"group": 1}]
+            ]
+        }
+    }
+]
+```
+
+or by applying [Origam](https://github.com/SublimeText/Origami)'s `carry_file_to_pane`
+
+```json
+[
+    {
+        "caption": "Terminus: Open Default Shell in Split View",
+        "command": "terminus_open",
+        "args": {
+            "config_name": "Default",
+            "post_window_hooks": [
+                ["carry_file_to_pane", {"direction": "down"}]
+            ]
+        }
+    }
+]
+```
+
+## User Build System
+
+Use `Terminus` as a build system. For example, the following can be added to your project settings to allow
+"SSH to Remote" build system.
+
+```json
+{
+    "build_systems":
+    [
+        {
+            "cmd":
+            [
+                "ssh", "user@example.com"
+            ],
+            "name": "SSH to Remote",
+            "target": "terminus_open",
+            "working_dir": "$folder"
+        }
+    ]
+}
+```
+
+## Alt-Left/Right to move between words (Unix)
 
 - Bash: add the following in `.bash_profile` or `.bashrc`
 ```
@@ -144,39 +245,7 @@ bind them to `alt+b` and `alt+f` respectively
 ]
 ```
 
-
-## User Commands in Palette
-
-- run `Preferences: Terminus Command Palette` and add, for example
-
-```json
-    {
-        "caption": "Terminus: Open Default Shell at Current Location",
-        "command": "terminus_open",
-        "args"   : {
-            "config_name": "Default",
-            "cwd": "${file_path:${folder}}"
-        }
-    }
-```
-or by passing custom `cmd`
-
-```json
-    {
-        "caption": "Terminus: Open iPython",
-        "command": "terminus_open",
-        "args"   : {
-            "cmd": "ipython",
-            "cwd": "${file_path:${folder}}",
-            "title": "iPython"
-        }
-    }
-```
-
-(check the details for the arguments of `terminus_open` below)
-
-
-## Note to advance users
+## Terminus API
 
 - A terminal could be opened using the command `terminus_open` with
 
@@ -220,32 +289,13 @@ window.run_command(
     "terminus_send_string", 
     {
         "string": "ls\n",
-        "tag": None        # or the tag which is passed to "terminus_open"
+        "tag": "<YOUR_TAG>"        # ignore this or set it to None to send text to the first terminal found
     }
 )
 ```
 
-If `tag` is not provided, the text will be sent to the first terminal found in the current window.
+If `tag` is not provided or is `None`, the text will be sent to the first terminal found in the current window.
 
-- `Terminus` as a build system. For example, the following can be added to your project settings to allow
-"SSH to Remote" build system.
-
-```json
-{
-    "build_systems":
-    [
-        {
-            "cmd":
-            [
-                "ssh", "user@example.com"
-            ],
-            "name": "SSH to Remote",
-            "target": "terminus_open",
-            "working_dir": "$folder"
-        }
-    ]
-}
-```
 
 ## FAQ
 
