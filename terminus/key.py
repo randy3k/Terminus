@@ -47,6 +47,11 @@ _CTRL_KEY_MAP = {
     "down": "\x1b[1;5B",
     "right": "\x1b[1;5C",
     "left": "\x1b[1;5D",
+    "home": "\x1b[1;5~",
+    "end": "\x1b[4;5~",
+    "pageup": "\x1b[5;5~",
+    "pagedown": "\x1b[6;5~",
+    "insert": "\x1b[2;5~",
     "delete": "\x1b[3;5~",
     "@": "\x00",
     "`": "\x00",
@@ -75,6 +80,11 @@ _SHIFT_KEY_MAP = {
     "right": "\x1b[1;2C",
     "left": "\x1b[1;2D",
     "tab": "\x1b[Z",
+    "home": "\x1b[1;2~",
+    "end": "\x1b[4;2~",
+    "pageup": "\x1b[5;2~",
+    "pagedown": "\x1b[6;2~",
+    "insert": "\x1b[2;2~",
     "delete": "\x1b[3;2~"
 }
 

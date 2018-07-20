@@ -161,6 +161,12 @@
     { "keys": ["ctrl+right"], "command": "terminus_keypress", "args": {"key": "right", "ctrl": true}, "context": [{"key": "terminus_view"}] },
     { "keys": ["ctrl+up"], "command": "terminus_keypress", "args": {"key": "up", "ctrl": true}, "context": [{"key": "terminus_view"}] },
     { "keys": ["ctrl+left"], "command": "terminus_keypress", "args": {"key": "left", "ctrl": true}, "context": [{"key": "terminus_view"}] },
+    { "keys": ["ctrl+insert"], "command": "terminus_keypress", "args": {"key": "insert", "ctrl": true}, "context": [{"key": "terminus_view"}] },
+    { "keys": ["ctrl+delete"], "command": "terminus_keypress", "args": {"key": "delete", "ctrl": true}, "context": [{"key": "terminus_view"}] },
+    { "keys": ["ctrl+pageup"], "command": "terminus_keypress", "args": {"key": "pageup", "ctrl": true}, "context": [{"key": "terminus_view"}] },
+    { "keys": ["ctrl+pagedown"], "command": "terminus_keypress", "args": {"key": "pagedown", "ctrl": true}, "context": [{"key": "terminus_view"}] },
+    { "keys": ["ctrl+home"], "command": "terminus_keypress", "args": {"key": "home", "ctrl": true}, "context": [{"key": "terminus_view"}] },
+    { "keys": ["ctrl+end"], "command": "terminus_keypress", "args": {"key": "end", "ctrl": true}, "context": [{"key": "terminus_view"}] },
     { "keys": ["ctrl+delete"], "command": "terminus_keypress", "args": {"key": "delete", "ctrl": true}, "context": [{"key": "terminus_view"}] },
     { "keys": ["ctrl+backspace"], "command": "terminus_keypress", "args": {"key": "backspace", "ctrl": true}, "context": [{"key": "terminus_view"}] },
 
@@ -203,6 +209,12 @@
     { "keys": ["shift+right"], "command": "terminus_keypress", "args": {"key": "right", "shift": true}, "context": [{"key": "terminus_view"}] },
     { "keys": ["shift+up"], "command": "terminus_keypress", "args": {"key": "up", "shift": true}, "context": [{"key": "terminus_view"}] },
     { "keys": ["shift+left"], "command": "terminus_keypress", "args": {"key": "left", "shift": true}, "context": [{"key": "terminus_view"}] },
+    { "keys": ["shift+insert"], "command": "terminus_keypress", "args": {"key": "insert", "shift": true}, "context": [{"key": "terminus_view"}] },
+    { "keys": ["shift+delete"], "command": "terminus_keypress", "args": {"key": "delete", "shift": true}, "context": [{"key": "terminus_view"}] },
+    { "keys": ["shift+pageup"], "command": "terminus_keypress", "args": {"key": "pageup", "shift": true}, "context": [{"key": "terminus_view"}] },
+    { "keys": ["shift+pagedown"], "command": "terminus_keypress", "args": {"key": "pagedown", "shift": true}, "context": [{"key": "terminus_view"}] },
+    { "keys": ["shift+home"], "command": "terminus_keypress", "args": {"key": "home", "shift": true}, "context": [{"key": "terminus_view"}] },
+    { "keys": ["shift+end"], "command": "terminus_keypress", "args": {"key": "end", "shift": true}, "context": [{"key": "terminus_view"}] },
     { "keys": ["shift+tab"], "command": "terminus_keypress", "args": {"key": "tab", "shift": true}, "context": [{"key": "terminus_view"}] },
     { "keys": ["shift+backspace"], "command": "terminus_keypress", "args": {"key": "backspace", "shift": true}, "context": [{"key": "terminus_view"}] }
 
