@@ -253,7 +253,7 @@ bind them to `alt+b` and `alt+f` respectively
 window.run_command(
     "terminus_open", {
         "config_name": None,     # the shell config name, use "Default" for the default config
-        "cmd": None,             # the cmd to execute if config_name is None
+        "cmd": None,             # the cmd to execute
         "cwd": None,             # the working directory
         "working_dir": None,     # alias of "cwd"
         "env": {},               # extra environmental variables

@@ -98,18 +98,20 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
 
         st_vars = self.window.extract_variables()
 
-        if config_name:
-            config = self.get_config_by_name(config_name)
-        elif cmd:
-            config = {
-                "name": "Terminus",
-                "cmd": cmd,
-                "env": env,
-                "title": title
-            }
-        else:
+        if not config_name and not cmd:
             self.show_configs()
             return
+
+        if config_name:
+            config = self.get_config_by_name(config_name)
+        else:
+            config = {
+                "name": "Terminus"
+            }
+        if cmd:
+            config["cmd"] = cmd
+        if env:
+            config["env"] = env
 
         cmd = config["cmd"]
         if isinstance(cmd, str):
