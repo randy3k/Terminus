@@ -125,6 +125,8 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
         else:
             _env = {}
 
+        _env["TERMINUS_SUBLIME"] = "1"
+
         if sys.platform.startswith("win"):
             pass
 
