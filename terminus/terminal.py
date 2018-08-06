@@ -137,6 +137,7 @@ class Terminal:
         self.tag = tag
         self.set_title(title)
         self.offset = offset
+        self.viewport = (0, self.view.text_to_layout(self.view.text_point(offset, 0))[1])
         _env = os.environ.copy()
         _env.update(env)
         size = view_size(self.view)

@@ -327,6 +327,7 @@ class TerminusKeypressCommand(sublime_plugin.TextCommand):
             return
         terminal.send_key(**kwargs)
         self.view.run_command("terminus_render")
+        self.view.run_command("terminus_show_cursor")
 
 
 class TerminusCopyCommand(sublime_plugin.TextCommand):
@@ -367,6 +368,9 @@ class TerminusPasteCommand(sublime_plugin.TextCommand):
 
         if bracketed:
             terminal.send_key("bracketed_paste_mode_end")
+
+        self.view.run_command("terminus_render")
+        self.view.run_command("terminus_show_cursor")
 
 
 class TerminusPasteFromHistoryCommand(sublime_plugin.TextCommand):
@@ -441,6 +445,9 @@ class TerminusDeleteWordCommand(sublime_plugin.TextCommand):
 
         terminal.send_string(delete_code * n)
 
+        self.view.run_command("terminus_render")
+        self.view.run_command("terminus_show_cursor")
+
 
 class ToggleTerminusPanelCommand(sublime_plugin.WindowCommand):
 
@@ -499,6 +506,7 @@ class TerminusSendStringCommand(sublime_plugin.WindowCommand):
 
         terminal.send_string(string)
         terminal.view.run_command("terminus_render")
+        terminal.view.run_command("terminus_show_cursor")
 
     def get_terminus_panel(self, visible=False):
         window = self.window

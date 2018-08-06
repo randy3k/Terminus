@@ -114,9 +114,10 @@ class TerminusRenderCommand(sublime_plugin.TextCommand, TerminusViewMixinx):
 
         screen = terminal.screen
         self.update_lines(edit, terminal)
-        self.trim_trailing_spaces(edit, terminal)
-        self.trim_history(edit, terminal)
-        view.run_command("terminus_show_cursor")
+        if terminal.viewport[1] < view.viewport_position()[1] + view.line_height():
+            self.trim_trailing_spaces(edit, terminal)
+            self.trim_history(edit, terminal)
+            view.run_command("terminus_show_cursor")
         screen.dirty.clear()
         logger.debug("updating lines takes {}s".format(str(time.time() - startt)))
         logger.debug("mode: {}, cursor: {}.{}".format(
@@ -278,7 +279,9 @@ class TerminusShowCursor(sublime_plugin.TextCommand, TerminusViewMixinx):
         last_y = view.text_to_layout(view.size())[1]
         viewport_y = last_y - view.viewport_extent()[1] + view.line_height()
         offset_y = view.text_to_layout(view.text_point(terminal.offset, 0))[1]
-        view.set_viewport_position((0, max(offset_y, viewport_y)), True)
+        y = max(offset_y, viewport_y)
+        terminal.viewport = (0, y)
+        view.set_viewport_position((0, y), True)
 
 
 class TerminusInsertCommand(sublime_plugin.TextCommand):
