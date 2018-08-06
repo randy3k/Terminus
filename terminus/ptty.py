@@ -207,10 +207,10 @@ class TerminalScreen(pyte.Screen):
                 self.scroll_up(line_diff)
                 self.cursor.y -= line_diff
 
-        if columns < self.columns:
-            for line in self.buffer.values():
-                for x in range(columns, self.columns):
-                    line.pop(x, None)
+        # if columns < self.columns:
+        #     for line in self.buffer.values():
+        #         for x in range(columns, self.columns):
+        #             line.pop(x, None)
 
         self.lines, self.columns = lines, columns
         self.set_margins()
