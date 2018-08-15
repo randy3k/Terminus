@@ -94,7 +94,7 @@ or by passing a custom `cmd`, say `ipython`
 ]
 ```
 
-- open temrinal in a split view
+- open terminal in a split view
 
 ```json
 [
@@ -165,7 +165,7 @@ or by passing custom `cmd`, say `ipython`
 ]
 ```
 
-- open temrinal in a split view
+- open terminal in a split view
 
 ```json
 [
@@ -264,9 +264,9 @@ window.run_command(
         "title": None,           # title of the view
         "panel_name": None,      # the name of the panel if terminal should be opened in panel
         "tag": None,             # a tag to identify the terminal
-        "pre_window_hooks": [],  # a list of window hooks before opening temrinal
-        "post_window_hooks": []  # a list of window hooks after opening temrinal
-        "post_view_hooks": []    # a list of view hooks after opening temrinal
+        "pre_window_hooks": [],  # a list of window hooks before opening terminal
+        "post_window_hooks": []  # a list of window hooks after opening terminal
+        "post_view_hooks": []    # a list of view hooks after opening terminal
     }
 )
 ```
