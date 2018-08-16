@@ -93,7 +93,8 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
             tag=None,
             pre_window_hooks=[],
             post_window_hooks=[],
-            post_view_hooks=[]):
+            post_view_hooks=[],
+            auto_close=True):
         config = None
 
         st_vars = self.window.extract_variables()
@@ -182,7 +183,8 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
                 "env": _env,
                 "title": title,
                 "panel_name": panel_name,
-                "tag": tag
+                "tag": tag,
+                "auto_close": auto_close
             }))
 
         if panel_name:

@@ -132,9 +132,13 @@ class Terminal:
 
         threading.Thread(target=renderer).start()
 
-    def open(self, cmd, cwd=None, env=None, title=None, offset=0, panel_name=None, tag=None):
+    def open(
+            self, cmd, cwd=None, env=None, title=None, offset=0,
+            panel_name=None, tag=None, auto_close=True):
+
         self.panel_name = panel_name
         self.tag = tag
+        self.auto_close = auto_close
         self.set_title(title)
         self.offset = offset
         self.viewport = (0, self.view.text_to_layout(self.view.text_point(offset, 0))[1])
@@ -172,7 +176,7 @@ class Terminal:
                 self.process.exitstatus)}),
         self.view.set_read_only(True)
 
-        if self.process.exitstatus == 0:
+        if self.process.exitstatus == 0 and self.auto_close:
             if self.panel_name:
                 window = self.view.window()
                 if window:

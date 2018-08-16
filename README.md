@@ -263,10 +263,11 @@ window.run_command(
         "env": {},               # extra environmental variables
         "title": None,           # title of the view
         "panel_name": None,      # the name of the panel if terminal should be opened in panel
-        "tag": None,             # a tag to identify the terminal
+        "tag": None,             # a tag to idFentify the terminal
         "pre_window_hooks": [],  # a list of window hooks before opening terminal
-        "post_window_hooks": []  # a list of window hooks after opening terminal
-        "post_view_hooks": []    # a list of view hooks after opening terminal
+        "post_window_hooks": [], # a list of window hooks after opening terminal
+        "post_view_hooks": [],   # a list of view hooks after opening terminal
+        "auto_close": True       # auto close terminal if process exits successfully
     }
 )
 ```
