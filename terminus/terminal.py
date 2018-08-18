@@ -120,7 +120,6 @@ class Terminal:
                         if was_resized():
                             self.handle_resize()
 
-                    with condition:
                         if self._need_to_render():
                             self.view.run_command("terminus_render")
                         condition.notify()
