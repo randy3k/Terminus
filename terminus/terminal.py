@@ -2,7 +2,6 @@ import sublime
 
 import os
 import base64
-import time
 import logging
 import tempfile
 import threading
