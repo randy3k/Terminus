@@ -63,11 +63,12 @@
     // use ctrl+c to copy
     // use ctrl+v to paste
     // use ctrl+w to close terminal
+    // use ctrl+pagedown/pageup to change tabs
     "natural_keyboard": true,
 
     // Windows and Linux users may want to disable mapping the "ctrl+k"
     // because there are quite a few shortcuts uses "ctrl+k".
-    // (Only "ctrl+k" is supported for now.)
+    // (Only "ctrl+k" can be disabled for now.)
     "disable_keys" : [
         // "ctrl+k"
     ],

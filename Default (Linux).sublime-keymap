@@ -24,5 +24,19 @@
             { "key": "terminus_view" },
             { "key": "terminus_view.natural_keyboard" }
         ]
+    },
+    { "keys": ["ctrl+pagedown"], "command": "next_view",
+        "context":
+        [
+            { "key": "terminus_view" },
+            { "key": "terminus_view.natural_keyboard" }
+        ]
+    },
+    { "keys": ["ctrl+pageup"], "command": "prev_view",
+        "context":
+        [
+            { "key": "terminus_view" },
+            { "key": "terminus_view.natural_keyboard" }
+        ]
     }
 ]

@@ -25,6 +25,20 @@
             { "key": "terminus_view.natural_keyboard" }
         ]
     },
+    { "keys": ["ctrl+pagedown"], "command": "next_view",
+        "context":
+        [
+            { "key": "terminus_view" },
+            { "key": "terminus_view.natural_keyboard" }
+        ]
+    },
+    { "keys": ["ctrl+pageup"], "command": "prev_view",
+        "context":
+        [
+            { "key": "terminus_view" },
+            { "key": "terminus_view.natural_keyboard" }
+        ]
+    },
 
     { "keys": ["ctrl+backspace"], "command": "terminus_delete_word", "args": {"forward": false}, "context": [{"key": "terminus_view"}] },
     { "keys": ["ctrl+delete"], "command": "terminus_delete_word", "args": {"forward": true}, "context": [{"key": "terminus_view"}] }
