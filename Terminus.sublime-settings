@@ -67,9 +67,9 @@
     "natural_keyboard": true,
 
     // Windows and Linux users may want to disable mapping the "ctrl+k"
-    // because there are quite a few shortcuts uses "ctrl+k".
-    // (Only "ctrl+k" can be disabled for now.)
+    // because there are a number of shortcuts which use "ctrl+k" as prefix.
     "disable_keys" : [
+        // (Only "ctrl+k" can be disabled for now.)
         // "ctrl+k"
     ],
 
