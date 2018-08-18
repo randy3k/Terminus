@@ -2,6 +2,7 @@ import sublime
 
 import os
 import base64
+import time
 import logging
 import tempfile
 import threading
@@ -67,7 +68,7 @@ class Terminal:
         return flag
 
     def _start_rendering(self):
-        lock = threading.Lock()
+        condition = threading.Condition()
         data = [""]
         done = [False]
         parent_window = self.view.window() or sublime.active_window()
@@ -86,23 +87,15 @@ class Terminal:
             size = view_size(self.view)
             return self.screen.lines != size[0] or self.screen.columns != size[1]
 
-        def feed_data():
-            with lock:
-                if len(data[0]) > 0:
-                    logger.debug("receieved: {}".format(data[0]))
-                    self.stream.feed(data[0])
-                    data[0] = ""
-
         def reader():
             while True:
-                # a trick to make window responsive when there is a lot of printings
-                # not sure why it works though
-                self.view.window()
                 try:
                     temp = self.process.read(1024)
                 except EOFError:
                     break
-                with lock:
+
+                with condition:
+                    condition.wait(0.1)
                     data[0] += temp
 
                 if done[0] or not view_is_attached():
@@ -113,15 +106,25 @@ class Terminal:
         threading.Thread(target=reader).start()
 
         def renderer():
+
+            def feed_data():
+                if len(data[0]) > 0:
+                    logger.debug("receieved: {}".format(data[0]))
+                    self.stream.feed(data[0])
+                    data[0] = ""
+
             while True:
                 with intermission(period=0.03):
-                    feed_data()
+                    with condition:
+                        feed_data()
 
-                    if was_resized():
-                        self.handle_resize()
+                        if was_resized():
+                            self.handle_resize()
 
-                    if self._need_to_render():
-                        self.view.run_command("terminus_render")
+                    with condition:
+                        if self._need_to_render():
+                            self.view.run_command("terminus_render")
+                        condition.notify()
 
                     if done[0] or not view_is_attached():
                         break
