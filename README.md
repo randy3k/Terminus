@@ -230,14 +230,18 @@ Use `Terminus` as a build system. For example, the following can be added to you
 
 - Bash: add the following in `.bash_profile` or `.bashrc`
 ```
-bind '"\e[1;3C": forward-word'
-bind '"\e[1;3D": backward-word'
+if test -n "$TERMINUS_SUBLIME"; then
+    bind '"\e[1;3C": forward-word'
+    bind '"\e[1;3D": backward-word'
+fi
 ```
 
 - Zsh: add the following in `.zshrc`
 ```
-bindkey "\e[1;3C" forward-word
-bindkey "\e[1;3D" backward-word
+if test -n "$TERMINUS_SUBLIME"; then
+    bindkey "\e[1;3C" forward-word
+    bindkey "\e[1;3D" backward-word
+fi
 ```
 
 Some programs, such as julia, does not recognize the standard keycodes for `alt+left` and `alt+right`. You could
