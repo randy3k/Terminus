@@ -197,6 +197,8 @@ class TerminusOpenImageCommand(sublime_plugin.TextCommand):
     def find_phantom(self, event):
         view = self.view
         terminal = Terminal.from_id(view.id())
+        if not terminal:
+            return
         pt = view.window_to_text((event["x"], event["y"]))
         cord = view.text_to_window(pt)
         if cord[1] < event["y"]:
