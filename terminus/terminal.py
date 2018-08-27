@@ -213,8 +213,12 @@ class Terminal:
             else:
                 string = string.replace("\n", "\r")
 
-        logger.debug("sent {}".format(string))
-        self.process.write(string)
+        if len(string) > 512:
+            logger.debug("sent {}".format(string[:512]))
+            threading.Timer(0.1, lambda: self.send_string(string[512:], False)).start()
+            self.process.write(string[:512])
+        else:
+            self.process.write(string)
 
     def bracketed_paste_mode_enabled(self):
         return (2004 << 5) in self.screen.mode
