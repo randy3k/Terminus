@@ -28,6 +28,7 @@ logger = logging.getLogger('Terminus')
 
 class Terminal:
     _terminals = {}
+    _title = ""
 
     def __init__(self, view):
         self.view = view
@@ -140,7 +141,8 @@ class Terminal:
         self.panel_name = panel_name
         self.tag = tag
         self.auto_close = auto_close
-        self.set_title(title)
+        self.default_title = title
+        self.title = title
         self.offset = offset
         self.viewport = (0, self.view.text_to_layout(self.view.text_point(offset, 0))[1])
         _env = os.environ.copy()
@@ -196,8 +198,14 @@ class Terminal:
         self.screen.resize(*size)
         # self.view.settings().set("wrap_width", size[1])
 
-    def set_title(self, title):
-        self.view.set_name(title)
+    @property
+    def title(self):
+        return self._title
+
+    @title.setter
+    def title(self, value):
+        self._title = value
+        self.view.set_name(value)
 
     def send_key(self, *args, **kwargs):
         kwargs["application_mode"] = self.application_mode_enabled()

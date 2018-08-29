@@ -118,6 +118,11 @@ class TerminusRenderCommand(sublime_plugin.TextCommand, TerminusViewMixinx):
             self.trim_trailing_spaces(edit, terminal)
             self.trim_history(edit, terminal)
             view.run_command("terminus_show_cursor")
+        if screen.title != terminal.title:
+            if screen.title:
+                terminal.title = screen.title
+            else:
+                terminal.title = terminal.default_title
         screen.dirty.clear()
         logger.debug("updating lines takes {}s".format(str(time.time() - startt)))
         logger.debug("mode: {}, cursor: {}.{}".format(

@@ -565,6 +565,7 @@ class TerminalStream(pyte.Stream):
         self.csi["S"] = "scroll_up"
         self.csi["T"] = "scroll_down"
         self.osc = {
+            "0": "set_title",
             "01": "set_icon_name",
             "02": "set_title",
             "1337": "handle_iterm_protocol"
