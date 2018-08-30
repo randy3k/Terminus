@@ -15,7 +15,13 @@
     { "keys": ["home"], "command": "terminus_keypress", "args": {"key": "home"}, "context": [{"key": "terminus_view"}] },
     { "keys": ["end"], "command": "terminus_keypress", "args": {"key": "end"}, "context": [{"key": "terminus_view"}] },
 
-    { "keys": ["escape"], "command": "terminus_keypress", "args": {"key": "escape"}, "context": [{"key": "terminus_view"}] },
+    { "keys": ["escape"], "command": "terminus_keypress", "args": {"key": "escape"},
+        "context": [
+            { "key": "terminus_view" },
+            { "key": "overlay_visible", "operator": "equal", "operand": false },
+            { "key": "popup_visible", "operator": "equal", "operand": false }
+
+        ] },
     { "keys": ["tab"], "command": "terminus_keypress", "args": {"key": "tab"}, "context": [{"key": "terminus_view"}] },
     { "keys": ["space"], "command": "terminus_keypress", "args": {"key": "space"}, "context": [{"key": "terminus_view"}] },
     { "keys": ["backspace"], "command": "terminus_keypress", "args": {"key": "backspace"}, "context": [{"key": "terminus_view"}] },
