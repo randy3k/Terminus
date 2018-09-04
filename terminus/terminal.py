@@ -1,10 +1,12 @@
 import sublime
 
 import os
+import time
 import base64
 import logging
 import tempfile
 import threading
+from queue import Queue, Empty
 
 from .ptty import TerminalPtyProcess, TerminalScreen, TerminalStream
 from .utils import view_size, responsive, intermission
@@ -37,6 +39,8 @@ class Terminal:
         self._cached_cursor_is_hidden = [True]
         self.image_count = 0
         self.images = {}
+        self._strings = Queue()
+        self._pending_to_send_string = [False]
 
     @classmethod
     def from_id(cls, vid):
@@ -222,12 +226,24 @@ class Terminal:
             else:
                 string = string.replace("\n", "\r")
 
-        if len(string) > 512:
-            logger.debug("sent {}".format(string[:512]))
-            threading.Timer(0.1, lambda: self.send_string(string[512:], False)).start()
-            self.process.write(string[:512])
-        else:
+        if not self._pending_to_send_string[0] and len(string) <= 512:
             self.process.write(string)
+        else:
+            for i in range(0, len(string), 512):
+                self._strings.put(string[i:i+512])
+            if not self._pending_to_send_string[0]:
+                threading.Thread(target=self.process_send_string).start()
+
+    def process_send_string(self):
+        self._pending_to_send_string[0] = True
+        while True:
+            try:
+                self.process.write(self._strings.get(False))
+            except Empty:
+                self._pending_to_send_string[0] = False
+                return
+            else:
+                time.sleep(0.1)
 
     def bracketed_paste_mode_enabled(self):
         return (2004 << 5) in self.screen.mode
