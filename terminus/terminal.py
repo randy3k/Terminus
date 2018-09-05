@@ -226,16 +226,17 @@ class Terminal:
             else:
                 string = string.replace("\n", "\r")
 
-        if not self._pending_to_send_string[0] and len(string) <= 512:
+        no_queue = not self._pending_to_send_string[0]
+        if no_queue and len(string) <= 512:
             self.process.write(string)
         else:
             for i in range(0, len(string), 512):
                 self._strings.put(string[i:i+512])
-            if not self._pending_to_send_string[0]:
+            if no_queue:
+                self._pending_to_send_string[0] = True
                 threading.Thread(target=self.process_send_string).start()
 
     def process_send_string(self):
-        self._pending_to_send_string[0] = True
         while True:
             try:
                 self.process.write(self._strings.get(False))
