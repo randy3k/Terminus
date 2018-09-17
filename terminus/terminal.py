@@ -228,6 +228,7 @@ class Terminal:
 
         no_queue = not self._pending_to_send_string[0]
         if no_queue and len(string) <= 512:
+            logger.debug("sent: {}".format(string[0:64] if len(string) > 64 else string))
             self.process.write(string)
         else:
             for i in range(0, len(string), 512):
@@ -239,7 +240,9 @@ class Terminal:
     def process_send_string(self):
         while True:
             try:
-                self.process.write(self._strings.get(False))
+                string = self._strings.get(False)
+                logger.debug("sent: {}".format(string[0:64] if len(string) > 64 else string))
+                self.process.write(string)
             except Empty:
                 self._pending_to_send_string[0] = False
                 return
