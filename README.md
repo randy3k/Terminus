@@ -226,6 +226,27 @@ Use `Terminus` as a build system. For example, the following can be added to you
 }
 ```
 
+Another build system for compiling C++ (with g++) is possible with the following code (as project settings).
+
+```json
+{
+    "build_systems":
+    [
+        {
+            "name": "Build & Run (g++)",
+            "cmd":
+            [
+                "bash",
+                "-c",
+                "g++ -pedantic -Wall -Wextra -Wconversion -pthread \"${file}\" -o \"${file_path}/${file_base_name}\" && \"${file_path}/${file_base_name}\" && echo && echo Press ENTER to continue && read line && exit"
+            ],
+            "target": "terminus_open",
+            "working_dir": "$folder"
+        }
+    ]
+}
+```
+
 ## Alt-Left/Right to move between words (Unix)
 
 - Bash: add the following in `.bash_profile` or `.bashrc`
