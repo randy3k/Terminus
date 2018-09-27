@@ -160,6 +160,11 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
                 cwd = os.path.expanduser("~")
 
         if not os.path.isdir(cwd):
+            home = os.path.expanduser("~")
+            if home:
+                cwd = home
+
+        if not os.path.isdir(cwd):
             raise Exception("{} does not exist".format(cwd))
 
         if not title:
