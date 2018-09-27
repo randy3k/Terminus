@@ -42,7 +42,7 @@ This package is heavily inspired by [TerminalView](https://github.com/Wramberg/T
 
 - Windows support
 - continuous history
-- easily customizable themes
+- easily customizable themes (see Terminus Utilities)
 - unicode support
 - 256 colors support
 - better xterm support
