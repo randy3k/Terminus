@@ -66,11 +66,13 @@
     // use ctrl+pagedown/pageup to change tabs
     "natural_keyboard": true,
 
-    // Windows and Linux users may want to disable mapping the "ctrl+k"
-    // because there are a number of shortcuts which use "ctrl+k" as prefix.
+    // Terminus sends all keybinds of the form `ctrl+[a-z]` to the terminal process
+    // directly. Windows and Linux users sometimes may want to disable some of such
+    // keybinds. (only keybinds listed below are supported, open an issue for a specific
+    // keybind if it is not in the list)
     "disable_keys" : [
-        // (Only "ctrl+k" can be disabled for now.)
-        // "ctrl+k"
+        // "ctrl+k"   // there are a number of shortcuts with "ctrl+k" prefix.
+        // "ctrl+p"   // to show Go to Anything
     ],
 
     // the name of the theme

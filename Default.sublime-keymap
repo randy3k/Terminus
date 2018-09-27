@@ -140,7 +140,7 @@
     { "keys": ["ctrl+m"], "command": "terminus_keypress", "args": {"key": "m", "ctrl": true}, "context": [{"key": "terminus_view"}] },
     { "keys": ["ctrl+n"], "command": "terminus_keypress", "args": {"key": "n", "ctrl": true}, "context": [{"key": "terminus_view"}] },
     { "keys": ["ctrl+o"], "command": "terminus_keypress", "args": {"key": "o", "ctrl": true}, "context": [{"key": "terminus_view"}] },
-    { "keys": ["ctrl+p"], "command": "terminus_keypress", "args": {"key": "p", "ctrl": true}, "context": [{"key": "terminus_view"}] },
+    { "keys": ["ctrl+p"], "command": "terminus_keypress", "args": {"key": "p", "ctrl": true}, "context": [{"key": "terminus_view.key.ctrl+p"}] },
     { "keys": ["ctrl+q"], "command": "terminus_keypress", "args": {"key": "q", "ctrl": true}, "context": [{"key": "terminus_view"}] },
     { "keys": ["ctrl+r"], "command": "terminus_keypress", "args": {"key": "r", "ctrl": true}, "context": [{"key": "terminus_view"}] },
     { "keys": ["ctrl+s"], "command": "terminus_keypress", "args": {"key": "s", "ctrl": true}, "context": [{"key": "terminus_view"}] },

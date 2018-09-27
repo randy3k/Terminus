@@ -13,7 +13,8 @@ logger = logging.getLogger('Terminus')
 
 
 KEYS = [
-    "ctrl+k"
+    "ctrl+k",
+    "ctrl+p"
 ]
 
 
