@@ -212,11 +212,13 @@ class TerminusRenderCommand(sublime_plugin.TextCommand, TerminusViewMixinx):
             if not trailing_region.empty() and len(view.substr(trailing_region).strip()) == 0:
                 view.erase(edit, trailing_region)
 
-    def trim_history(self, edit, terminal, n=10000):
+    def trim_history(self, edit, terminal):
         """
         If number of lines in view > n, remove n / 10 lines from the top
         """
         view = self.view
+        n = sublime.load_settings("Terminus.sublime-settings") \
+                   .get("scrollback_history_size")
         screen = terminal.screen
         lastrow = view.rowcol(view.size())[0]
         if lastrow + 1 > n:
