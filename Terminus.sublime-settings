@@ -58,6 +58,9 @@
     // the default LANG variable of unix system.
     "unix_lang": "en_US.UTF-8",
 
+    // number of lines kept in scrollback history
+    // decreasing this value may improve performance
+    "scrollback_history_size": 10000,
 
     // Windows and Linux only
     // use ctrl+c to copy

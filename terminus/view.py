@@ -1,6 +1,7 @@
 import sublime
 import sublime_plugin
 
+import math
 import time
 import logging
 
@@ -211,15 +212,17 @@ class TerminusRenderCommand(sublime_plugin.TextCommand, TerminusViewMixinx):
             if not trailing_region.empty() and len(view.substr(trailing_region).strip()) == 0:
                 view.erase(edit, trailing_region)
 
-    def trim_history(self, edit, terminal, n=10000, m=1000):
+    def trim_history(self, edit, terminal):
         """
-        If number of lines in view > n, remove m lines from the top
+        If number of lines in view > n, remove n / 10 lines from the top
         """
         view = self.view
+        n = sublime.load_settings("Terminus.sublime-settings") \
+                   .get("scrollback_history_size")
         screen = terminal.screen
         lastrow = view.rowcol(view.size())[0]
         if lastrow + 1 > n:
-            m = max(lastrow + 1 - n, m)
+            m = max(lastrow + 1 - n, math.ceil(n / 10))
             logger.debug("removing {} lines from the top".format(m))
             top_region = sublime.Region(0, view.line(view.text_point(m - 1, 0)).end() + 1)
             view.erase(edit, top_region)
