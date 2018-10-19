@@ -1,0 +1,23 @@
+{
+    "name": "Mariana",
+    "theme_colors": {
+        "foreground": "#d8dee9",
+        "background": "#343d46",
+        "black": "#000000",
+        "red": "#ec5f66",
+        "green": "#99c794",
+        "brown": "#fac761",
+        "blue": "#6699cc",
+        "magenta": "#c695c6",
+        "cyan": "#5fb4b4",
+        "white": "#FFFFFF",
+        "light_black": "#333333",
+        "light_red": "#ec5f66",
+        "light_green": "#99c794",
+        "light_brown": "#fac761",
+        "light_blue": "#6699cc",
+        "light_magenta": "#c695c6",
+        "light_cyan": "#5fb4b4",
+        "light_white": "#FFFFFF"
+    }
+}
