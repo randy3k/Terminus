@@ -126,7 +126,10 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
         else:
             _env = {}
 
-        _env["TERMINUS_SUBLIME"] = "1"
+        _env["TERM_PROGRAM"] = "Terminus-Sublime"
+
+        # TODO: Get Version information from package_control
+        # _env["TERM_PROGRAM_VERSION"] = "0.2.13"
 
         if sys.platform.startswith("win"):
             pass
