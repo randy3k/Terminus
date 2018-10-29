@@ -63,6 +63,8 @@ class TerminusCommandsEventListener(sublime_plugin.EventListener):
             return ("terminus_copy", None)
         elif name == "paste":
             return ("terminus_paste", None)
+        elif name == "paste_and_indent":
+            return ("terminus_paste", None)
         elif name == "paste_from_history":
             return ("terminus_paste_from_history", None)
         elif name == "undo":
