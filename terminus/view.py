@@ -160,7 +160,6 @@ class TerminusRenderCommand(sublime_plugin.TextCommand, TerminusViewMixinx):
         self.ensure_position(edit, line)
         line_region = view.line(view.text_point(line, 0))
         segments = list(segment_buffer_line(buffer_line))
-        view.erase(edit, line_region)
         text = "".join(s[0] for s in segments)
         if lf:
             # append a zero width space if the the line ends with a linefeed
@@ -169,7 +168,7 @@ class TerminusRenderCommand(sublime_plugin.TextCommand, TerminusViewMixinx):
             text += CONTINUATION
 
         text = text.rstrip()
-        view.insert(edit, line_region.begin(), text)
+        view.replace(edit, line_region, text)
         self.colorize_line(edit, line, segments)
 
     def colorize_line(self, edit, line, segments):
