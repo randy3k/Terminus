@@ -107,6 +107,11 @@ class TerminusViewMixinx:
 
 
 class TerminusRenderCommand(sublime_plugin.TextCommand, TerminusViewMixinx):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # it keeps all the highlight keys
+        self.colored_lines = {}
+
     def run(self, edit):
         view = self.view
         startt = time.time()
@@ -160,7 +165,6 @@ class TerminusRenderCommand(sublime_plugin.TextCommand, TerminusViewMixinx):
         self.ensure_position(edit, line)
         line_region = view.line(view.text_point(line, 0))
         segments = list(segment_buffer_line(buffer_line))
-        view.erase(edit, line_region)
         text = "".join(s[0] for s in segments)
         if lf:
             # append a zero width space if the the line ends with a linefeed
@@ -169,7 +173,8 @@ class TerminusRenderCommand(sublime_plugin.TextCommand, TerminusViewMixinx):
             text += CONTINUATION
 
         text = text.rstrip()
-        view.insert(edit, line_region.begin(), text)
+        self.decolorize_line(line)
+        view.replace(edit, line_region, text)
         self.colorize_line(edit, line, segments)
 
     def colorize_line(self, edit, line, segments):
@@ -177,15 +182,25 @@ class TerminusRenderCommand(sublime_plugin.TextCommand, TerminusViewMixinx):
         if segments:
             # ensure the last segement's position exists
             self.ensure_position(edit, line, segments[-1][2])
+            if line not in self.colored_lines:
+                self.colored_lines[line] = []
         for s in segments:
             fg, bg = s[3:]
             if fg != "default" or bg != "default":
                 a = view.text_point(line, s[1])
                 b = view.text_point(line, s[2])
+                key = highlight_key(view)
                 view.add_regions(
-                    highlight_key(view),
+                    key,
                     [sublime.Region(a, b)],
                     "terminus.{}.{}".format(fg, bg))
+                self.colored_lines[line].append(key)
+
+    def decolorize_line(self, line):
+        if line in self.colored_lines:
+            for key in self.colored_lines[line]:
+                self.view.erase_regions(key)
+            del self.colored_lines[line]
 
     def trim_trailing_spaces(self, edit, terminal):
         view = self.view
@@ -195,6 +210,7 @@ class TerminusRenderCommand(sublime_plugin.TextCommand, TerminusViewMixinx):
         lastrow = view.rowcol(view.size())[0]
         row = lastrow
         while row > cursor_row:
+            self.decolorize_line(row)
             line_region = view.line(view.text_point(row, 0))
             text = view.substr(line_region)
             if len(text.strip()) == 0:
@@ -224,6 +240,10 @@ class TerminusRenderCommand(sublime_plugin.TextCommand, TerminusViewMixinx):
         if lastrow + 1 > n:
             m = max(lastrow + 1 - n, math.ceil(n / 10))
             logger.debug("removing {} lines from the top".format(m))
+            for line in range(m):
+                self.decolorize_line(line)
+            # shift colored_lines indexes
+            self.colored_lines = {k - m: v for (k, v) in self.colored_lines.items()}
             top_region = sublime.Region(0, view.line(view.text_point(m - 1, 0)).end() + 1)
             view.erase(edit, top_region)
             terminal.offset -= m
@@ -237,6 +257,8 @@ class TerminusRenderCommand(sublime_plugin.TextCommand, TerminusViewMixinx):
                 view.text_point(terminal.offset + screen.lines, 0),
                 view.size()
             )
+            for line in view.lines(tail_region):
+                self.decolorize_line(view.rowcol(line)[0])
             view.erase(edit, tail_region)
 
 
