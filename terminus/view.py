@@ -234,7 +234,7 @@ class TerminusRenderCommand(sublime_plugin.TextCommand, TerminusViewMixinx):
         """
         view = self.view
         n = sublime.load_settings("Terminus.sublime-settings") \
-                   .get("scrollback_history_size")
+                   .get("scrollback_history_size", 10000)
         screen = terminal.screen
         lastrow = view.rowcol(view.size())[0]
         if lastrow + 1 > n:
