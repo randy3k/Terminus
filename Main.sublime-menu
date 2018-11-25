@@ -1,0 +1,46 @@
+[
+    {
+        "caption": "Preferences",
+        "mnemonic": "n",
+        "id": "preferences",
+        "children": [
+            {
+                "caption": "Package Settings",
+                "mnemonic": "P",
+                "id": "package-settings",
+                "children": [
+                    {
+                        "caption": "Terminus",
+                        "children": [
+                            {
+                                "caption": "Settings",
+                                "command": "edit_settings",
+                                "args": {
+                                    "base_file": "${packages}/Terminus/Terminus.sublime-settings"
+                                }
+                            },
+                            {
+                                "caption": "Command Palette",
+                                "command": "edit_settings",
+                                "args":
+                                {
+                                    "base_file": "${packages}/Terminus/Default.sublime-commands",
+                                    "default": "[\n\t$0\n]\n"
+                                }
+                            },
+                            {
+                                "caption": "Key Bindings",
+                                "command": "terminus_edit_settings",
+                                "args": {
+                                    "base_file": "${packages}/Terminus/Default ($platform).sublime-keymap",
+                                    "user_file": "${packages}/User/Default ($platform).sublime-keymap",
+                                    "default": "[\n\t$0\n]\n"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+]
