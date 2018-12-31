@@ -127,7 +127,7 @@ class TerminusRenderCommand(sublime_plugin.TextCommand, TerminusViewMixinx):
             view.run_command("terminus_show_cursor")
         if screen.title != terminal.title:
             if screen.title:
-                terminal.title = screen.title
+                terminal.title = screen.title + terminal.default_title
             else:
                 terminal.title = terminal.default_title
         screen.dirty.clear()
