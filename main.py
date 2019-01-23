@@ -13,7 +13,12 @@ from .terminus.commands import (
     TerminusPasteFromHistoryCommand,
     TerminusDeleteWordCommand,
     ToggleTerminusPanelCommand,
-    TerminusSendStringCommand
+    TerminusSendStringCommand,
+    TerminusViewEventListener,
+    TerminusActivateCommand,
+    TerminusRenderCommand,
+    TerminusShowCursor,
+    TerminusInsertCommand
 )
 from .terminus.edit_settings import (
     TerminusEditSettingsListener,
@@ -32,13 +37,6 @@ from .terminus.theme import (
     plugin_loaded as theme_plugin_loaded
 )
 from .terminus.utils import settings_on_change
-from .terminus.view import (
-    TerminusViewEventListener,
-    TerminusActivateCommand,
-    TerminusRenderCommand,
-    TerminusShowCursor,
-    TerminusInsertCommand
-)
 
 
 __all__ = [

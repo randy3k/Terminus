@@ -25,22 +25,29 @@ body {{
 <img src="data:image/{what};base64,{data}" width="{width}" height="{height}"/>
 """
 
+KEYS = [
+    "ctrl+k",
+    "ctrl+p"
+]
+
 logger = logging.getLogger('Terminus')
 
 
 class Terminal:
     _terminals = {}
-    _title = ""
+    _detached_terminals = []
 
-    def __init__(self, view):
-        self.view = view
-        self._terminals[view.id()] = self
+    def __init__(self):
+        self._title = ""
+        self.view = None
+        self.offset = 0
         self._cached_cursor = [0, 0]
         self._cached_cursor_is_hidden = [True]
         self.image_count = 0
         self.images = {}
         self._strings = Queue()
         self._pending_to_send_string = [False]
+        self.condition = threading.Condition()
 
     @classmethod
     def from_id(cls, vid):
@@ -54,6 +61,24 @@ class Terminal:
             if terminal.tag == tag:
                 return terminal
         return None
+
+    def attach_view(self, view):
+        with self.condition:
+            self.detached = False
+            Terminal._terminals[view.id()] = self
+            if self in Terminal._detached_terminals:
+                Terminal._detached_terminals.remove(self)
+            self.view = view
+            self.view.settings().erase("terminus.detached")
+
+    def detach_view(self):
+        with self.condition:
+            self.detached = True
+            Terminal._detached_terminals.append(self)
+            if self.view.id() in Terminal._terminals:
+                del Terminal._terminals[self.view.id()]
+            self.view.settings().set("terminus.detached", True)
+            self.view = None
 
     def _need_to_render(self):
         flag = False
@@ -72,15 +97,21 @@ class Terminal:
         return flag
 
     def _start_rendering(self):
-        condition = threading.Condition()
         data = [""]
         done = [False]
-        parent_window = self.view.window() or sublime.active_window()
+        parent_window = [None]
 
         @responsive(period=1, default=True)
         def view_is_attached():
+            if self.detached:
+                # irrelevant if terminal is attahced
+                return True
+
+            if not parent_window[0]:
+                parent_window[0] = self.view.window() or sublime.active_window()
+
             if self.panel_name:
-                window = self.view.window() or parent_window
+                window = self.view.window() or parent_window[0]
                 terminus_view = window.find_output_panel(self.panel_name)
                 return terminus_view and terminus_view.id() == self.view.id()
             else:
@@ -98,12 +129,13 @@ class Terminal:
                 except EOFError:
                     break
 
-                with condition:
-                    condition.wait(0.1)
+                with self.condition:
+                    self.condition.wait(0.1)
                     data[0] += temp
 
-                if done[0] or not view_is_attached():
-                    break
+                    if done[0] or not view_is_attached():
+                        logger.debug("reader breaks")
+                        break
 
             done[0] = True
 
@@ -119,18 +151,20 @@ class Terminal:
 
             while True:
                 with intermission(period=0.03):
-                    with condition:
-                        feed_data()
+                    if not self.detached:
+                        with self.condition:
+                            feed_data()
 
-                        if was_resized():
-                            self.handle_resize()
-                            self.view.run_command("terminus_show_cursor")
+                            if was_resized():
+                                self.handle_resize()
+                                self.view.run_command("terminus_show_cursor")
 
-                        if self._need_to_render():
-                            self.view.run_command("terminus_render")
-                        condition.notify()
+                            if self._need_to_render():
+                                self.view.run_command("terminus_render")
+                            self.condition.notify()
 
                     if done[0] or not view_is_attached():
+                        logger.debug("renderer breaks")
                         break
 
             feed_data()
@@ -139,24 +173,87 @@ class Terminal:
 
         threading.Thread(target=renderer).start()
 
-    def open(
-            self, cmd, cwd=None, env=None, title=None, offset=0,
+    def init_view(self):
+        view = self.view
+        kwargs = self.activation_args
+        view_settings = view.settings()
+
+        if view_settings.get("terminus_view", False):
+            return
+
+        view_settings.set("terminus_view", True)
+        terminus_settings = sublime.load_settings("Terminus.sublime-settings")
+        if "panel_name" in kwargs:
+            view_settings.set("terminus_view.panel_name", kwargs["panel_name"])
+        if "tag" in kwargs:
+            view_settings.set("terminus_view.tag", kwargs["tag"])
+        view_settings.set("terminus_view.args", kwargs)
+        view_settings.set(
+            "terminus_view.natural_keyboard",
+            terminus_settings.get("natural_keyboard", True))
+        disable_keys = terminus_settings.get("disable_keys", {})
+        if not disable_keys:
+            disable_keys = terminus_settings.get("ignore_keys", {})
+        for key in KEYS:
+            if key not in disable_keys:
+                view_settings.set("terminus_view.key.{}".format(key), True)
+        view.set_scratch(True)
+        view.set_read_only(False)
+        view_settings.set("is_widget", True)
+        view_settings.set("gutter", False)
+        view_settings.set("highlight_line", False)
+        view_settings.set("auto_complete_commit_on_tab", False)
+        view_settings.set("draw_centered", False)
+        view_settings.set("word_wrap", False)
+        view_settings.set("auto_complete", False)
+        view_settings.set("draw_white_space", "none")
+        view_settings.set("draw_indent_guides", False)
+        view_settings.set("caret_style", "blink")
+        view_settings.set("scroll_past_end", True)
+        view_settings.set("color_scheme", "Terminus.sublime-color-scheme")
+        # disable bracket highligher (not working)
+        view_settings.set("bracket_highlighter.ignore", True)
+        view_settings.set("bracket_highlighter.clone_locations", {})
+        # disable vintageous
+        view_settings.set("__vi_external_disable", True)
+        for key, value in terminus_settings.get("view_settings", {}).items():
+            view_settings.set(key, value)
+
+        if view.size() > 0:
+            self.offset = view.rowcol(view.size())[0] + 2
+            logger.debug("activating with offset %s", self.offset)
+
+    def activate(
+            self, cmd, cwd=None, env=None, title=None,
             panel_name=None, tag=None, auto_close=True):
+
+        view = self.view
+        if view:
+            self.detached = False
+            Terminal._terminals[view.id()] = self
+        else:
+            Terminal._detached_terminals.append(self)
+            self.detached = True
+
+        self.activation_args = {
+            "cmd": cmd, "cwd": cwd, "env": env, "title": title,
+            "panel_name": panel_name, "tag": tag, "auto_close": auto_close
+        }
+
+        if view:
+            self.init_view()
 
         self.panel_name = panel_name
         self.tag = tag
         self.auto_close = auto_close
         self.default_title = title
-        self.title = title
-        self.offset = offset
-        self.viewport = (0, self.view.text_to_layout(self.view.text_point(offset, 0))[1])
-        _env = os.environ.copy()
-        _env.update(env)
-        size = view_size(self.view)
+
+        size = view_size(view or sublime.active_window().active_view())
         if size == (1, 1):
             size = (24, 80)
-        # self.view.settings().set("wrap_width", size[1])
         logger.debug("view size: {}".format(str(size)))
+        _env = os.environ.copy()
+        _env.update(env)
         self.process = TerminalPtyProcess.spawn(cmd, cwd=cwd, env=_env, dimensions=size)
         self.screen = TerminalScreen(size[1], size[0], process=self.process, history=10000)
         self.stream = TerminalStream(self.screen)
@@ -166,12 +263,15 @@ class Terminal:
         self._start_rendering()
 
     def close(self):
+        logger.debug("close")
+
         vid = self.view.id()
         if vid in self._terminals:
             del self._terminals[vid]
         self.process.terminate()
 
     def cleanup(self):
+        logger.debug("cleanup")
         self.view.run_command("terminus_render")
 
         # process might be still alive but view was detached
@@ -201,7 +301,6 @@ class Terminal:
             self.screen.lines, self.screen.columns, size[0], size[1]))
         self.process.setwinsize(*size)
         self.screen.resize(*size)
-        # self.view.settings().set("wrap_width", size[1])
 
     @property
     def title(self):
@@ -209,8 +308,9 @@ class Terminal:
 
     @title.setter
     def title(self, value):
-        self._title = value
-        self.view.set_name(value)
+        if not self.detached:
+            self._title = value
+            self.view.set_name(value)
 
     def send_key(self, *args, **kwargs):
         kwargs["application_mode"] = self.application_mode_enabled()

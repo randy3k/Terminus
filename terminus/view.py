@@ -13,12 +13,6 @@ from .terminal import Terminal, CONTINUATION
 logger = logging.getLogger('Terminus')
 
 
-KEYS = [
-    "ctrl+k",
-    "ctrl+p"
-]
-
-
 class TerminusViewEventListener(sublime_plugin.EventListener):
 
     def on_activated(self, view):
@@ -31,7 +25,7 @@ class TerminusViewEventListener(sublime_plugin.EventListener):
             return
 
         settings = view.settings()
-        if not settings.has("terminus_view.args"):
+        if not settings.has("terminus_view.args") or settings.get("terminus.detached"):
             return
 
         kwargs = settings.get("terminus_view.args")
@@ -44,53 +38,10 @@ class TerminusViewEventListener(sublime_plugin.EventListener):
 class TerminusActivateCommand(sublime_plugin.TextCommand):
 
     def run(self, _, **kwargs):
-        terminus_settings = sublime.load_settings("Terminus.sublime-settings")
-
         view = self.view
-        view_settings = view.settings()
-        view_settings.set("terminus_view", True)
-        if "panel_name" in kwargs:
-            view_settings.set("terminus_view.panel_name", kwargs["panel_name"])
-        if "tag" in kwargs:
-            view_settings.set("terminus_view.tag", kwargs["tag"])
-        view_settings.set("terminus_view.args", kwargs)
-        view_settings.set(
-            "terminus_view.natural_keyboard",
-            terminus_settings.get("natural_keyboard", True))
-        disable_keys = terminus_settings.get("disable_keys", {})
-        if not disable_keys:
-            disable_keys = terminus_settings.get("ignore_keys", {})
-        for key in KEYS:
-            if key not in disable_keys:
-                view_settings.set("terminus_view.key.{}".format(key), True)
-        view.set_scratch(True)
-        view.set_read_only(False)
-        view_settings.set("is_widget", True)
-        view_settings.set("gutter", False)
-        view_settings.set("highlight_line", False)
-        view_settings.set("auto_complete_commit_on_tab", False)
-        view_settings.set("draw_centered", False)
-        view_settings.set("word_wrap", False)
-        view_settings.set("auto_complete", False)
-        view_settings.set("draw_white_space", "none")
-        view_settings.set("draw_indent_guides", False)
-        view_settings.set("caret_style", "blink")
-        view_settings.set("scroll_past_end", True)
-        view_settings.set("color_scheme", "Terminus.sublime-color-scheme")
-        # disable bracket highligher (not working)
-        view_settings.set("bracket_highlighter.ignore", True)
-        view_settings.set("bracket_highlighter.clone_locations", {})
-        # disable vintageous
-        view_settings.set("__vi_external_disable", True)
-        for key, value in terminus_settings.get("view_settings", {}).items():
-            view_settings.set(key, value)
-
-        if view.size() > 0:
-            kwargs["offset"] = view.rowcol(view.size())[0] + 2
-            logger.debug("activating with offset %s", kwargs["offset"])
-
-        terminal = Terminal(self.view)
-        terminal.open(**kwargs)
+        terminal = Terminal()
+        terminal.attach_view(view)
+        terminal.activate(view, **kwargs)
 
 
 class TerminusViewMixinx:
@@ -121,7 +72,8 @@ class TerminusRenderCommand(sublime_plugin.TextCommand, TerminusViewMixinx):
 
         screen = terminal.screen
         self.update_lines(edit, terminal)
-        if terminal.viewport[1] < view.viewport_position()[1] + view.line_height():
+        viewport_y = view.settings().get("terminus.viewport.y", 0)
+        if viewport_y < view.viewport_position()[1] + view.line_height():
             self.trim_trailing_spaces(edit, terminal)
             self.trim_history(edit, terminal)
             view.run_command("terminus_show_cursor")
@@ -311,7 +263,7 @@ class TerminusShowCursor(sublime_plugin.TextCommand, TerminusViewMixinx):
         viewport_y = last_y - view.viewport_extent()[1] + view.line_height()
         offset_y = view.text_to_layout(view.text_point(terminal.offset, 0))[1]
         y = max(offset_y, viewport_y)
-        terminal.viewport = (0, y)
+        view.settings().set("terminus.viewport.y", y)
         view.set_viewport_position((0, y), True)
 
 
