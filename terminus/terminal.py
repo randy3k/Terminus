@@ -102,7 +102,7 @@ class Terminal:
         def view_is_attached():
             with self.lock:
                 if self.detached:
-                    # irrelevant if terminal is attahced
+                    # irrelevant if terminal is detached
                     return True
                 if self.panel_name:
                     return panel_window(self.view)
