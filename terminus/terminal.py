@@ -40,7 +40,6 @@ class Terminal:
     def __init__(self, view=None):
         self._title = ""
         self.view = view
-        self.offset = 0
         self._cached_cursor = [0, 0]
         self._cached_cursor_is_hidden = [True]
         self.image_count = 0
@@ -62,7 +61,7 @@ class Terminal:
                 return terminal
         return None
 
-    def attach_view(self, view):
+    def attach_view(self, view, offset=None):
         with self.lock:
             self.view = view
             self.init_view()
@@ -71,9 +70,9 @@ class Terminal:
             if self in Terminal._detached_terminals:
                 Terminal._detached_terminals.remove(self)
             self.view.settings().erase("terminus.detached")
-
             # allow screen to be rerendered
             self.screen.dirty.update(range(self.screen.lines))
+            self.set_offset(offset)
 
     def detach_view(self):
         with self.lock:
@@ -183,12 +182,13 @@ class Terminal:
             return
 
         view_settings.set("terminus_view", True)
+        view_settings.set("terminus_view.args", kwargs)
+
         terminus_settings = sublime.load_settings("Terminus.sublime-settings")
         if "panel_name" in kwargs:
             view_settings.set("terminus_view.panel_name", kwargs["panel_name"])
         if "tag" in kwargs:
             view_settings.set("terminus_view.tag", kwargs["tag"])
-        view_settings.set("terminus_view.args", kwargs)
         view_settings.set(
             "terminus_view.natural_keyboard",
             terminus_settings.get("natural_keyboard", True))
@@ -220,9 +220,16 @@ class Terminal:
         for key, value in terminus_settings.get("view_settings", {}).items():
             view_settings.set(key, value)
 
-        if view.size() > 0:
-            self.offset = view.rowcol(view.size())[0] + 2
-            logger.debug("activating with offset %s", self.offset)
+    def set_offset(self, offset=None):
+        if offset is not None:
+            self.offset = offset
+        else:
+            if self.view and self.view.size() > 0:
+                view = self.view
+                self.offset = view.rowcol(view.size())[0] + 1
+            else:
+                self.offset = 0
+        logger.debug("activating with offset %s", self.offset)
 
     def activate(
             self, cmd, cwd=None, env=None, title=None,
@@ -249,6 +256,7 @@ class Terminal:
         if view:
             self.title = title
             self.init_view()
+            self.set_offset()
 
         size = view_size(view or sublime.active_window().active_view())
         if size == (1, 1):

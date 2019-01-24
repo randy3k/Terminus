@@ -380,9 +380,15 @@ class TerminusResetCommand(sublime_plugin.TextCommand):
             window.focus_view(new_view)
         else:
             window = view.window()
+            all_text = view.substr(sublime.Region(0, view.size()))
             view.close()
             new_view = window.new_file()
-            sublime.set_timeout(lambda: terminal.attach_view(new_view))
+
+            def callback():
+                new_view.run_command("terminus_insert", {"point": 0, "character": all_text})
+                terminal.attach_view(new_view, terminal.offset)
+
+            sublime.set_timeout(callback)
 
 
 class TerminusKeypressCommand(sublime_plugin.TextCommand):
