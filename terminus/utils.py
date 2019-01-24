@@ -1,7 +1,20 @@
+import sublime
+
 import time
 from wcwidth import wcwidth
 from functools import wraps
 from contextlib import contextmanager
+
+
+def panel_window(view):
+    panel_name = view.settings().get("terminus_view.panel_name")
+    if not panel_name:
+        return None
+    for w in sublime.windows():
+        v = w.find_output_panel(panel_name)
+        if v and v.id() == view.id():
+            return w
+    return None
 
 
 def view_size(view):

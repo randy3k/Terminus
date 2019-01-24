@@ -11,7 +11,7 @@ import logging
 from .key import get_key_code
 from .terminal import Terminal, CONTINUATION
 from .ptty import segment_buffer_line
-from .utils import rev_wcwidth, highlight_key
+from .utils import panel_window, rev_wcwidth, highlight_key
 
 logger = logging.getLogger('Terminus')
 
@@ -597,7 +597,7 @@ class TerminusResetCommand(sublime_plugin.TextCommand):
         terminal.detach_view()
         if terminal.panel_name:
             panel_name = terminal.panel_name
-            window = self.view.window() or sublime.active_window()
+            window = panel_window(view)
             window.destroy_output_panel(panel_name)  # do not reuse
             new_view = window.get_output_panel(panel_name)
             terminal.attach_view(new_view, offset=0)

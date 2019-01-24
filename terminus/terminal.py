@@ -9,7 +9,7 @@ import threading
 from queue import Queue, Empty
 
 from .ptty import TerminalPtyProcess, TerminalScreen, TerminalStream
-from .utils import view_size, responsive, intermission
+from .utils import panel_window, view_size, responsive, intermission
 from .key import get_key_code
 from .image import get_image_info, image_resize
 
@@ -105,7 +105,6 @@ class Terminal:
     def _start_rendering(self):
         data = [""]
         done = [False]
-        parent_window = [None]
 
         @responsive(period=1, default=True)
         def view_is_attached():
@@ -113,10 +112,7 @@ class Terminal:
                 # irrelevant if terminal is attahced
                 return True
             if self.panel_name:
-                if not parent_window[0]:
-                    parent_window[0] = self.view.window() or sublime.active_window()
-
-                window = self.view.window() or parent_window[0]
+                window = panel_window(self.view)
                 terminus_view = window.find_output_panel(self.panel_name)
                 return terminus_view and terminus_view.id() == self.view.id()
             else:
