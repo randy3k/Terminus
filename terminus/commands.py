@@ -382,7 +382,7 @@ class TerminusResetCommand(sublime_plugin.TextCommand):
             window = view.window()
             view.close()
             new_view = window.new_file()
-            terminal.attach_view(new_view)
+            sublime.set_timeout(lambda: terminal.attach_view(new_view))
 
 
 class TerminusKeypressCommand(sublime_plugin.TextCommand):
