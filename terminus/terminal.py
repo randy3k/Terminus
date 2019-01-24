@@ -62,7 +62,7 @@ class Terminal:
                 return terminal
         return None
 
-    def attach_view(self, view, offset=None):
+    def attach_view(self, view):
         with self.lock:
             self.view = view
             self.init_view()
@@ -74,8 +74,6 @@ class Terminal:
 
             # allow screen to be rerendered
             self.screen.dirty.update(range(self.screen.lines))
-            if offset is not None:
-                self.offset = offset
 
     def detach_view(self):
         with self.lock:

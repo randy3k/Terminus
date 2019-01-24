@@ -375,13 +375,14 @@ class TerminusResetCommand(sublime_plugin.TextCommand):
             window = panel_window(view)
             window.destroy_output_panel(panel_name)  # do not reuse
             new_view = window.get_output_panel(panel_name)
-            terminal.attach_view(new_view, offset=0)
+            terminal.attach_view(new_view)
             window.run_command("show_panel", {"panel": "output.{}".format(panel_name)})
             window.focus_view(new_view)
         else:
-            new_view = view.window().new_file()
-            terminal.attach_view(new_view, offset=0)
+            window = view.window()
             view.close()
+            new_view = window.new_file()
+            terminal.attach_view(new_view)
 
 
 class TerminusKeypressCommand(sublime_plugin.TextCommand):
