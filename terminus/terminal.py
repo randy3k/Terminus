@@ -47,7 +47,7 @@ class Terminal:
         self.images = {}
         self._strings = Queue()
         self._pending_to_send_string = [False]
-        self.condition = threading.Condition()
+        self.lock = threading.RLock()
 
     @classmethod
     def from_id(cls, vid):
@@ -63,7 +63,7 @@ class Terminal:
         return None
 
     def attach_view(self, view, offset=None):
-        with self.condition:
+        with self.lock:
             self.view = view
             self.init_view()
             self.detached = False
@@ -78,7 +78,7 @@ class Terminal:
                 self.offset = offset
 
     def detach_view(self):
-        with self.condition:
+        with self.lock:
             self.detached = True
             Terminal._detached_terminals.append(self)
             if self.view.id() in Terminal._terminals:
@@ -105,18 +105,20 @@ class Terminal:
     def _start_rendering(self):
         data = [""]
         done = [False]
+        condition = threading.Condition()
 
         @responsive(period=1, default=True)
         def view_is_attached():
-            if self.detached:
-                # irrelevant if terminal is attahced
-                return True
-            if self.panel_name:
-                window = panel_window(self.view)
-                terminus_view = window.find_output_panel(self.panel_name)
-                return terminus_view and terminus_view.id() == self.view.id()
-            else:
-                return self.view.window()
+            with self.lock:
+                if self.detached:
+                    # irrelevant if terminal is attahced
+                    return True
+                if self.panel_name:
+                    window = panel_window(self.view)
+                    terminus_view = window.find_output_panel(self.panel_name)
+                    return terminus_view and terminus_view.id() == self.view.id()
+                else:
+                    return self.view.window()
 
         @responsive(period=1, default=False)
         def was_resized():
@@ -130,8 +132,8 @@ class Terminal:
                 except EOFError:
                     break
 
-                with self.condition:
-                    self.condition.wait(0.1)
+                with condition:
+                    condition.wait(0.1)
                     data[0] += temp
 
                     if done[0] or not view_is_attached():
@@ -152,17 +154,17 @@ class Terminal:
 
             while True:
                 with intermission(period=0.03):
-                    if not self.detached:
-                        with self.condition:
-                            feed_data()
+                    with condition:
+                        feed_data()
+                        with self.lock:
+                            if not self.detached:
+                                if was_resized():
+                                    self.handle_resize()
+                                    self.view.run_command("terminus_show_cursor")
 
-                            if was_resized():
-                                self.handle_resize()
-                                self.view.run_command("terminus_show_cursor")
-
-                            if self._need_to_render():
-                                self.view.run_command("terminus_render")
-                            self.condition.notify()
+                                if self._need_to_render():
+                                    self.view.run_command("terminus_render")
+                        condition.notify()
 
                     if done[0] or not view_is_attached():
                         logger.debug("renderer breaks")
