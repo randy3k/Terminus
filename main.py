@@ -7,6 +7,10 @@ from .terminus.commands import (
     TerminusCommandsEventListener,
     TerminusOpenCommand,
     TerminusCloseCommand,
+    TerminusViewEventListener,
+    TerminusActivateCommand,
+    TerminusResetCommand,
+    TerminusRenderCommand,
     TerminusKeypressCommand,
     TerminusCopyCommand,
     TerminusPasteCommand,
@@ -14,10 +18,6 @@ from .terminus.commands import (
     TerminusDeleteWordCommand,
     ToggleTerminusPanelCommand,
     TerminusSendStringCommand,
-    TerminusViewEventListener,
-    TerminusActivateCommand,
-    TerminusResetCommand,
-    TerminusRenderCommand,
     TerminusShowCursor,
     TerminusInsertCommand
 )
@@ -42,9 +42,10 @@ from .terminus.utils import settings_on_change
 
 __all__ = [
     "TerminusCommandsEventListener", "TerminusOpenCommand", "TerminusCloseCommand",
-    "TerminusKeypressCommand", "TerminusCopyCommand", "TerminusPasteCommand",
     "TerminusViewEventListener", "TerminusActivateCommand", "TerminusResetCommand",
-    "TerminusRenderCommand", "TerminusShowCursor", "TerminusInsertCommand",
+    "TerminusRenderCommand",
+    "TerminusKeypressCommand", "TerminusCopyCommand", "TerminusPasteCommand",
+    "TerminusShowCursor", "TerminusInsertCommand",
     "TerminusPasteFromHistoryCommand", "TerminusDeleteWordCommand", "ToggleTerminusPanelCommand",
     "TerminusSendStringCommand",
     "TerminusSelectThemeCommand", "TerminusGenerateThemeCommand",
