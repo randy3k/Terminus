@@ -400,6 +400,7 @@ class TerminusCopyCommand(sublime_plugin.TextCommand):
     """
     It does nothing special now, just `copy`.
     """
+
     def run(self, edit):
         view = self.view
         if not view.settings().get("terminus_view"):
