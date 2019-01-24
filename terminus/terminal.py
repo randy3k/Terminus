@@ -25,11 +25,6 @@ body {{
 <img src="data:image/{what};base64,{data}" width="{width}" height="{height}"/>
 """
 
-KEYS = [
-    "ctrl+k",
-    "ctrl+p"
-]
-
 logger = logging.getLogger('Terminus')
 
 
@@ -64,12 +59,11 @@ class Terminal:
     def attach_view(self, view, offset=None):
         with self.lock:
             self.view = view
-            self.init_view()
             self.detached = False
             Terminal._terminals[view.id()] = self
             if self in Terminal._detached_terminals:
                 Terminal._detached_terminals.remove(self)
-            self.view.settings().erase("terminus.detached")
+            self.view.settings().erase("terminus_view.detached")
             # allow screen to be rerendered
             self.screen.dirty.update(range(self.screen.lines))
             self.set_offset(offset)
@@ -80,7 +74,7 @@ class Terminal:
             Terminal._detached_terminals.append(self)
             if self.view.id() in Terminal._terminals:
                 del Terminal._terminals[self.view.id()]
-            self.view.settings().set("terminus.detached", True)
+            self.view.settings().set("terminus_view.detached", True)
             self.view = None
 
     def _need_to_render(self):
@@ -111,9 +105,7 @@ class Terminal:
                     # irrelevant if terminal is attahced
                     return True
                 if self.panel_name:
-                    window = panel_window(self.view)
-                    terminus_view = window.find_output_panel(self.panel_name)
-                    return terminus_view and terminus_view.id() == self.view.id()
+                    return panel_window(self.view)
                 else:
                     return self.view.window()
 
@@ -173,53 +165,6 @@ class Terminal:
 
         threading.Thread(target=renderer).start()
 
-    def init_view(self):
-        view = self.view
-        kwargs = self.activation_args
-        view_settings = view.settings()
-
-        if view_settings.get("terminus_view", False):
-            return
-
-        view_settings.set("terminus_view", True)
-        view_settings.set("terminus_view.args", kwargs)
-
-        terminus_settings = sublime.load_settings("Terminus.sublime-settings")
-        if "panel_name" in kwargs:
-            view_settings.set("terminus_view.panel_name", kwargs["panel_name"])
-        if "tag" in kwargs:
-            view_settings.set("terminus_view.tag", kwargs["tag"])
-        view_settings.set(
-            "terminus_view.natural_keyboard",
-            terminus_settings.get("natural_keyboard", True))
-        disable_keys = terminus_settings.get("disable_keys", {})
-        if not disable_keys:
-            disable_keys = terminus_settings.get("ignore_keys", {})
-        for key in KEYS:
-            if key not in disable_keys:
-                view_settings.set("terminus_view.key.{}".format(key), True)
-        view.set_scratch(True)
-        view.set_read_only(False)
-        view_settings.set("is_widget", True)
-        view_settings.set("gutter", False)
-        view_settings.set("highlight_line", False)
-        view_settings.set("auto_complete_commit_on_tab", False)
-        view_settings.set("draw_centered", False)
-        view_settings.set("word_wrap", False)
-        view_settings.set("auto_complete", False)
-        view_settings.set("draw_white_space", "none")
-        view_settings.set("draw_indent_guides", False)
-        view_settings.set("caret_style", "blink")
-        view_settings.set("scroll_past_end", True)
-        view_settings.set("color_scheme", "Terminus.sublime-color-scheme")
-        # disable bracket highligher (not working)
-        view_settings.set("bracket_highlighter.ignore", True)
-        view_settings.set("bracket_highlighter.clone_locations", {})
-        # disable vintageous
-        view_settings.set("__vi_external_disable", True)
-        for key, value in terminus_settings.get("view_settings", {}).items():
-            view_settings.set(key, value)
-
     def set_offset(self, offset=None):
         if offset is not None:
             self.offset = offset
@@ -243,11 +188,6 @@ class Terminal:
             Terminal._detached_terminals.append(self)
             self.detached = True
 
-        self.activation_args = {
-            "cmd": cmd, "cwd": cwd, "env": env, "title": title,
-            "panel_name": panel_name, "tag": tag, "auto_close": auto_close
-        }
-
         self.panel_name = panel_name
         self.tag = tag
         self.auto_close = auto_close
@@ -255,7 +195,6 @@ class Terminal:
 
         if view:
             self.title = title
-            self.init_view()
             self.set_offset()
 
         size = view_size(view or sublime.active_window().active_view())

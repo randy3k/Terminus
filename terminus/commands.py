@@ -13,6 +13,11 @@ from .terminal import Terminal, CONTINUATION
 from .ptty import segment_buffer_line
 from .utils import panel_window, rev_wcwidth, highlight_key
 
+KEYS = [
+    "ctrl+k",
+    "ctrl+p"
+]
+
 logger = logging.getLogger('Terminus')
 
 
@@ -343,7 +348,7 @@ class TerminusViewEventListener(sublime_plugin.EventListener):
             return
 
         settings = view.settings()
-        if not settings.has("terminus_view.args") or settings.get("terminus.detached"):
+        if not settings.has("terminus_view.args") or settings.get("terminus_view.detached"):
             return
 
         kwargs = settings.get("terminus_view.args")
@@ -353,10 +358,59 @@ class TerminusViewEventListener(sublime_plugin.EventListener):
         sublime.set_timeout(lambda: view.run_command("terminus_activate", kwargs), 100)
 
 
+class TerminusInitializeCommand(sublime_plugin.TextCommand):
+    def run(self, _, **kwargs):
+        view = self.view
+        view_settings = view.settings()
+
+        if view_settings.get("terminus_view", False):
+            return
+
+        view_settings.set("terminus_view", True)
+        view_settings.set("terminus_view.args", kwargs)
+
+        terminus_settings = sublime.load_settings("Terminus.sublime-settings")
+        if "panel_name" in kwargs:
+            view_settings.set("terminus_view.panel_name", kwargs["panel_name"])
+        if "tag" in kwargs:
+            view_settings.set("terminus_view.tag", kwargs["tag"])
+        view_settings.set(
+            "terminus_view.natural_keyboard",
+            terminus_settings.get("natural_keyboard", True))
+        disable_keys = terminus_settings.get("disable_keys", {})
+        if not disable_keys:
+            disable_keys = terminus_settings.get("ignore_keys", {})
+        for key in KEYS:
+            if key not in disable_keys:
+                view_settings.set("terminus_view.key.{}".format(key), True)
+        view.set_scratch(True)
+        view.set_read_only(False)
+        view_settings.set("is_widget", True)
+        view_settings.set("gutter", False)
+        view_settings.set("highlight_line", False)
+        view_settings.set("auto_complete_commit_on_tab", False)
+        view_settings.set("draw_centered", False)
+        view_settings.set("word_wrap", False)
+        view_settings.set("auto_complete", False)
+        view_settings.set("draw_white_space", "none")
+        view_settings.set("draw_indent_guides", False)
+        view_settings.set("caret_style", "blink")
+        view_settings.set("scroll_past_end", True)
+        view_settings.set("color_scheme", "Terminus.sublime-color-scheme")
+        # disable bracket highligher (not working)
+        view_settings.set("bracket_highlighter.ignore", True)
+        view_settings.set("bracket_highlighter.clone_locations", {})
+        # disable vintageous
+        view_settings.set("__vi_external_disable", True)
+        for key, value in terminus_settings.get("view_settings", {}).items():
+            view_settings.set(key, value)
+
+
 class TerminusActivateCommand(sublime_plugin.TextCommand):
 
     def run(self, _, **kwargs):
         view = self.view
+        view.run_command("terminus_initialize", kwargs)
         terminal = Terminal(view)
         terminal.activate(**kwargs)
 
@@ -364,31 +418,44 @@ class TerminusActivateCommand(sublime_plugin.TextCommand):
 class TerminusReattachCommand(sublime_plugin.TextCommand):
 
     def run(self, _, **kwargs):
-        # because attach_view and detach_view can block UI
-        sublime.set_timeout_async(lambda: self.run_async(**kwargs))
-
-    def run_async(self, **kwargs):
         view = self.view
         terminal = Terminal.from_id(view.id())
         if not terminal:
             return
 
-        terminal.detach_view()
-        if terminal.panel_name:
-            panel_name = terminal.panel_name
-            window = panel_window(view)
-            window.destroy_output_panel(panel_name)  # do not reuse
-            new_view = window.get_output_panel(panel_name)
-            terminal.attach_view(new_view)
-            window.run_command("show_panel", {"panel": "output.{}".format(panel_name)})
-            window.focus_view(new_view)
-        else:
-            window = view.window()
-            all_text = view.substr(sublime.Region(0, view.size()))
-            view.close()
-            new_view = window.new_file()
-            new_view.run_command("terminus_insert", {"point": 0, "character": all_text})
-            terminal.attach_view(new_view, terminal.offset)
+        def run_detach():
+            terminal.detach_view()
+
+            def run_sync():
+                all_text = view.substr(sublime.Region(0, view.size()))
+
+                if terminal.panel_name:
+                    panel_name = terminal.panel_name
+                    window = panel_window(view)
+                    window.destroy_output_panel(panel_name)  # do not reuse
+                    new_view = window.get_output_panel(panel_name)
+
+                    def run_attach():
+                        new_view.run_command("terminus_initialize")
+                        new_view.run_command("terminus_insert", {"point": 0, "character": all_text})
+                        terminal.attach_view(new_view, terminal.offset)
+                        window.run_command("show_panel", {"panel": "output.{}".format(panel_name)})
+                        window.focus_view(new_view)
+                else:
+                    window = view.window()
+                    view.close()
+                    new_view = window.new_file()
+
+                    def run_attach():
+                        new_view.run_command("terminus_initialize")
+                        new_view.run_command("terminus_insert", {"point": 0, "character": all_text})
+                        terminal.attach_view(new_view, terminal.offset)
+
+                sublime.set_timeout_async(run_attach)
+
+            sublime.set_timeout(run_sync)
+
+        sublime.set_timeout_async(run_detach)
 
 
 class TerminusKeypressCommand(sublime_plugin.TextCommand):
@@ -645,7 +712,7 @@ class TerminusRenderCommand(sublime_plugin.TextCommand, TerminusViewMixin):
 
         screen = terminal.screen
         self.update_lines(edit, terminal)
-        viewport_y = view.settings().get("terminus.viewport.y", 0)
+        viewport_y = view.settings().get("terminus_view.viewport_y", 0)
         if viewport_y < view.viewport_position()[1] + view.line_height():
             self.trim_trailing_spaces(edit, terminal)
             self.trim_history(edit, terminal)
@@ -836,7 +903,7 @@ class TerminusShowCursor(sublime_plugin.TextCommand, TerminusViewMixin):
         viewport_y = last_y - view.viewport_extent()[1] + view.line_height()
         offset_y = view.text_to_layout(view.text_point(terminal.offset, 0))[1]
         y = max(offset_y, viewport_y)
-        view.settings().set("terminus.viewport.y", y)
+        view.settings().set("terminus_view.viewport_y", y)
         view.set_viewport_position((0, y), True)
 
 
