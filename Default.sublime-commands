@@ -29,6 +29,14 @@
         "command": "toggle_terminus_panel"
     },
     {
+        "caption": "Terminus: Reset Current Terminal",
+        "command": "terminus_reset"
+    },
+    {
+        "caption": "Terminus: Close Current Terminal",
+        "command": "terminus_close"
+    },
+    {
         "caption": "Terminus Utilities: Select Theme",
         "command": "terminus_select_theme"
     },

@@ -37,9 +37,9 @@ class Terminal:
     _terminals = {}
     _detached_terminals = []
 
-    def __init__(self):
+    def __init__(self, view=None):
         self._title = ""
-        self.view = None
+        self.view = view
         self.offset = 0
         self._cached_cursor = [0, 0]
         self._cached_cursor_is_hidden = [True]
@@ -62,14 +62,20 @@ class Terminal:
                 return terminal
         return None
 
-    def attach_view(self, view):
+    def attach_view(self, view, offset=None):
         with self.condition:
+            self.view = view
+            self.init_view()
             self.detached = False
             Terminal._terminals[view.id()] = self
             if self in Terminal._detached_terminals:
                 Terminal._detached_terminals.remove(self)
-            self.view = view
             self.view.settings().erase("terminus.detached")
+
+            # allow screen to be rerendered
+            self.screen.dirty.update(range(self.screen.lines))
+            if offset is not None:
+                self.offset = offset
 
     def detach_view(self):
         with self.condition:
@@ -106,11 +112,10 @@ class Terminal:
             if self.detached:
                 # irrelevant if terminal is attahced
                 return True
-
-            if not parent_window[0]:
-                parent_window[0] = self.view.window() or sublime.active_window()
-
             if self.panel_name:
+                if not parent_window[0]:
+                    parent_window[0] = self.view.window() or sublime.active_window()
+
                 window = self.view.window() or parent_window[0]
                 terminus_view = window.find_output_panel(self.panel_name)
                 return terminus_view and terminus_view.id() == self.view.id()
@@ -240,13 +245,14 @@ class Terminal:
             "panel_name": panel_name, "tag": tag, "auto_close": auto_close
         }
 
-        if view:
-            self.init_view()
-
         self.panel_name = panel_name
         self.tag = tag
         self.auto_close = auto_close
         self.default_title = title
+
+        if view:
+            self.title = title
+            self.init_view()
 
         size = view_size(view or sublime.active_window().active_view())
         if size == (1, 1):

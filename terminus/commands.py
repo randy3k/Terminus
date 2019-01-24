@@ -582,9 +582,31 @@ class TerminusActivateCommand(sublime_plugin.TextCommand):
 
     def run(self, _, **kwargs):
         view = self.view
-        terminal = Terminal()
-        terminal.attach_view(view)
+        terminal = Terminal(view)
         terminal.activate(**kwargs)
+
+
+class TerminusResetCommand(sublime_plugin.TextCommand):
+
+    def run(self, _, **kwargs):
+        view = self.view
+        terminal = Terminal.from_id(view.id())
+        if not terminal:
+            return
+
+        terminal.detach_view()
+        if terminal.panel_name:
+            panel_name = terminal.panel_name
+            window = self.view.window() or sublime.active_window()
+            window.destroy_output_panel(panel_name)  # do not reuse
+            new_view = window.get_output_panel(panel_name)
+            terminal.attach_view(new_view, offset=0)
+            window.run_command("show_panel", {"panel": "output.{}".format(panel_name)})
+            window.focus_view(new_view)
+        else:
+            new_view = view.window().new_file()
+            terminal.attach_view(new_view, offset=0)
+            view.close()
 
 
 class TerminusViewMixinx:
