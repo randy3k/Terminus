@@ -361,9 +361,13 @@ class TerminusActivateCommand(sublime_plugin.TextCommand):
         terminal.activate(**kwargs)
 
 
-class TerminusResetCommand(sublime_plugin.TextCommand):
+class TerminusReattachCommand(sublime_plugin.TextCommand):
 
     def run(self, _, **kwargs):
+        # because attach_view and detach_view can block UI
+        sublime.set_timeout_async(lambda: self.run_async(**kwargs))
+
+    def run_async(self, **kwargs):
         view = self.view
         terminal = Terminal.from_id(view.id())
         if not terminal:
@@ -383,12 +387,8 @@ class TerminusResetCommand(sublime_plugin.TextCommand):
             all_text = view.substr(sublime.Region(0, view.size()))
             view.close()
             new_view = window.new_file()
-
-            def callback():
-                new_view.run_command("terminus_insert", {"point": 0, "character": all_text})
-                terminal.attach_view(new_view, terminal.offset)
-
-            sublime.set_timeout(callback)
+            new_view.run_command("terminus_insert", {"point": 0, "character": all_text})
+            terminal.attach_view(new_view, terminal.offset)
 
 
 class TerminusKeypressCommand(sublime_plugin.TextCommand):

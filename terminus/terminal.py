@@ -46,7 +46,7 @@ class Terminal:
         self.images = {}
         self._strings = Queue()
         self._pending_to_send_string = [False]
-        self.lock = threading.RLock()
+        self.lock = threading.Lock()
 
     @classmethod
     def from_id(cls, vid):

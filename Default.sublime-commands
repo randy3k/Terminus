@@ -29,8 +29,8 @@
         "command": "toggle_terminus_panel"
     },
     {
-        "caption": "Terminus: Reset Current Terminal",
-        "command": "terminus_reset"
+        "caption": "Terminus: Reattach Current Terminal",
+        "command": "terminus_reattach"
     },
     {
         "caption": "Terminus: Close Current Terminal",
