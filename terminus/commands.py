@@ -415,7 +415,7 @@ class TerminusActivateCommand(sublime_plugin.TextCommand):
         terminal.activate(**kwargs)
 
 
-class TerminusReattachCommand(sublime_plugin.TextCommand):
+class TerminusClearHistoryCommand(sublime_plugin.TextCommand):
 
     def run(self, _, **kwargs):
         view = self.view
@@ -427,8 +427,6 @@ class TerminusReattachCommand(sublime_plugin.TextCommand):
             terminal.detach_view()
 
             def run_sync():
-                all_text = view.substr(sublime.Region(0, view.size()))
-
                 if terminal.panel_name:
                     panel_name = terminal.panel_name
                     window = panel_window(view)
@@ -437,8 +435,7 @@ class TerminusReattachCommand(sublime_plugin.TextCommand):
 
                     def run_attach():
                         new_view.run_command("terminus_initialize")
-                        new_view.run_command("terminus_insert", {"point": 0, "character": all_text})
-                        terminal.attach_view(new_view, terminal.offset)
+                        terminal.attach_view(new_view)
                         window.run_command("show_panel", {"panel": "output.{}".format(panel_name)})
                         window.focus_view(new_view)
                 else:
@@ -448,8 +445,7 @@ class TerminusReattachCommand(sublime_plugin.TextCommand):
 
                     def run_attach():
                         new_view.run_command("terminus_initialize")
-                        new_view.run_command("terminus_insert", {"point": 0, "character": all_text})
-                        terminal.attach_view(new_view, terminal.offset)
+                        terminal.attach_view(new_view)
 
                 sublime.set_timeout_async(run_attach)
 

@@ -331,7 +331,7 @@ If `tag` is not provided or is `None`, the text will be sent to the first termin
 
 ### Memory issue
 
-It is known that Terminus sometimes consumes a lot of memory after extensive use. It is because Sublime Text keeps an infinite undo stack. There is virtually no fix unless upstream provides an API to work with the undo stack. Meanwhile, users could execute `Terminus: Reattach Current Terminal` to clone and continue the current terminal into a new view/panel.
+It is known that Terminus sometimes consumes a lot of memory after extensive use. It is because Sublime Text keeps an infinite undo stack. There is virtually no fix unless upstream provides an API to work with the undo stack. Meanwhile, users could execute `Terminus: Clear Current Terminal History` to release the memory.
 
 ### Terminal panel background issue
 
