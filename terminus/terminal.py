@@ -369,11 +369,22 @@ class Terminal:
             if region.empty() and region.begin() == 0:
                 view.erase_phantom_by_id(pid)
                 if pid in self.images:
+                    try:
+                        os.remove(self.images[pid])
+                    except Exception:
+                        pass
                     del self.images[pid]
 
     def __del__(self):
         # make sure the process is terminated
         self.process.terminate(force=True)
+
+        # remove images
+        for image_path in list(self.images.values()):
+            try:
+                os.remove(image_path)
+            except Exception:
+                pass
 
         if self.process.isalive():
             logger.debug("process becomes orphaned")
