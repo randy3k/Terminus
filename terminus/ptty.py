@@ -559,6 +559,10 @@ class TerminalScreen(pyte.Screen):
         self.history.extend(copy(self.buffer[y]) for y in range(count))
 
 
+PLAIN_TEXT = "plain_text"
+OSC_PARAM = "osc_param"
+
+
 class TerminalStream(pyte.Stream):
 
     def __init__(self, *args, **kwargs):
@@ -570,6 +574,9 @@ class TerminalStream(pyte.Stream):
             "02": "set_title",
             "1337": "handle_iterm_protocol"
         }
+        self._osc_termination_pattern = re.compile(
+            "|".join(map(re.escape, [ctrl.ST_C0, ctrl.ST_C1, ctrl.BEL])))
+        self.yield_what = None
         super().__init__(*args, **kwargs)
 
     def _parser_fsm(self):
@@ -709,15 +716,47 @@ class TerminalStream(pyte.Stream):
 
                 param = ""
                 if char == ";":
-                    char = yield
-
-                while char not in OSC_TERMINATORS:
-                    param += char
-                    char = yield
-                    if char == ESC:
-                        char += yield
+                    while True:
+                        block = yield OSC_PARAM
+                        if block in OSC_TERMINATORS:
+                            break
+                        param += block
 
                 osc_dispatch[code](param)
 
             elif char not in NUL_OR_DEL:
                 draw(char)
+
+    def feed(self, data):
+        send = self._parser.send
+        draw = self.listener.draw
+        match_text = self._text_pattern.match
+        search_osc = self._osc_termination_pattern.search
+        yield_what = self.yield_what
+
+        length = len(data)
+        offset = 0
+        while offset < length:
+            if yield_what == PLAIN_TEXT:
+                match = match_text(data, offset)
+                if match:
+                    start, offset = match.span()
+                    draw(data[start:offset])
+                else:
+                    yield_what = None
+            elif yield_what == OSC_PARAM:
+                match = search_osc(data, offset)
+                if match:
+                    start, end = match.span()
+                    send(data[offset:start])
+                    send(data[start])
+                    offset = start + 1
+                    yield_what = None
+                else:
+                    send(data[offset:])
+                    offset = length
+            else:
+                yield_what = send(data[offset:offset + 1])
+                offset += 1
+
+        self.yield_what = yield_what

@@ -96,18 +96,16 @@ class Terminal:
     def _start_rendering(self):
         data = [""]
         done = [False]
-        condition = threading.Condition()
 
         @responsive(period=1, default=True)
         def view_is_attached():
-            with self.lock:
-                if self.detached:
-                    # irrelevant if terminal is detached
-                    return True
-                if self.panel_name:
-                    return panel_window(self.view)
-                else:
-                    return self.view.window()
+            if self.detached:
+                # irrelevant if terminal is detached
+                return True
+            if self.panel_name:
+                return panel_window(self.view)
+            else:
+                return self.view.window()
 
         @responsive(period=1, default=False)
         def was_resized():
@@ -121,8 +119,7 @@ class Terminal:
                 except EOFError:
                     break
 
-                with condition:
-                    condition.wait(0.1)
+                with self.lock:
                     data[0] += temp
 
                     if done[0] or not view_is_attached():
@@ -142,18 +139,15 @@ class Terminal:
                     data[0] = ""
 
             while True:
-                with intermission(period=0.03):
-                    with condition:
-                        feed_data()
-                        with self.lock:
-                            if not self.detached:
-                                if was_resized():
-                                    self.handle_resize()
-                                    self.view.run_command("terminus_show_cursor")
+                with intermission(period=0.03), self.lock:
+                    feed_data()
+                    if not self.detached:
+                        if was_resized():
+                            self.handle_resize()
+                            self.view.run_command("terminus_show_cursor")
 
-                                if self._need_to_render():
-                                    self.view.run_command("terminus_render")
-                        condition.notify()
+                        if self._need_to_render():
+                            self.view.run_command("terminus_render")
 
                     if done[0] or not view_is_attached():
                         logger.debug("renderer breaks")
