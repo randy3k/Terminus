@@ -25,7 +25,7 @@ The first cross platform terminal for Sublime Text.
     </tr>
     <tr>
         <th>Terminal in panel</th>
-        <th></th>
+        <th>Support <a href="https://www.iterm2.com/documentation-images.html">showing images</a></th>
     </tr>
     <tr>
         <td width="50%">
@@ -34,6 +34,7 @@ The first cross platform terminal for Sublime Text.
             </a>
         </td>
         <td width="50%">
+            <img src="https://user-images.githubusercontent.com/1690993/51725223-1dfa3780-202f-11e9-9600-6e24b78d562d.png" width="100%">
         </td>
     </tr>
 </table>
