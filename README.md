@@ -207,8 +207,7 @@ or by applying [Origami](https://github.com/SublimeText/Origami)'s `carry_file_t
 
 ## User Build System
 
-Use `Terminus` as a build system. For example, the following can be added to your project settings to allow
-"SSH to Remote" build system.
+Use `Terminus` as a build system. For example, the following can be added to your project settings to run a bash command.
 
 ```json
 {
@@ -217,32 +216,12 @@ Use `Terminus` as a build system. For example, the following can be added to you
         {
             "cmd":
             [
-                "ssh", "user@example.com"
+                "bash", "-c", "echo helloworld"
             ],
-            "name": "SSH to Remote",
+            "name": "Hello World",
             "target": "terminus_open",
-            "working_dir": "$folder"
-        }
-    ]
-}
-```
-
-Another build system for compiling C++ (with g++) is possible with the following code (as project settings).
-
-```json
-{
-    "build_systems":
-    [
-        {
-            "name": "Build & Run (g++)",
-            "cmd":
-            [
-                "bash",
-                "-c",
-                "g++ -pedantic -Wall -Wextra -Wconversion -pthread \"${file}\" -o \"${file_path}/${file_base_name}\" && \"${file_path}/${file_base_name}\" && echo && echo Press ENTER to continue && read line && exit"
-            ],
-            "target": "terminus_open",
-            "working_dir": "$folder"
+            "working_dir": "$folder",
+            "auto_close": false
         }
     ]
 }
