@@ -37,6 +37,14 @@
         "command": "terminus_close"
     },
     {
+        "caption": "Terminus: Maximize to View",
+        "command": "terminus_maximize"
+    },
+    {
+        "caption": "Terminus: Minimize to Panel",
+        "command": "terminus_minimize"
+    },
+    {
         "caption": "Terminus Utilities: Select Theme",
         "command": "terminus_select_theme"
     },

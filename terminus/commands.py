@@ -454,6 +454,89 @@ class TerminusClearHistoryCommand(sublime_plugin.TextCommand):
         sublime.set_timeout_async(run_detach)
 
 
+class TerminusMaximizeCommand(sublime_plugin.TextCommand):
+
+    def is_enabled(self):
+        view = self.view
+        terminal = Terminal.from_id(view.id())
+        if terminal and terminal.panel_name:
+            return True
+        else:
+            return False
+
+    def run(self, _, **kwargs):
+        view = self.view
+        terminal = Terminal.from_id(view.id())
+
+        def run_detach():
+            all_text = view.substr(sublime.Region(0, view.size()))
+            terminal.detach_view()
+
+            def run_sync():
+                offset = terminal.offset
+                window = panel_window(view)
+                window.destroy_output_panel(terminal.panel_name)
+                new_view = window.new_file()
+
+                def run_attach():
+                    new_view.run_command("terminus_initialize")
+                    new_view.run_command(
+                        "terminus_insert", {"point": 0, "character": all_text})
+                    terminal.panel_name = None
+                    terminal.attach_view(new_view, offset)
+
+                sublime.set_timeout_async(run_attach)
+
+            sublime.set_timeout(run_sync)
+
+        sublime.set_timeout_async(run_detach)
+
+
+class TerminusMinimizeCommand(sublime_plugin.TextCommand):
+
+    def is_enabled(self):
+        view = self.view
+        terminal = Terminal.from_id(view.id())
+        if terminal and not terminal.panel_name:
+            return True
+        else:
+            return False
+
+    def run(self, _, **kwargs):
+        view = self.view
+        terminal = Terminal.from_id(view.id())
+
+        def run_detach():
+            all_text = view.substr(sublime.Region(0, view.size()))
+            terminal.detach_view()
+
+            def run_sync():
+                offset = terminal.offset
+                window = view.window()
+                view.close()
+                if "panel_name" in kwargs:
+                    panel_name = kwargs["panel_name"]
+                else:
+                    panel_name = "Terminus"
+                window.destroy_output_panel(panel_name)
+                new_view = window.get_output_panel(panel_name)
+
+                def run_attach():
+                    new_view.run_command("terminus_initialize")
+                    new_view.run_command(
+                        "terminus_insert", {"point": 0, "character": all_text})
+                    window.run_command("show_panel", {"panel": "output.{}".format(panel_name)})
+                    window.focus_view(new_view)
+                    terminal.panel_name = panel_name
+                    terminal.attach_view(new_view, offset)
+
+                sublime.set_timeout_async(run_attach)
+
+            sublime.set_timeout(run_sync)
+
+        sublime.set_timeout_async(run_detach)
+
+
 class TerminusKeypressCommand(sublime_plugin.TextCommand):
 
     def run(self, _, **kwargs):
