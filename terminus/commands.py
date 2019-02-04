@@ -191,7 +191,7 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
         else:
             terminus_view = self.window.new_file()
 
-        sublime.set_timeout(lambda: terminus_view.run_command(
+        terminus_view.run_command(
             "terminus_activate",
             {
                 "cmd": cmd,
@@ -201,7 +201,7 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
                 "panel_name": panel_name,
                 "tag": tag,
                 "auto_close": auto_close
-            }))
+            })
 
         if panel_name:
             self.window.run_command("show_panel", {"panel": "output.{}".format(panel_name)})
@@ -354,6 +354,7 @@ class TerminusCloseAllCommand(sublime_plugin.WindowCommand):
 
 
 class TerminusViewEventListener(sublime_plugin.EventListener):
+    _recent_panel = {}
 
     def on_activated(self, view):
         terminal = Terminal.from_id(view.id())
@@ -362,6 +363,7 @@ class TerminusViewEventListener(sublime_plugin.EventListener):
             # https://github.com/facelessuser/BracketHighlighter/issues/488
             # TODO: remove this hack for BH
             view.settings().set("bracket_highlighter.clone_locations", {})
+            TerminusViewEventListener.set_recent_panel(view)
             return
 
         settings = view.settings()
@@ -373,6 +375,30 @@ class TerminusViewEventListener(sublime_plugin.EventListener):
             return
 
         sublime.set_timeout(lambda: view.run_command("terminus_activate", kwargs), 100)
+
+    def on_window_command(self, window, command_name, args):
+        if command_name == "show_panel":
+            panel = args["panel"].replace("output.", "")
+            view = window.find_output_panel(panel)
+            if view and view.settings().get("terminus_view.panel_name"):
+                TerminusViewEventListener.set_recent_panel(view)
+
+    @classmethod
+    def set_recent_panel(cls, view):
+        panel_name = view.settings().get("terminus_view.panel_name")
+        if panel_name:
+            window = panel_window(view)
+            if window:
+                cls._recent_panel[window.id()] = panel_name
+
+    @classmethod
+    def recent_panel(cls, window):
+        if not window:
+            return
+        try:
+            return cls._recent_panel[window.id()]
+        except KeyError:
+            return
 
 
 class TerminusInitializeCommand(sublime_plugin.TextCommand):
@@ -691,11 +717,18 @@ class ToggleTerminusPanelCommand(sublime_plugin.WindowCommand):
         window = self.window
         if "config_name" not in kwargs:
             kwargs["config_name"] = "Default"
+
         if "panel_name" in kwargs:
             panel_name = kwargs["panel_name"]
         else:
-            panel_name = "Terminus"
+            recent_panel = TerminusViewEventListener.recent_panel(window)
+            if recent_panel and window.find_output_panel(recent_panel):
+                panel_name = recent_panel
+            else:
+                panel_name = "Terminus"
+
             kwargs["panel_name"] = panel_name
+
         terminus_view = window.find_output_panel(panel_name)
         if terminus_view:
             window.run_command(
