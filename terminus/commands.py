@@ -91,8 +91,10 @@ class TerminusCommandsEventListener(sublime_plugin.EventListener):
 
 
 class TerminusOpenCommand(sublime_plugin.WindowCommand):
+    def run(self, *args, **kwargs):
+        sublime.set_timeout_async(lambda: self.run_async(*args, **kwargs))
 
-    def run(
+    def run_async(
             self,
             config_name=None,
             cmd=None,
