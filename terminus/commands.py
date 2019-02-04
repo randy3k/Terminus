@@ -420,11 +420,13 @@ class TerminusInitializeCommand(sublime_plugin.TextCommand):
         view_settings.set(
             "terminus_view.natural_keyboard",
             terminus_settings.get("natural_keyboard", True))
-        disable_keys = terminus_settings.get("disable_keys", {})
-        if not disable_keys:
-            disable_keys = terminus_settings.get("ignore_keys", {})
+        preserve_keys = terminus_settings.get("preserve_keys", {})
+        if not preserve_keys:
+            preserve_keys = terminus_settings.get("disable_keys", {})
+        if not preserve_keys:
+            preserve_keys = terminus_settings.get("ignore_keys", {})
         for key in KEYS:
-            if key not in disable_keys:
+            if key not in preserve_keys:
                 view_settings.set("terminus_view.key.{}".format(key), True)
         view.set_scratch(True)
         view.set_read_only(False)

@@ -70,10 +70,10 @@
     "natural_keyboard": true,
 
     // Terminus sends all keybinds of the form `ctrl+[a-z]` to the terminal process
-    // directly. Windows and Linux users sometimes may want to disable some of such
+    // directly. Windows and Linux users sometimes may want to preserve some of such
     // keybinds. (only keybinds listed below are supported, open an issue for a specific
     // keybind if it is not in the list)
-    "disable_keys" : [
+    "preserve_keys" : [
         // "ctrl+k"   // there are a number of shortcuts with "ctrl+k" prefix.
         // "ctrl+p"   // to show Go to Anything
     ],
