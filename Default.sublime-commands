@@ -37,6 +37,10 @@
         "command": "terminus_close"
     },
     {
+        "caption": "Terminus: Close All",
+        "command": "terminus_close_all"
+    },
+    {
         "caption": "Terminus: Maximize to View",
         "command": "terminus_maximize"
     },

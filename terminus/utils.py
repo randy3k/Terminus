@@ -15,6 +15,19 @@ def panel_window(view):
     return None
 
 
+def available_panel_name(window, panel_name):
+    if not window.find_output_panel(panel_name):
+        return panel_name
+
+    count = 2
+    while True:
+        new_panel_name = "{} {:d}".format(panel_name, count)
+        if not window.find_output_panel(new_panel_name):
+            return new_panel_name
+        else:
+            count += 1
+
+
 def view_size(view):
     pixel_width, pixel_height = view.viewport_extent()
     pixel_per_line = view.line_height()

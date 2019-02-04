@@ -228,15 +228,7 @@ class Terminal:
         self.view.set_read_only(True)
 
         if self.process.exitstatus == 0 and self.auto_close:
-            if self.panel_name:
-                window = self.view.window()
-                if window:
-                    window.destroy_output_panel(self.panel_name)
-            else:
-                window = self.view.window()
-                if window:
-                    window.focus_view(self.view)
-                    window.run_command("close")
+            self.view.run_command("terminus_close")
 
     def handle_resize(self):
         size = view_size(self.view)

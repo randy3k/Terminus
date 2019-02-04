@@ -7,6 +7,7 @@ from .terminus.commands import (
     TerminusCommandsEventListener,
     TerminusOpenCommand,
     TerminusCloseCommand,
+    TerminusCloseAllCommand,
     TerminusViewEventListener,
     TerminusInitializeCommand,
     TerminusActivateCommand,
@@ -45,6 +46,7 @@ from .terminus.utils import settings_on_change
 
 __all__ = [
     "TerminusCommandsEventListener", "TerminusOpenCommand", "TerminusCloseCommand",
+    "TerminusCloseAllCommand",
     "TerminusViewEventListener", "TerminusInitializeCommand", "TerminusActivateCommand",
     "TerminusClearHistoryCommand", "TerminusMaximizeCommand", "TerminusMinimizeCommand",
     "TerminusRenderCommand", "TerminusKeypressCommand", "TerminusCopyCommand",
@@ -84,8 +86,4 @@ def plugin_loaded():
 def plugin_unloaded():
     # close all terminals
     for w in sublime.windows():
-        w.destroy_output_panel("Terminus")
-        for view in w.views():
-            if view.settings().get("terminus_view"):
-                w.focus_view(view)
-                w.run_command("close")
+        w.run_command("terminus_close_all")

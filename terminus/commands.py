@@ -11,7 +11,8 @@ import logging
 from .key import get_key_code
 from .terminal import Terminal, CONTINUATION
 from .ptty import segment_buffer_line
-from .utils import panel_window, rev_wcwidth, highlight_key
+from .utils import panel_window, available_panel_name, rev_wcwidth, highlight_key
+
 
 KEYS = [
     "ctrl+k",
@@ -185,7 +186,7 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
             self.window.run_command(*hook)
 
         if panel_name:
-            self.window.destroy_output_panel(panel_name)  # do not reuse
+            panel_name = available_panel_name(self.window, panel_name)
             terminus_view = self.window.get_output_panel(panel_name)
         else:
             terminus_view = self.window.new_file()
@@ -321,19 +322,35 @@ class TerminusCloseCommand(sublime_plugin.TextCommand):
 
     def run(self, _):
         view = self.view
+        if not view.settings().get("terminus_view"):
+            return
+
         terminal = Terminal.from_id(view.id())
         if terminal:
             terminal.close()
         panel_name = view.settings().get("terminus_view.panel_name")
         if panel_name:
-            window = view.window()
+            window = panel_window(view)
             if window:
                 window.destroy_output_panel(panel_name)
         else:
-            window = view.window()
-            if window:
-                window.focus_view(view)
-                window.run_command("close")
+            view.close()
+
+
+class TerminusCloseAllCommand(sublime_plugin.WindowCommand):
+
+    def run(self):
+        window = self.window
+        views = []
+        for view in window.views():
+            if view.settings().get("terminus_view"):
+                views.append(view)
+        for panel in window.panels():
+            view = window.find_output_panel(panel.replace("output.", ""))
+            if view and view.settings().get("terminus_view"):
+                views.append(view)
+        for view in views:
+            view.run_command("terminus_close")
 
 
 class TerminusViewEventListener(sublime_plugin.EventListener):
@@ -517,17 +534,17 @@ class TerminusMinimizeCommand(sublime_plugin.TextCommand):
                 if "panel_name" in kwargs:
                     panel_name = kwargs["panel_name"]
                 else:
-                    panel_name = "Terminus"
-                window.destroy_output_panel(panel_name)
+                    panel_name = available_panel_name(window, "Terminus")
+
                 new_view = window.get_output_panel(panel_name)
 
                 def run_attach():
-                    new_view.run_command("terminus_initialize")
+                    terminal.panel_name = panel_name
+                    new_view.run_command("terminus_initialize", {"panel_name": panel_name})
                     new_view.run_command(
                         "terminus_insert", {"point": 0, "character": all_text})
                     window.run_command("show_panel", {"panel": "output.{}".format(panel_name)})
                     window.focus_view(new_view)
-                    terminal.panel_name = panel_name
                     terminal.attach_view(new_view, offset)
 
                 sublime.set_timeout_async(run_attach)
