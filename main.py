@@ -40,7 +40,8 @@ try:
     from .terminus.theme import (
         TerminusSelectThemeCommand,
         TerminusGenerateThemeCommand,
-        plugin_loaded as theme_plugin_loaded
+        plugin_loaded as theme_plugin_loaded,
+        plugin_unloaded as theme_plugin_unloaded
     )
     from .terminus.utils import settings_on_change
 except ImportError:
@@ -97,3 +98,7 @@ def plugin_unloaded():
     # close all terminals
     for w in sublime.windows():
         w.run_command("terminus_close_all")
+
+    theme_plugin_unloaded()
+    settings = sublime.load_settings("Terminus.sublime-settings")
+    settings_on_change(settings, "debug", clear=True)

@@ -135,3 +135,8 @@ def plugin_loaded():
     settings_on_change(settings, ["256color", "user_theme_colors", "theme"])(
         lambda _: sublime.active_window().run_command("terminus_generate_theme")
     )
+
+
+def plugin_unloaded():
+    settings = sublime.load_settings("Terminus.sublime-settings")
+    settings_on_change(settings, ["256color", "user_theme_colors", "theme"], clear=True)
