@@ -3,46 +3,48 @@ import sublime
 import sys
 import logging
 
-from .terminus.commands import (
-    TerminusCommandsEventListener,
-    TerminusOpenCommand,
-    TerminusCloseCommand,
-    TerminusCloseAllCommand,
-    TerminusViewEventListener,
-    TerminusInitializeCommand,
-    TerminusActivateCommand,
-    TerminusClearHistoryCommand,
-    TerminusMaximizeCommand,
-    TerminusMinimizeCommand,
-    TerminusRenderCommand,
-    TerminusKeypressCommand,
-    TerminusCopyCommand,
-    TerminusPasteCommand,
-    TerminusPasteFromHistoryCommand,
-    TerminusDeleteWordCommand,
-    ToggleTerminusPanelCommand,
-    TerminusSendStringCommand,
-    TerminusShowCursor,
-    TerminusInsertCommand
-)
-from .terminus.edit_settings import (
-    TerminusEditSettingsListener,
-    TerminusEditSettingsCommand
-)
-from .terminus.mouse import (
-    TerminusMouseEventListener,
-    TerminusOpenContextUrlCommand,
-    TerminusClickCommand,
-    TerminusOpenImageCommand
-)
-from .terminus.query import TerminusQueryContextListener
-from .terminus.theme import (
-    TerminusSelectThemeCommand,
-    TerminusGenerateThemeCommand,
-    plugin_loaded as theme_plugin_loaded
-)
-from .terminus.utils import settings_on_change
-
+try:
+    from .terminus.commands import (
+        TerminusCommandsEventListener,
+        TerminusOpenCommand,
+        TerminusCloseCommand,
+        TerminusCloseAllCommand,
+        TerminusViewEventListener,
+        TerminusInitializeCommand,
+        TerminusActivateCommand,
+        TerminusClearHistoryCommand,
+        TerminusMaximizeCommand,
+        TerminusMinimizeCommand,
+        TerminusRenderCommand,
+        TerminusKeypressCommand,
+        TerminusCopyCommand,
+        TerminusPasteCommand,
+        TerminusPasteFromHistoryCommand,
+        TerminusDeleteWordCommand,
+        ToggleTerminusPanelCommand,
+        TerminusSendStringCommand,
+        TerminusShowCursor,
+        TerminusInsertCommand
+    )
+    from .terminus.edit_settings import (
+        TerminusEditSettingsListener,
+        TerminusEditSettingsCommand
+    )
+    from .terminus.mouse import (
+        TerminusMouseEventListener,
+        TerminusOpenContextUrlCommand,
+        TerminusClickCommand,
+        TerminusOpenImageCommand
+    )
+    from .terminus.query import TerminusQueryContextListener
+    from .terminus.theme import (
+        TerminusSelectThemeCommand,
+        TerminusGenerateThemeCommand,
+        plugin_loaded as theme_plugin_loaded
+    )
+    from .terminus.utils import settings_on_change
+except ImportError:
+    pass
 
 __all__ = [
     "TerminusCommandsEventListener", "TerminusOpenCommand", "TerminusCloseCommand",
@@ -65,6 +67,14 @@ logger = logging.getLogger('Terminus')
 
 
 def plugin_loaded():
+    try:
+        from package_control import events
+        if events.post_upgrade(__package__):
+            from .tools.reloader import reload_package
+            reload_package(__package__)
+    except ImportError:
+        pass
+
     theme_plugin_loaded()
 
     if not logger.hasHandlers():
