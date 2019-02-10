@@ -52,6 +52,15 @@ FILE_PARAM_PATTERN = re.compile(
 )
 
 
+def reverse_fg_bg(fg, bg):
+    fg, bg = bg, fg
+    if fg == "default":
+        fg = "reverse_default"
+    if bg == "default":
+        bg = "reverse_default"
+    return fg, bg
+
+
 def segment_buffer_line(buffer_line):
     """
     segment a buffer line based on bg and fg colors
@@ -81,16 +90,12 @@ def segment_buffer_line(buffer_line):
             text = " " * i
 
         if fg != char.fg or bg != char.bg or reverse != char.reverse:
+            if reverse:
+                fg, bg = reverse_fg_bg(fg, bg)
             yield text, start, counter, fg, bg
             fg = char.fg
             bg = char.bg
             reverse = char.reverse
-            if reverse:
-                fg, bg = bg, fg
-                if fg == "default":
-                    fg = "reverse_default"
-                if bg == "default":
-                    bg = "reverse_default"
             text = char.data
             start = counter
         else:
@@ -98,6 +103,8 @@ def segment_buffer_line(buffer_line):
 
         counter += 1
 
+    if reverse:
+        fg, bg = reverse_fg_bg(fg, bg)
     yield text, start, counter, fg, bg
 
 

@@ -890,6 +890,7 @@ class TerminusRenderCommand(sublime_plugin.TextCommand, TerminusViewMixin):
         self.ensure_position(edit, line)
         line_region = view.line(view.text_point(line, 0))
         segments = list(segment_buffer_line(buffer_line))
+
         text = "".join(s[0] for s in segments)
         if lf:
             # append a zero width space if the the line ends with a linefeed
@@ -935,10 +936,10 @@ class TerminusRenderCommand(sublime_plugin.TextCommand, TerminusViewMixin):
         lastrow = view.rowcol(view.size())[0]
         row = lastrow
         while row > cursor_row:
-            self.decolorize_line(row)
             line_region = view.line(view.text_point(row, 0))
             text = view.substr(line_region)
             if len(text.strip()) == 0:
+                self.decolorize_line(row)
                 region = view.line(view.text_point(row, 0))
                 view.erase(edit, sublime.Region(region.begin() - 1, region.end()))
                 row = row - 1
