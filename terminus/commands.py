@@ -984,7 +984,7 @@ class TerminusRenderCommand(sublime_plugin.TextCommand, TerminusViewMixin):
                 view.size()
             )
             for line in view.lines(tail_region):
-                self.decolorize_line(view.rowcol(line)[0])
+                self.decolorize_line(view.rowcol(line.begin())[0])
             view.erase(edit, tail_region)
 
 
