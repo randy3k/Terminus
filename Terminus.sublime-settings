@@ -87,6 +87,7 @@
         // "background": "#262626",
         // "foreground": "#ffffff",
         // "caret": "white",
+        // "block_caret": "white",
         // "selection": "#444444",
         // "selection_foreground": "#ffffff"
         // "00": "#000000",  // black
