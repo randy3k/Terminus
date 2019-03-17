@@ -582,7 +582,7 @@ class TerminalStream(pyte.Stream):
             "1337": "handle_iterm_protocol"
         }
         self._osc_termination_pattern = re.compile(
-            "|".join(map(re.escape, [ctrl.ST_C0, ctrl.ST_C1, ctrl.BEL])))
+            "|".join(map(re.escape, [ctrl.ST_C0, ctrl.ST_C1, ctrl.BEL, ctrl.CR])))
         self.yield_what = None
         super().__init__(*args, **kwargs)
 
