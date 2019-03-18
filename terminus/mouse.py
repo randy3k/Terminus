@@ -143,7 +143,8 @@ class TerminusOpenContextUrlCommand(sublime_plugin.TextCommand):
         return terminal is not None
 
     def is_visible(self, event):
-        return find_url(self.view, event) is not None
+        terminal = Terminal.from_id(self.view.id())
+        return terminal is not None and find_url(self.view, event) is not None
 
     def description(self, event):
         url = find_url(self.view, event)
@@ -156,9 +157,7 @@ class TerminusOpenContextUrlCommand(sublime_plugin.TextCommand):
 
 
 class TerminusClickCommand(sublime_plugin.TextCommand):
-    """`
-    Reset cursor position if the click is occured below the last row
-    """
+    """Reset cursor position if the click is occured below the last row."""
 
     def run_(self, edit, args):
         view = self.view
@@ -192,7 +191,8 @@ class TerminusOpenImageCommand(sublime_plugin.TextCommand):
         return terminal is not None
 
     def is_visible(self, event):
-        return self.find_phantom(event) is not None
+        terminal = Terminal.from_id(self.view.id())
+        return terminal is not None and self.find_phantom(event) is not None
 
     def find_phantom(self, event):
         view = self.view
