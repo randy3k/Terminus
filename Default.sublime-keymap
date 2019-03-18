@@ -1,6 +1,14 @@
 [
-    // Open/hide the default shell in panel
+    // Toggle the default shell in panel
     // { "keys": ["alt+`"], "command": "toggle_terminus_panel" },
+
+    // Open a terminal view at current file directory
+    // {
+    //     "keys": ["ctrl+alt+t"], "command": "terminus_open", "args": {
+    //         "config_name": "Default",
+    //         "cwd": "${file_path:${folder}}"
+    //     }
+    // },
 
     // Basic keys
     { "keys": ["up"], "command": "terminus_keypress", "args": {"key": "up"}, "context": [{"key": "terminus_view"}] },

@@ -267,7 +267,7 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
 
     def get_config_by_name(self, name):
         default_config = self.default_config()
-        if name == "Default":
+        if name.lower() == "default":
             return default_config
 
         settings = sublime.load_settings("Terminus.sublime-settings")
@@ -279,10 +279,10 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
                 continue
             if "platforms" in config and platform not in config["platforms"]:
                 continue
-            if name == config["name"]:
+            if name.lower() == config["name"].lower():
                 return config
 
-        if name == default_config["name"]:
+        if name.lower() == default_config["name"].lower():
             return default_config
         raise Exception("Config {} not found".format(name))
 
