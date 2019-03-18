@@ -139,7 +139,8 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
         else:
             _env = {}
 
-        _env["TERMINUS_SUBLIME"] = "1"
+        _env["TERMINUS_SUBLIME"] = "1"  # for backward compatibility
+        _env["TERM_PROGRAM"] = "Terminus-Sublime"
 
         if sys.platform.startswith("win"):
             pass
