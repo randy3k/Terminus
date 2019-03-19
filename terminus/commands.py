@@ -856,7 +856,9 @@ class TerminusRenderCommand(sublime_plugin.TextCommand, TerminusViewMixin):
                 terminal.title = screen.title
             else:
                 terminal.title = terminal.default_title
-        screen.dirty.clear()
+
+        # we should not clear dirty lines here, it shoud be done in the eventloop
+        # screen.dirty.clear()
         logger.debug("updating lines takes {}s".format(str(time.time() - startt)))
         logger.debug("mode: {}, cursor: {}.{}".format(
             [m >> 5 for m in screen.mode], screen.cursor.x, screen.cursor.y))

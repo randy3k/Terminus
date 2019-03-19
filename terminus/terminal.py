@@ -148,6 +148,7 @@ class Terminal:
 
                         if self._need_to_render():
                             self.view.run_command("terminus_render")
+                            self.screen.dirty.clear()
 
                     if done[0] or not view_is_attached():
                         logger.debug("renderer breaks")
