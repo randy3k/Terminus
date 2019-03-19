@@ -591,9 +591,9 @@ class TerminusKeypressCommand(sublime_plugin.TextCommand):
         terminal = Terminal.from_id(self.view.id())
         if not terminal or not terminal.process.isalive():
             return
-        terminal.send_key(**kwargs)
         self.view.run_command("terminus_render")
         self.view.run_command("terminus_show_cursor")
+        terminal.send_key(**kwargs)
 
 
 class TerminusCopyCommand(sublime_plugin.TextCommand):
@@ -631,13 +631,14 @@ class TerminusPasteCommand(sublime_plugin.TextCommand):
             terminal.send_key("bracketed_paste_mode_start")
 
         copied = sublime.get_clipboard()
+
+        self.view.run_command("terminus_render")
+        self.view.run_command("terminus_show_cursor")
+
         terminal.send_string(copied)
 
         if bracketed:
             terminal.send_key("bracketed_paste_mode_end")
-
-        self.view.run_command("terminus_render")
-        self.view.run_command("terminus_show_cursor")
 
 
 class TerminusPasteFromHistoryCommand(sublime_plugin.TextCommand):
@@ -710,10 +711,10 @@ class TerminusDeleteWordCommand(sublime_plugin.TextCommand):
                 n = 1
             delete_code = get_key_code("backspace")
 
-        terminal.send_string(delete_code * n)
-
         self.view.run_command("terminus_render")
         self.view.run_command("terminus_show_cursor")
+
+        terminal.send_string(delete_code * n)
 
 
 class ToggleTerminusPanelCommand(sublime_plugin.WindowCommand):
@@ -778,9 +779,9 @@ class TerminusSendStringCommand(sublime_plugin.WindowCommand):
         else:
             self.bring_view_to_topmost(view)
 
-        terminal.send_string(string)
         terminal.view.run_command("terminus_render")
         terminal.view.run_command("terminus_show_cursor")
+        terminal.send_string(string)
 
     def get_terminus_panel(self, visible=False):
         window = self.window
