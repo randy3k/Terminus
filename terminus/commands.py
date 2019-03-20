@@ -591,7 +591,7 @@ class TerminusKeypressCommand(sublime_plugin.TextCommand):
         terminal = Terminal.from_id(self.view.id())
         if not terminal or not terminal.process.isalive():
             return
-        self.view.run_command("terminus_render")
+        # self.view.run_command("terminus_render")
         self.view.run_command("terminus_show_cursor")
         terminal.send_key(**kwargs)
 
@@ -632,7 +632,7 @@ class TerminusPasteCommand(sublime_plugin.TextCommand):
 
         copied = sublime.get_clipboard()
 
-        self.view.run_command("terminus_render")
+        # self.view.run_command("terminus_render")
         self.view.run_command("terminus_show_cursor")
 
         terminal.send_string(copied)
@@ -711,7 +711,7 @@ class TerminusDeleteWordCommand(sublime_plugin.TextCommand):
                 n = 1
             delete_code = get_key_code("backspace")
 
-        self.view.run_command("terminus_render")
+        # self.view.run_command("terminus_render")
         self.view.run_command("terminus_show_cursor")
 
         terminal.send_string(delete_code * n)
@@ -779,7 +779,7 @@ class TerminusSendStringCommand(sublime_plugin.WindowCommand):
         else:
             self.bring_view_to_topmost(view)
 
-        terminal.view.run_command("terminus_render")
+        # terminal.view.run_command("terminus_render")
         terminal.view.run_command("terminus_show_cursor")
         terminal.send_string(string)
 
