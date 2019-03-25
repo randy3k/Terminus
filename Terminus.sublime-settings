@@ -65,7 +65,6 @@
     // Windows and Linux only
     // use ctrl+c to copy
     // use ctrl+v to paste
-    // use ctrl+w to close terminal
     // use ctrl+pagedown/pageup to change tabs
     "natural_keyboard": true,
 

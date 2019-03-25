@@ -17,13 +17,6 @@
             { "key": "terminus_view.natural_keyboard" }
         ]
     },
-    { "keys": ["ctrl+w"], "command": "terminus_close",
-        "context":
-        [
-            { "key": "terminus_view" },
-            { "key": "terminus_view.natural_keyboard" }
-        ]
-    },
     { "keys": ["ctrl+pagedown"], "command": "next_view",
         "context":
         [

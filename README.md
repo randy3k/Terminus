@@ -227,6 +227,16 @@ Use `Terminus` as a build system. For example, the following can be added to you
 }
 ```
 
+## Ctrl-W to close terminal
+
+Following keybind can be considered if one wants to use `ctrl+w` to close terminals.
+
+```
+{ 
+    "keys": ["ctrl+w"], "command": "terminus_close", "context": [{ "key": "terminus_view"}]
+}
+```
+
 ## Alt-Left/Right to move between words (Unix)
 
 - Bash: add the following in `.bash_profile` or `.bashrc`
