@@ -480,9 +480,9 @@ class TerminusResetCommand(sublime_plugin.TextCommand):
                     window = panel_window(view)
                     window.destroy_output_panel(panel_name)  # do not reuse
                     new_view = window.get_output_panel(panel_name)
+                    new_view.run_command("terminus_initialize")
 
                     def run_attach():
-                        new_view.run_command("terminus_initialize")
                         terminal.attach_view(new_view)
                         window.run_command("show_panel", {"panel": "output.{}".format(panel_name)})
                         window.focus_view(new_view)
@@ -490,9 +490,9 @@ class TerminusResetCommand(sublime_plugin.TextCommand):
                     window = view.window()
                     view.close()
                     new_view = window.new_file()
+                    new_view.run_command("terminus_initialize")
 
                     def run_attach():
-                        new_view.run_command("terminus_initialize")
                         terminal.attach_view(new_view)
 
                 sublime.set_timeout_async(run_attach)
@@ -853,6 +853,14 @@ class TerminusRenderCommand(sublime_plugin.TextCommand, TerminusViewMixin):
             terminal.clean_images()
             terminal._pending_to_clear_scrollback[0] = False
 
+        if terminal._pending_to_reset[0]:
+            def _reset():
+                logger.debug("reset terminal")
+                view.run_command("terminus_reset")
+                terminal._pending_to_reset[0] = False
+
+            sublime.set_timeout(_reset)
+
         self.update_lines(edit, terminal)
         viewport_y = view.settings().get("terminus_view.viewport_y", 0)
         if viewport_y < view.viewport_position()[1] + view.line_height():
@@ -870,15 +878,6 @@ class TerminusRenderCommand(sublime_plugin.TextCommand, TerminusViewMixin):
         logger.debug("updating lines takes {}s".format(str(time.time() - startt)))
         logger.debug("mode: {}, cursor: {}.{}".format(
             [m >> 5 for m in screen.mode], screen.cursor.x, screen.cursor.y))
-
-        if terminal._pending_to_reset[0]:
-
-            def _reset():
-                logger.debug("reset terminal")
-                view.run_command("terminus_reset")
-                terminal._pending_to_reset[0] = False
-
-            sublime.set_timeout(_reset, 100)
 
     def update_lines(self, edit, terminal):
         # cursor = screen.cursor
