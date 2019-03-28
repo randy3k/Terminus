@@ -358,8 +358,13 @@ class TerminusCloseAllCommand(sublime_plugin.WindowCommand):
 
 class TerminusViewEventListener(sublime_plugin.EventListener):
     _recent_panel = {}
+    _active_view = {}
 
     def on_activated(self, view):
+        window = view.window()
+        if window:
+            TerminusViewEventListener._active_view[window.id()] = view
+
         terminal = Terminal.from_id(view.id())
         if terminal:
             TerminusViewEventListener.set_recent_panel(view)
@@ -396,6 +401,15 @@ class TerminusViewEventListener(sublime_plugin.EventListener):
             return
         try:
             return cls._recent_panel[window.id()]
+        except KeyError:
+            return
+
+    @classmethod
+    def active_view(cls, window):
+        if not window:
+            return
+        try:
+            return cls._active_view[window.id()]
         except KeyError:
             return
 
@@ -751,7 +765,13 @@ class TerminusSendStringCommand(sublime_plugin.WindowCommand):
             if terminal:
                 view = terminal.view
         else:
-            view = self.get_terminus_panel(True)
+            view = TerminusViewEventListener.active_view(self.window)
+            if view:
+                terminal = Terminal.from_id(view.id())
+                if not terminal:
+                    view = None
+            if not view:
+                view = self.get_terminus_panel(True)
             if not view:
                 view = self.get_terminus_view(True)
             if not view:
