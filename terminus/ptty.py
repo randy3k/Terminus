@@ -172,6 +172,12 @@ class TerminalScreen(pyte.Screen):
         else:
             raise Exception("missing process")
 
+        if "clear_scrollback" in kwargs:
+            self._clear_scrollback = kwargs["clear_scrollback"]
+            del kwargs["clear_scrollback"]
+        else:
+            raise Exception("missing clear_scrollback")
+
         if "history" in kwargs:
             history = kwargs["history"]
             del kwargs["history"]
@@ -194,6 +200,7 @@ class TerminalScreen(pyte.Screen):
 
     def reset_history(self):
         self.history.clear()
+        self._clear_scrollback()
 
     def resize(self, lines=None, columns=None):
         lines = lines or self.lines

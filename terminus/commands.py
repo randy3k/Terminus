@@ -846,6 +846,12 @@ class TerminusRenderCommand(sublime_plugin.TextCommand, TerminusViewMixin):
             return
 
         screen = terminal.screen
+
+        if terminal._pending_to_clear_scrollback[0]:
+            view.replace(edit, sublime.Region(0, view.size()), "")  # nuke everything
+            terminal.offset = 0
+            terminal._pending_to_clear_scrollback[0] = False
+
         self.update_lines(edit, terminal)
         viewport_y = view.settings().get("terminus_view.viewport_y", 0)
         if viewport_y < view.viewport_position()[1] + view.line_height():

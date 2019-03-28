@@ -41,6 +41,7 @@ class Terminal:
         self.images = {}
         self._strings = Queue()
         self._pending_to_send_string = [False]
+        self._pending_to_clear_scrollback = [False]
         self.lock = threading.Lock()
 
     @classmethod
@@ -199,7 +200,9 @@ class Terminal:
         _env = os.environ.copy()
         _env.update(env)
         self.process = TerminalPtyProcess.spawn(cmd, cwd=cwd, env=_env, dimensions=size)
-        self.screen = TerminalScreen(size[1], size[0], process=self.process, history=10000)
+        self.screen = TerminalScreen(
+            size[1], size[0], process=self.process, history=10000,
+            clear_scrollback=self.clear_scrollback)
         self.stream = TerminalStream(self.screen)
 
         self.screen.set_show_image_callback(self.show_image)
@@ -247,6 +250,9 @@ class Terminal:
         if not self.detached:
             self._title = value
             self.view.set_name(value)
+
+    def clear_scrollback(self):
+        self._pending_to_clear_scrollback[0] = True
 
     def send_key(self, *args, **kwargs):
         kwargs["application_mode"] = self.application_mode_enabled()
