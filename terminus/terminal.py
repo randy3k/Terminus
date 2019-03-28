@@ -42,7 +42,7 @@ class Terminal:
         self._strings = Queue()
         self._pending_to_send_string = [False]
         self._pending_to_clear_scrollback = [False]
-        self._pending_to_reset = [False]
+        self._pending_to_reset = [None]
         self.lock = threading.Lock()
 
     @classmethod
@@ -256,7 +256,9 @@ class Terminal:
         self._pending_to_clear_scrollback[0] = True
 
     def reset_callback(self):
-        if self.offset:
+        if self._pending_to_reset[0] is None:
+            self._pending_to_reset[0] = False
+        else:
             self._pending_to_reset[0] = True
 
     def send_key(self, *args, **kwargs):
