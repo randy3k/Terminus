@@ -463,7 +463,7 @@ class TerminusActivateCommand(sublime_plugin.TextCommand):
         terminal.activate(**kwargs)
 
 
-class TerminusClearHistoryCommand(sublime_plugin.TextCommand):
+class TerminusResetCommand(sublime_plugin.TextCommand):
 
     def run(self, _, **kwargs):
         view = self.view

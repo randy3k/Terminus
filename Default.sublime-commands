@@ -29,8 +29,8 @@
         "command": "toggle_terminus_panel"
     },
     {
-        "caption": "Terminus: Clear History",
-        "command": "terminus_clear_history"
+        "caption": "Terminus: Reset",
+        "command": "terminus_reset"
     },
     {
         "caption": "Terminus: Close",

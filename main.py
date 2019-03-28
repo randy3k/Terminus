@@ -12,7 +12,6 @@ except ImportError:
 else:
     if events.post_upgrade(__package__):
         # clean up sys.modules to ensure all submodules are reloaded
-        import sys
         modules_to_clear = set()
         prefix = __package__ + "."  # don't clear the base package
         for module_name in sys.modules:
@@ -33,7 +32,7 @@ from .terminus.commands import (
     TerminusViewEventListener,
     TerminusInitializeCommand,
     TerminusActivateCommand,
-    TerminusClearHistoryCommand,
+    TerminusResetCommand,
     TerminusMaximizeCommand,
     TerminusMinimizeCommand,
     TerminusRenderCommand,
@@ -71,7 +70,7 @@ __all__ = [
     "TerminusCommandsEventListener", "TerminusOpenCommand", "TerminusCloseCommand",
     "TerminusCloseAllCommand",
     "TerminusViewEventListener", "TerminusInitializeCommand", "TerminusActivateCommand",
-    "TerminusClearHistoryCommand", "TerminusMaximizeCommand", "TerminusMinimizeCommand",
+    "TerminusResetCommand", "TerminusMaximizeCommand", "TerminusMinimizeCommand",
     "TerminusRenderCommand", "TerminusKeypressCommand", "TerminusCopyCommand",
     "TerminusPasteCommand", "TerminusShowCursor", "TerminusInsertCommand",
     "TerminusPasteFromHistoryCommand", "TerminusDeleteWordCommand", "ToggleTerminusPanelCommand",
