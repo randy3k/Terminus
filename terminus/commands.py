@@ -755,13 +755,7 @@ class TerminusSendStringCommand(sublime_plugin.WindowCommand):
             if terminal:
                 view = terminal.view
         else:
-            view = self.window.active_view()
-            if view:
-                terminal = Terminal.from_id(view.id())
-                if not terminal:
-                    view = None
-            if not view:
-                view = self.get_terminus_panel(True)
+            view = self.get_terminus_panel(True)
             if not view:
                 view = self.get_terminus_view(True)
             if not view:
