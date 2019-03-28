@@ -323,6 +323,11 @@ If `tag` is not provided or is `None`, the text will be sent to the first termin
 
 It is known that Terminus sometimes consumes a lot of memory after extensive use. It is because Sublime Text keeps an infinite undo stack. There is virtually no fix unless upstream provides an API to work with the undo stack. Meanwhile, users could execute `Terminus: Clear History` to release the memory.
 
+### Color issue when maximizing and minimizing terminal
+
+It is known that the color of the scrollback history will be lost when a terminal is maximized or minimized from or to the panel. There is no fix for this issue.
+
+
 ### Terminal panel background issue
 
 If you are using DA UI and your terminal panel has weired background color,
