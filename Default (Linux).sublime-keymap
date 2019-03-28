@@ -17,6 +17,14 @@
             { "key": "terminus_view.natural_keyboard" }
         ]
     },
+    { "keys": ["ctrl+alt+v"], "command": "terminus_keypress", 
+        "args": {"key": "v", "ctrl": true},
+        "context":
+        [
+            { "key": "terminus_view" },
+            { "key": "terminus_view.natural_keyboard" }
+        ]
+    },
     { "keys": ["ctrl+pagedown"], "command": "next_view",
         "context":
         [
