@@ -42,6 +42,7 @@ class Terminal:
         self._strings = Queue()
         self._pending_to_send_string = [False]
         self._pending_to_clear_scrollback = [False]
+        self._pending_to_reset = [False]
         self.lock = threading.Lock()
 
     @classmethod
@@ -202,7 +203,7 @@ class Terminal:
         self.process = TerminalPtyProcess.spawn(cmd, cwd=cwd, env=_env, dimensions=size)
         self.screen = TerminalScreen(
             size[1], size[0], process=self.process, history=10000,
-            clear_scrollback=self.clear_scrollback)
+            clear_callback=self.clear_callback, reset_callback=self.reset_callback)
         self.stream = TerminalStream(self.screen)
 
         self.screen.set_show_image_callback(self.show_image)
@@ -251,8 +252,12 @@ class Terminal:
             self._title = value
             self.view.set_name(value)
 
-    def clear_scrollback(self):
+    def clear_callback(self):
         self._pending_to_clear_scrollback[0] = True
+
+    def reset_callback(self):
+        if self.offset:
+            self._pending_to_reset[0] = True
 
     def send_key(self, *args, **kwargs):
         kwargs["application_mode"] = self.application_mode_enabled()

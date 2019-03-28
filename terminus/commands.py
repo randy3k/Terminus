@@ -870,6 +870,15 @@ class TerminusRenderCommand(sublime_plugin.TextCommand, TerminusViewMixin):
         logger.debug("mode: {}, cursor: {}.{}".format(
             [m >> 5 for m in screen.mode], screen.cursor.x, screen.cursor.y))
 
+        if terminal._pending_to_reset[0]:
+
+            def _reset():
+                logger.debug("reset terminal")
+                view.run_command("terminus_reset")
+                terminal._pending_to_reset[0] = False
+
+            sublime.set_timeout(_reset, 100)
+
     def update_lines(self, edit, terminal):
         # cursor = screen.cursor
         screen = terminal.screen
