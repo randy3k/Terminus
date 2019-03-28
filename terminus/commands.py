@@ -850,6 +850,7 @@ class TerminusRenderCommand(sublime_plugin.TextCommand, TerminusViewMixin):
         if terminal._pending_to_clear_scrollback[0]:
             view.replace(edit, sublime.Region(0, view.size()), "")  # nuke everything
             terminal.offset = 0
+            terminal.clean_images()
             terminal._pending_to_clear_scrollback[0] = False
 
         self.update_lines(edit, terminal)
