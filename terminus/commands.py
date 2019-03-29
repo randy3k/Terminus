@@ -363,7 +363,8 @@ class TerminusViewEventListener(sublime_plugin.EventListener):
     _active_view = {}
 
     def on_activated(self, view):
-        if view.settings().get("is_widget", False):
+        if view.settings().get("is_widget", False) and \
+                not view.settings().get("terminus_view", False):
             return
 
         window = view.window()
