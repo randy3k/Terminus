@@ -358,6 +358,7 @@ class TerminusCloseAllCommand(sublime_plugin.WindowCommand):
 
 class TerminusViewEventListener(sublime_plugin.EventListener):
     _recent_panel = {}
+    _recent_view = {}
     _active_view = {}
 
     def on_activated(self, view):
@@ -370,7 +371,7 @@ class TerminusViewEventListener(sublime_plugin.EventListener):
 
         terminal = Terminal.from_id(view.id())
         if terminal:
-            TerminusViewEventListener.set_recent_panel(view)
+            TerminusViewEventListener.set_recent_terminal(view)
             return
 
         settings = view.settings()
@@ -388,22 +389,42 @@ class TerminusViewEventListener(sublime_plugin.EventListener):
             panel = args["panel"].replace("output.", "")
             view = window.find_output_panel(panel)
             if view and view.settings().get("terminus_view.panel_name"):
-                TerminusViewEventListener.set_recent_panel(view)
+                TerminusViewEventListener.set_recent_terminal(view)
 
     @classmethod
-    def set_recent_panel(cls, view):
+    def set_recent_terminal(cls, view):
         panel_name = view.settings().get("terminus_view.panel_name")
         if panel_name:
             window = panel_window(view)
             if window:
                 cls._recent_panel[window.id()] = panel_name
+                cls._recent_view[window.id()] = view
+        else:
+            window = view.window()
+            if window:
+                cls._recent_view[window.id()] = view
 
     @classmethod
     def recent_panel(cls, window):
         if not window:
             return
         try:
-            return cls._recent_panel[window.id()]
+            panel_name = cls._recent_panel[window.id()]
+            if window.find_output_panel(panel_name):
+                return panel_name
+        except KeyError:
+            return
+
+    @classmethod
+    def recent_view(cls, window):
+        if not window:
+            return
+        try:
+            view = cls._recent_view[window.id()]
+            if view:
+                terminal = Terminal.from_id(view.id())
+                if terminal:
+                    return view
         except KeyError:
             return
 
@@ -412,7 +433,11 @@ class TerminusViewEventListener(sublime_plugin.EventListener):
         if not window:
             return
         try:
-            return cls._active_view[window.id()]
+            view = cls._active_view[window.id()]
+            if view:
+                terminal = Terminal.from_id(view.id())
+                if terminal:
+                    return view
         except KeyError:
             return
 
@@ -474,6 +499,7 @@ class TerminusActivateCommand(sublime_plugin.TextCommand):
         view.run_command("terminus_initialize", kwargs)
         terminal = Terminal(view)
         terminal.activate(**kwargs)
+        TerminusViewEventListener.set_recent_terminal(view)
 
 
 class TerminusResetCommand(sublime_plugin.TextCommand):
@@ -740,12 +766,7 @@ class ToggleTerminusPanelCommand(sublime_plugin.WindowCommand):
         if "panel_name" in kwargs:
             panel_name = kwargs["panel_name"]
         else:
-            recent_panel = TerminusViewEventListener.recent_panel(window)
-            if recent_panel and window.find_output_panel(recent_panel):
-                panel_name = recent_panel
-            else:
-                panel_name = "Terminus"
-
+            panel_name = TerminusViewEventListener.recent_panel(window) or "Terminus"
             kwargs["panel_name"] = panel_name
 
         terminus_view = window.find_output_panel(panel_name)
@@ -769,18 +790,19 @@ class TerminusSendStringCommand(sublime_plugin.WindowCommand):
                 view = terminal.view
         else:
             view = TerminusViewEventListener.active_view(self.window)
-            if view:
-                terminal = Terminal.from_id(view.id())
-                if not terminal:
-                    view = None
             if not view:
                 view = self.get_terminus_panel(visible_only=True)
             if not view:
                 view = self.get_terminus_view(visible_only=True)
-            if not visible_only and not view:
-                view = self.get_terminus_panel()
-            if not visible_only and not view:
-                view = self.get_terminus_view()
+            if not view:
+                view = TerminusViewEventListener.recent_view(self.window)
+                # TODO: with visibility
+            if not visible_only:
+                if not view:
+                    view = self.get_terminus_panel(visible_only=False)
+                if not view:
+                    view = self.get_terminus_view(visible_only=False)
+
             if view:
                 terminal = Terminal.from_id(view.id())
             else:
@@ -832,10 +854,11 @@ class TerminusSendStringCommand(sublime_plugin.WindowCommand):
         # move the view to the top of the group
         window = view.window()
         group, _ = window.get_view_index(view)
-        if window.active_view_in_group(group) != view:
+        if window.active_view_in_group(group).id() != view.id():
             window_active_view = window.active_view()
             window.focus_view(view)
-            window.focus_view(window_active_view)
+            if window.get_view_index(window_active_view)[0] != group:
+                window.focus_view(window_active_view)
 
 
 class TerminusViewMixin:
