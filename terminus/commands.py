@@ -759,7 +759,7 @@ class TerminusSendStringCommand(sublime_plugin.WindowCommand):
     Send string to a (tagged) terminal
     """
 
-    def run(self, string, tag=None, visible_only=True):
+    def run(self, string, tag=None, visible_only=False):
         if tag:
             terminal = Terminal.from_tag(tag)
             if terminal:
