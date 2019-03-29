@@ -1004,8 +1004,8 @@ class TerminusRenderCommand(sublime_plugin.TextCommand, TerminusViewMixin):
         while row > cursor_row:
             line_region = view.line(view.text_point(row, 0))
             text = view.substr(line_region)
-            if len(text) == 0:
-                self.decolorize_line(row)
+            if len(text.strip()) == 0 and \
+                    (row not in self.colored_lines or len(self.colored_lines[row]) == 0):
                 region = view.line(view.text_point(row, 0))
                 view.erase(edit, sublime.Region(region.begin() - 1, region.end()))
                 row = row - 1
