@@ -1,18 +1,7 @@
-import sublime
-
 import time
 from wcwidth import wcwidth
 from functools import wraps
 from contextlib import contextmanager
-
-
-def panel_window(view):
-    for w in sublime.windows():
-        for panel in w.panels():
-            v = w.find_output_panel(panel.replace("output.", ""))
-            if v and v.id() == view.id():
-                return w
-    return None
 
 
 def available_panel_name(window, panel_name):
@@ -26,25 +15,6 @@ def available_panel_name(window, panel_name):
             return new_panel_name
         else:
             count += 1
-
-
-def view_size(view):
-    pixel_width, pixel_height = view.viewport_extent()
-    pixel_per_line = view.line_height()
-    pixel_per_char = view.em_width()
-
-    if pixel_per_line == 0 or pixel_per_char == 0:
-        return (0, 0)
-
-    nb_columns = int(pixel_width / pixel_per_char) - 3
-    if nb_columns < 1:
-        nb_columns = 1
-
-    nb_rows = int(pixel_height / pixel_per_line)
-    if nb_rows < 1:
-        nb_rows = 1
-
-    return (nb_rows, nb_columns)
 
 
 def highlight_key(view):

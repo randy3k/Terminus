@@ -11,7 +11,8 @@ import logging
 from .key import get_key_code
 from .terminal import Terminal, CONTINUATION
 from .ptty import segment_buffer_line
-from .utils import panel_window, available_panel_name, rev_wcwidth, highlight_key
+from .utils import available_panel_name, rev_wcwidth, highlight_key
+from .view import panel_window, panel_is_visible, view_is_visible
 
 
 KEYS = [
@@ -796,7 +797,13 @@ class TerminusSendStringCommand(sublime_plugin.WindowCommand):
                 view = self.get_terminus_view(visible_only=True)
             if not view:
                 view = TerminusViewEventListener.recent_view(self.window)
-                # TODO: with visibility
+                if visible_only and view:
+                    if view.settings().get("terminus_view.panel_name", None):
+                        if not panel_is_visible(view):
+                            view = None
+                    else:
+                        if not view_is_visible(view):
+                            view = None
             if not visible_only:
                 if not view:
                     view = self.get_terminus_panel(visible_only=False)
@@ -843,8 +850,7 @@ class TerminusSendStringCommand(sublime_plugin.WindowCommand):
         window = self.window
         for view in window.views():
             if visible_only:
-                group, _ = window.get_view_index(view)
-                if window.active_view_in_group(group) != view:
+                if not view_is_visible(view):
                     continue
             terminal = Terminal.from_id(view.id())
             if terminal:
@@ -852,13 +858,16 @@ class TerminusSendStringCommand(sublime_plugin.WindowCommand):
 
     def bring_view_to_topmost(self, view):
         # move the view to the top of the group
-        window = view.window()
-        group, _ = window.get_view_index(view)
-        if window.active_view_in_group(group).id() != view.id():
-            window_active_view = window.active_view()
-            window.focus_view(view)
-            if window.get_view_index(window_active_view)[0] != group:
-                window.focus_view(window_active_view)
+        if not view_is_visible(view):
+            window = view.window()
+            if window:
+                window_active_view = window.active_view()
+                window.focus_view(view)
+
+                # do not refocus if view and active_view are of the same group
+                group, _ = window.get_view_index(view)
+                if window.get_view_index(window_active_view)[0] != group:
+                    window.focus_view(window_active_view)
 
 
 class TerminusViewMixin:

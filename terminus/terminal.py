@@ -9,7 +9,8 @@ import threading
 from queue import Queue, Empty
 
 from .ptty import TerminalPtyProcess, TerminalScreen, TerminalStream
-from .utils import panel_window, view_size, responsive, intermission
+from .utils import responsive, intermission
+from .view import panel_window, view_size
 from .key import get_key_code
 from .image import get_image_info, image_resize
 
