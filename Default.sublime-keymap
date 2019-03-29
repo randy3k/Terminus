@@ -5,7 +5,6 @@
     // Open a terminal view at current file directory
     // {
     //     "keys": ["ctrl+alt+t"], "command": "terminus_open", "args": {
-    //         "config_name": "Default",
     //         "cwd": "${file_path:${folder}}"
     //     }
     // },

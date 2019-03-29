@@ -95,29 +95,7 @@ or by passing a custom `cmd`, say `ipython`
 ]
 ```
 
-- open terminal in a split view
-
-```json
-[
-    {
-        "keys": ["ctrl+alt+t"],
-        "command": "terminus_open",
-        "args": {
-            "config_name": "Default",
-            "pre_window_hooks": [
-                ["set_layout", {
-                    "cols": [0.0, 1.0],
-                    "rows": [0.0, 0.5, 1.0],
-                    "cells": [[0, 0, 1, 1], [0, 1, 1, 2]]
-                }],
-                ["focus_group", {"group": 1}]
-            ]
-        }
-    }
-]
-```
-
-or by applying [Origami](https://github.com/SublimeText/Origami)'s `carry_file_to_pane`
+- open terminal in a split view by using [Origami](https://github.com/SublimeText/Origami)'s `carry_file_to_pane`
 
 ```json
 [
@@ -166,29 +144,7 @@ or by passing custom `cmd`, say `ipython`
 ]
 ```
 
-- open terminal in a split view
-
-```json
-[
-    {
-        "caption": "Terminus: Open Default Shell in Split View",
-        "command": "terminus_open",
-        "args": {
-            "config_name": "Default",
-            "pre_window_hooks": [
-                ["set_layout", {
-                    "cols": [0.0, 1.0],
-                    "rows": [0.0, 0.5, 1.0],
-                    "cells": [[0, 0, 1, 1], [0, 1, 1, 2]]
-                }],
-                ["focus_group", {"group": 1}]
-            ]
-        }
-    }
-]
-```
-
-or by applying [Origami](https://github.com/SublimeText/Origami)'s `carry_file_to_pane`
+- open terminal in a split view by using [Origami](https://github.com/SublimeText/Origami)'s `carry_file_to_pane`
 
 ```json
 [

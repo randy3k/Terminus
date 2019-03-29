@@ -113,16 +113,14 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
 
         st_vars = self.window.extract_variables()
 
-        if not config_name and not cmd:
+        if config_name == "<ask>":
             self.show_configs()
             return
 
         if config_name:
             config = self.get_config_by_name(config_name)
         else:
-            config = {
-                "name": "Terminus"
-            }
+            config = self.get_config_by_name("Default")
         if cmd:
             config["cmd"] = cmd
         if env:
@@ -762,9 +760,6 @@ class ToggleTerminusPanelCommand(sublime_plugin.WindowCommand):
 
     def run(self, **kwargs):
         window = self.window
-        if "config_name" not in kwargs:
-            kwargs["config_name"] = "Default"
-
         if "panel_name" in kwargs:
             panel_name = kwargs["panel_name"]
         else:

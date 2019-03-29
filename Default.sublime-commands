@@ -12,17 +12,17 @@
     // },
     {
         "caption": "Terminus: Open Default Shell in View",
-        "command": "terminus_open",
-        "args": {"config_name": "Default"}
+        "command": "terminus_open"
     },
     {
         "caption": "Terminus: Open Default Shell in Panel",
         "command": "terminus_open",
-        "args": {"config_name": "Default", "panel_name": "Terminus"}
+        "args": {"panel_name": "Terminus"}
     },
     {
         "caption": "Terminus: List Shells",
-        "command": "terminus_open"
+        "command": "terminus_open",
+        "args": {"config_name": "<ask>"}
     },
     {
         "caption": "Terminus: Toggle Panel",
