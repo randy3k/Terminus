@@ -759,7 +759,7 @@ class TerminusSendStringCommand(sublime_plugin.WindowCommand):
     Send string to a (tagged) terminal
     """
 
-    def run(self, string, tag=None):
+    def run(self, string, tag=None, visible_only=True):
         if tag:
             terminal = Terminal.from_tag(tag)
             if terminal:
@@ -771,12 +771,12 @@ class TerminusSendStringCommand(sublime_plugin.WindowCommand):
                 if not terminal:
                     view = None
             if not view:
-                view = self.get_terminus_panel(True)
+                view = self.get_terminus_panel(visible_only=True)
             if not view:
-                view = self.get_terminus_view(True)
-            if not view:
+                view = self.get_terminus_view(visible_only=True)
+            if not visible_only and not view:
                 view = self.get_terminus_panel()
-            if not view:
+            if not visible_only and not view:
                 view = self.get_terminus_view()
             if view:
                 terminal = Terminal.from_id(view.id())
@@ -799,9 +799,9 @@ class TerminusSendStringCommand(sublime_plugin.WindowCommand):
         terminal.view.run_command("terminus_show_cursor")
         terminal.send_string(string)
 
-    def get_terminus_panel(self, visible=False):
+    def get_terminus_panel(self, visible_only=False):
         window = self.window
-        if visible:
+        if visible_only:
             active_panel = window.active_panel()
             panels = [active_panel] if active_panel else []
         else:
@@ -814,10 +814,10 @@ class TerminusSendStringCommand(sublime_plugin.WindowCommand):
                     return panel_view
         return None
 
-    def get_terminus_view(self, visible=False):
+    def get_terminus_view(self, visible_only=False):
         window = self.window
         for view in window.views():
-            if visible:
+            if visible_only:
                 group, _ = window.get_view_index(view)
                 if window.active_view_in_group(group) != view:
                     continue
