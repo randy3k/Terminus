@@ -201,13 +201,9 @@ class TerminalScreen(pyte.Screen):
 
     def reset(self):
         super().reset()
-        self.reset_history()
         self.cursor = Cursor(0, 0)
-        self._reset_callback()
-
-    def reset_history(self):
         self.history.clear()
-        self._clear_callback()
+        self._reset_callback()
 
     def resize(self, lines=None, columns=None):
         lines = lines or self.lines
@@ -396,7 +392,8 @@ class TerminalScreen(pyte.Screen):
         super().erase_in_display(how)
 
         if how == 3:
-            self.reset_history()
+            self.history.clear()
+            self._clear_callback()
 
     # def set_tab_stop(self):
     #     pass
