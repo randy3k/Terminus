@@ -309,7 +309,11 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
             }
         else:
             if "SHELL" in os.environ:
-                cmd = [os.environ["SHELL"], "-i", "-l"]
+                shell = os.environ["SHELL"]
+                if os.path.basename(shell) == "tsch":
+                    cmd = [shell, "-l"]
+                else:
+                    cmd = [shell, "-i", "-l"]
             else:
                 cmd = ["/bin/bash", "-i", "-l"]
 
