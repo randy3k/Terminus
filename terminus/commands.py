@@ -121,6 +121,7 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
             config = self.get_config_by_name(config_name)
         else:
             config = self.get_config_by_name("Default")
+
         if cmd:
             config["cmd"] = cmd
         if env:
@@ -180,9 +181,6 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
         if not os.path.isdir(cwd):
             raise Exception("{} does not exist".format(cwd))
 
-        if not title:
-            title = config["name"]
-
         # pre_window_hooks
         for hook in pre_window_hooks:
             self.window.run_command(*hook)
@@ -196,6 +194,7 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
         terminus_view.run_command(
             "terminus_activate",
             {
+                "config_name": config["name"],
                 "cmd": cmd,
                 "cwd": cwd,
                 "env": _env,
@@ -918,11 +917,11 @@ class TerminusRenderCommand(sublime_plugin.TextCommand, TerminusViewMixin):
             self.trim_trailing_spaces(edit, terminal)
             self.trim_history(edit, terminal)
             view.run_command("terminus_show_cursor")
-        if screen.title != terminal.title:
-            if screen.title:
-                terminal.title = screen.title
-            else:
-                terminal.title = terminal.default_title
+
+        if terminal.default_title:
+            terminal.title = terminal.default_title
+        elif screen.title != terminal.title:
+            terminal.title = screen.title
 
         # we should not clear dirty lines here, it shoud be done in the eventloop
         # screen.dirty.clear()

@@ -175,7 +175,7 @@ class Terminal:
         logger.debug("activating with offset %s", self.offset)
 
     def activate(
-            self, cmd, cwd=None, env=None, title=None,
+            self, config_name, cmd, cwd=None, env=None, title=None,
             panel_name=None, tag=None, auto_close=True):
 
         view = self.view
@@ -186,6 +186,7 @@ class Terminal:
             Terminal._detached_terminals.append(self)
             self.detached = True
 
+        self.config_name = config_name
         self.panel_name = panel_name
         self.tag = tag
         self.auto_close = auto_close
@@ -250,6 +251,7 @@ class Terminal:
     @title.setter
     def title(self, value):
         if not self.detached:
+            value = value if value else self.config_name
             self._title = value
             self.view.set_name(value)
 
