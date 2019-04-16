@@ -493,6 +493,9 @@ class TerminusInitializeCommand(sublime_plugin.TextCommand):
         view_settings.set("__vi_external_disable", True)
         for key, value in terminus_settings.get("view_settings", {}).items():
             view_settings.set(key, value)
+        # disable vintage
+        view_settings.set("command_mode", False)
+        view_settings.set("inverse_caret_state", False)
 
 
 class TerminusActivateCommand(sublime_plugin.TextCommand):
