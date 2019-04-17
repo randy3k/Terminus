@@ -237,9 +237,8 @@ class Terminal:
         if self.process.exitstatus == 0 and self.auto_close:
             self.view.run_command("terminus_close")
 
-        if not self.auto_close:
-            # to avoid being reactivated
-            self.view.settings().set("terminus_view.closed", True)
+        # to avoid being reactivated
+        self.view.settings().set("terminus_view.closed", True)
 
     def handle_resize(self):
         size = view_size(self.view)
