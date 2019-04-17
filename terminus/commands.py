@@ -381,6 +381,9 @@ class TerminusViewEventListener(sublime_plugin.EventListener):
         if not settings.has("terminus_view.args") or settings.get("terminus_view.detached"):
             return
 
+        if settings.has("terminus_view.closed"):
+            return
+
         kwargs = settings.get("terminus_view.args")
         if "cmd" not in kwargs:
             return
