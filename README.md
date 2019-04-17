@@ -77,7 +77,6 @@ Check the details for the arguments of `terminus_open` below.
 [
     { 
         "keys": ["ctrl+alt+t"], "command": "terminus_open", "args": {
-            "config_name": "Default",
             "cwd": "${file_path:${folder}}"
         }
     }
@@ -103,7 +102,6 @@ or by passing a custom `cmd`, say `ipython`
         "keys": ["ctrl+alt+t"],
         "command": "terminus_open",
         "args": {
-            "config_name": "Default",
             "post_window_hooks": [
                 ["carry_file_to_pane", {"direction": "down"}]
             ]
@@ -122,7 +120,6 @@ or by passing a custom `cmd`, say `ipython`
         "caption": "Terminus: Open Default Shell at Current Location",
         "command": "terminus_open",
         "args"   : {
-            "config_name": "Default",
             "cwd": "${file_path:${folder}}"
         }
     }
@@ -152,7 +149,6 @@ or by passing custom `cmd`, say `ipython`
         "caption": "Terminus: Open Default Shell in Split View",
         "command": "terminus_open",
         "args": {
-            "config_name": "Default",
             "post_window_hooks": [
                 ["carry_file_to_pane", {"direction": "down"}]
             ]
@@ -227,14 +223,14 @@ bind them to `alt+b` and `alt+f` respectively
 ```py
 window.run_command(
     "terminus_open", {
-        "config_name": None,     # the shell config name, use "Default" for the default config
+        "config_name": None,     # the shell config name, use `None` for the default config
         "cmd": None,             # the cmd to execute
         "cwd": None,             # the working directory
         "working_dir": None,     # alias of "cwd"
         "env": {},               # extra environmental variables
-        "title": None,           # title of the view
+        "title": None,           # title of the view, let terminal configures it if leave empty
         "panel_name": None,      # the name of the panel if terminal should be opened in panel
-        "tag": None,             # a tag to idFentify the terminal
+        "tag": None,             # a tag to identify the terminal
         "pre_window_hooks": [],  # a list of window hooks before opening terminal
         "post_window_hooks": [], # a list of window hooks after opening terminal
         "post_view_hooks": [],   # a list of view hooks after opening terminal
