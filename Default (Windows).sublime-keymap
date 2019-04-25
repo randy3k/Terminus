@@ -17,7 +17,7 @@
             { "key": "terminus_view.natural_keyboard" }
         ]
     },
-    { "keys": ["ctrl+alt+v"], "command": "terminus_keypress", 
+    { "keys": ["ctrl+alt+v"], "command": "terminus_keypress",
         "args": {"key": "v", "ctrl": true},
         "context":
         [
@@ -41,5 +41,13 @@
     },
 
     { "keys": ["ctrl+backspace"], "command": "terminus_delete_word", "args": {"forward": false}, "context": [{"key": "terminus_view"}] },
-    { "keys": ["ctrl+delete"], "command": "terminus_delete_word", "args": {"forward": true}, "context": [{"key": "terminus_view"}] }
+    { "keys": ["ctrl+delete"], "command": "terminus_delete_word", "args": {"forward": true}, "context": [{"key": "terminus_view"}] },
+
+    { "keys": ["ctrl+,"], "command": "terminus_edit_settings",
+        "args": {
+            "base_file": "${packages}/Terminus/Terminus.sublime-settings",
+            "default": "{\n\t$0\n}\n"
+        },
+        "context": [{"key": "terminus_view"}]
+    }
 ]
