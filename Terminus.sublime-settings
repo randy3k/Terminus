@@ -78,8 +78,11 @@
     ],
 
     // the name of the theme
-    // change it to "user" if you want to use customized theme
+    // Terminus comes with a number of themes - select a predefined theme using
+    // `Terminus Utilities: Select Theme`.
     "theme": "default",
+
+    // change `theme` to "user" if you want to use customized theme
     // see https://www.sublimetext.com/docs/3/color_schemes.html#colors for the
     // available colors
     "user_theme_colors": {
