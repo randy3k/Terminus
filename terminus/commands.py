@@ -536,14 +536,18 @@ class TerminusResetCommand(sublime_plugin.TextCommand):
                         window.focus_view(new_view)
                 else:
                     window = view.window()
+                    has_focus = view == window.active_view()
                     layout = window.get_layout()
+                    if not has_focus:
+                        window.focus_view(view)
                     new_view = window.new_file()
                     view.close()
                     new_view.run_command("terminus_initialize")
 
                     def run_attach():
                         window.run_command("set_layout", layout)
-                        window.focus_view(new_view)
+                        if has_focus:
+                            window.focus_view(new_view)
                         terminal.attach_view(new_view)
 
                 sublime.set_timeout_async(run_attach)
