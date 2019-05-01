@@ -103,9 +103,9 @@ def _get_ctrl_combination_key_code(key):
 
 
 def _get_alt_combination_key_code(key):
-    key = key.lower()
-    if key in _ALT_KEY_MAP:
-        return _ALT_KEY_MAP[key]
+    key_lo = key.lower()
+    if key_lo in _ALT_KEY_MAP:
+        return _ALT_KEY_MAP[key_lo]
 
     code = _get_key_code(key)
     return "\x1b" + code
