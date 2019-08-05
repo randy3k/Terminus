@@ -12,8 +12,7 @@ from .utils import highlight_key
 
 logger = logging.getLogger('Terminus')
 
-rex = re.compile(
-    r'''(?x)
+rex = re.compile(r'''(?x)
     \b(?:
         https?://(?:(?:[a-zA-Z0-9\-_]+(?:\.[a-zA-Z0-9\-._]+)+)|localhost)|  # http://
         www\.[a-zA-Z0-9\-_]+(?:\.[a-zA-Z0-9\-._]+)+                         # www.
@@ -21,8 +20,12 @@ rex = re.compile(
     /?[a-zA-Z0-9\-._?,!'(){}\[\]/+&@%$#=:"|~;]*                             # url path and query string
     [a-zA-Z0-9\-_~:/#@$*+=]                                                 # allowed end chars
     ''')
-rexf = re.compile(r'(?i)(?P<file>(([a-zA-Z]:)|((\\|/){1,2}\w+)\$?|\w+)((\\|/)(\w[\w]*.*))\.([a-zA-Z0-9]+))([\",\s]+)?((line\s)|\(|$)(?P<line>\d+)?(\)|$|\D)')
-rexf_local = re.compile(r'(?i)(?:(?<=\"))(?P<file>[a-zA-Z0-9\-_\./\\]+)(?:(?=\"))(?:\",)?(?:\sline\s)(?P<line>[0-9]+)')
+rexf = re.compile(
+    r'(?i)(?P<file>(([a-zA-Z]:)|((\\|/){1,2}\w+)\$?|\w+)((\\|/)(\w[\w]*.*))\.([a-zA-Z0-9]+))([\",\s]+)?((line\s)|\(|$)(?P<line>\d+)?(\)|$|\D)'
+)
+rexf_local = re.compile(
+    r'(?i)(?:(?<=\"))(?P<file>[a-zA-Z0-9\-_\./\\]+)(?:(?=\"))(?:\",)?(?:\sline\s)(?P<line>[0-9]+)'
+)
 
 URL_POPUP = """
 <style>
@@ -78,6 +81,7 @@ def find_file(view, event=None, pt=None, *args):
     def on_navigate(action):
         if action == "open":
             view.window().open_file(full_path, sublime.ENCODED_POSITION)
+
     text, line, pt, _ = args
     found = False
     for regexp in (rexf, rexf_local):
@@ -125,7 +129,6 @@ def find_something(view, event=None, pt=None):
 
 
 class TerminusMouseEventListener(sublime_plugin.EventListener):
-
     def on_text_command(self, view, command_name, args):
         terminal = Terminal.from_id(view.id())
         if not terminal:
@@ -169,11 +172,8 @@ class TerminusMouseEventListener(sublime_plugin.EventListener):
 
 class TerminusOpenContextUrlCommand(sublime_plugin.TextCommand):
     def run(self, edit, event):
-        for_open, type_ = find_something(self.view, event)
-        if type_ == 'url':
-            webbrowser.open_new_tab(for_open)
-        elif type_ == 'file':
-            self.view.window().open_file(for_open, sublime.ENCODED_POSITION)
+        func = find_something(self.view, event)[-1]
+        func('open')
 
     def is_enable(self, *args, **kwargs):
         terminal = Terminal.from_id(self.view.id())
@@ -184,7 +184,7 @@ class TerminusOpenContextUrlCommand(sublime_plugin.TextCommand):
         return terminal is not None and find_something(self.view, event)[0] is not None
 
     def description(self, event):
-        for_open, type_ = find_something(self.view, event)
+        for_open = find_something(self.view, event)[0]
         if len(for_open) > 64:
             for_open = for_open[0:64] + "..."
         return "Open " + for_open
