@@ -486,7 +486,7 @@ class TerminusInitializeCommand(sublime_plugin.TextCommand):
         view_settings.set("auto_complete", False)
         view_settings.set("draw_white_space", "none")
         view_settings.set("draw_indent_guides", False)
-        view_settings.set("caret_style", "blink")
+        # view_settings.set("caret_style", "blink")
         view_settings.set("scroll_past_end", True)
         view_settings.set("color_scheme", "Terminus.sublime-color-scheme")
         # disable bracket highligher (not working)
