@@ -58,6 +58,7 @@ Package Control.
 
 - run `Terminus: Open Default Shell in View`
 
+- [OdatNurd](https://github.com/OdatNurd) made a [great video](https://www.youtube.com/watch?v=mV0ghkMwTQc) for Terminus
 
 ## User Key Bindings
 
