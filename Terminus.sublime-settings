@@ -27,18 +27,18 @@
             "platforms": ["windows"]
         },
         {
-            "name": "PowerShell",
-            "cmd": "powershell.exe",
+            "name": "PowerShell Core",
+            "cmd": "pwsh.exe",
             "env": {},
             "enable": true,
             "default": false,
             "platforms": ["windows"]
         },
         {
-            "name": "PowerShell Core",
-            "cmd": "pwsh.exe",
+            "name": "PowerShell",
+            "cmd": "powershell.exe",
             "env": {},
-            "enable": true,
+            "enable": false,
             "default": false,
             "platforms": ["windows"]
         },
