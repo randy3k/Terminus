@@ -38,7 +38,7 @@
             "name": "PowerShell",
             "cmd": "powershell.exe",
             "env": {},
-            "enable": false,
+            "enable": true,
             "default": false,
             "platforms": ["windows"]
         },
