@@ -204,7 +204,7 @@ class Terminal:
         self.timeit = timeit
         if timeit:
             self.start_time = time.time()
-        self.default_title = title
+        self.default_title = view.name() if view.name() else title
 
         if view:
             self.title = title
