@@ -80,6 +80,16 @@ class Terminal:
             self.view.settings().set("terminus_view.detached", True)
             self.view = None
 
+    @responsive(period=1, default=True)
+    def terminal_is_hosted(self):
+        if self.detached:
+            # irrelevant if terminal is detached
+            return True
+        if self.panel_name:
+            return panel_window(self.view)
+        else:
+            return self.view.window()
+
     def _need_to_render(self):
         flag = False
         if self.screen.dirty:
@@ -100,16 +110,6 @@ class Terminal:
         data = [""]
         done = [False]
 
-        @responsive(period=1, default=True)
-        def view_is_attached():
-            if self.detached:
-                # irrelevant if terminal is detached
-                return True
-            if self.panel_name:
-                return panel_window(self.view)
-            else:
-                return self.view.window()
-
         @responsive(period=1, default=False)
         def was_resized():
             size = view_size(self.view)
@@ -125,7 +125,7 @@ class Terminal:
                 with self.lock:
                     data[0] += temp
 
-                    if done[0] or not view_is_attached():
+                    if done[0] or not self.terminal_is_hosted():
                         logger.debug("reader breaks")
                         break
 
@@ -153,7 +153,7 @@ class Terminal:
                             self.view.run_command("terminus_render")
                             self.screen.dirty.clear()
 
-                    if done[0] or not view_is_attached():
+                    if done[0] or not self.terminal_is_hosted():
                         logger.debug("renderer breaks")
                         break
 
