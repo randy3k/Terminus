@@ -423,7 +423,8 @@ class TerminusViewEventListener(sublime_plugin.EventListener):
             return
         try:
             panel_name = cls._recent_panel[window.id()]
-            if window.find_output_panel(panel_name):
+            view = window.find_output_panel(panel_name)
+            if view and Terminal.from_id(view.id()):
                 return panel_name
         except KeyError:
             return
