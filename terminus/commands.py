@@ -7,6 +7,7 @@ import sys
 import math
 import time
 import logging
+from random import random
 
 from .key import get_key_code
 from .terminal import Terminal, CONTINUATION
@@ -31,6 +32,7 @@ class TerminusCommandsEventListener(sublime_plugin.EventListener):
         return Default.paste_from_history.g_clipboard_history
 
     def on_pre_close(self, view):
+        # panel doesn't trigger on_pre_close
         terminal = Terminal.from_id(view.id())
         if terminal:
             terminal.close()
@@ -364,10 +366,14 @@ class TerminusViewEventListener(sublime_plugin.EventListener):
     _recent_view = {}
     _active_view = {}
 
-    def on_activated(self, view):
+    def on_activated_async(self, view):
         if view.settings().get("is_widget", False) and \
                 not view.settings().get("terminus_view", False):
             return
+
+        if random() > 0.7:
+            # occassionally cull zombie terminals
+            Terminal.cull_terminals()
 
         window = view.window()
         if window:
@@ -513,6 +519,7 @@ class TerminusActivateCommand(sublime_plugin.TextCommand):
     def run(self, _, **kwargs):
         view = self.view
         view.run_command("terminus_initialize", kwargs)
+        Terminal.cull_terminals()
         terminal = Terminal(view)
         terminal.activate(**kwargs)
         TerminusViewEventListener.set_recent_terminal(view)

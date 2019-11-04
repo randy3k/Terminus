@@ -59,6 +59,16 @@ class Terminal:
                 return terminal
         return None
 
+    @classmethod
+    def cull_terminals(cls):
+        terminals_to_close = []
+        for terminal in cls._terminals.values():
+            if not terminal.is_hosted():
+                terminals_to_close.append(terminal)
+
+        for terminal in terminals_to_close:
+            terminal.close()
+
     def attach_view(self, view, offset=None):
         with self.lock:
             self.view = view
@@ -81,14 +91,14 @@ class Terminal:
             self.view = None
 
     @responsive(period=1, default=True)
-    def terminal_is_hosted(self):
+    def is_hosted(self):
         if self.detached:
             # irrelevant if terminal is detached
             return True
         if self.panel_name:
-            return panel_window(self.view)
+            return panel_window(self.view) or False
         else:
-            return self.view.window()
+            return self.view.window() or False
 
     def _need_to_render(self):
         flag = False
@@ -125,7 +135,7 @@ class Terminal:
                 with self.lock:
                     data[0] += temp
 
-                    if done[0] or not self.terminal_is_hosted():
+                    if done[0] or not self.is_hosted():
                         logger.debug("reader breaks")
                         break
 
@@ -153,7 +163,7 @@ class Terminal:
                             self.view.run_command("terminus_render")
                             self.screen.dirty.clear()
 
-                    if done[0] or not self.terminal_is_hosted():
+                    if done[0] or not self.is_hosted():
                         logger.debug("renderer breaks")
                         break
 
@@ -214,19 +224,19 @@ class Terminal:
 
     def close(self):
         logger.debug("close")
-
+        self.process.terminate()
         vid = self.view.id()
         if vid in self._terminals:
             del self._terminals[vid]
-        self.process.terminate()
 
     def cleanup(self):
         logger.debug("cleanup")
         self.view.run_command("terminus_render")
 
-        # process might be still alive but view was detached
-        # make sure the process is terminated
-        self.close()
+        # process might became orphan, make sure the process is terminated
+        # however, we do not immediately from it from _terminals to allow
+        # copy, paste etc to be functional
+        self.process.terminate()
 
         self.view.run_command(
             "append",
