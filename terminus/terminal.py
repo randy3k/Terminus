@@ -224,13 +224,16 @@ class Terminal:
 
     def close(self):
         logger.debug("close")
-        self.process.terminate()
         vid = self.view.id()
         if vid in self._terminals:
             del self._terminals[vid]
+        self.process.terminate()
 
     def cleanup(self):
         logger.debug("cleanup")
+        if not self.view or self.view.id() not in self._terminals:
+            return
+
         self.view.run_command("terminus_render")
 
         # process might became orphan, make sure the process is terminated

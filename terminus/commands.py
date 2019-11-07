@@ -189,8 +189,13 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
 
         if panel_name:
             # panel_name = available_panel_name(self.window, panel_name)
-            self.window.destroy_output_panel(panel_name)
+            # self.window.destroy_output_panel(panel_name)
             terminus_view = self.window.get_output_panel(panel_name)
+            terminal = Terminal.from_id(terminus_view.id())
+            if terminal:
+                terminal.close()
+                terminus_view.settings().erase("terminus_view.closed")
+                terminus_view.settings().erase("terminus_view")
         else:
             terminus_view = self.window.new_file()
 
@@ -388,7 +393,7 @@ class TerminusViewEventListener(sublime_plugin.EventListener):
         if not settings.has("terminus_view.args") or settings.get("terminus_view.detached"):
             return
 
-        if settings.has("terminus_view.closed"):
+        if settings.get("terminus_view.closed", False):
             return
 
         kwargs = settings.get("terminus_view.args")
