@@ -186,7 +186,7 @@ class Terminal:
 
     def activate(
             self, config_name, cmd, cwd=None, env=None, title=None,
-            panel_name=None, tag=None, auto_close=True):
+            panel_name=None, tag=None, auto_close=True, cancellable=False, timeit=False):
 
         view = self.view
         if view:
@@ -200,6 +200,10 @@ class Terminal:
         self.panel_name = panel_name
         self.tag = tag
         self.auto_close = auto_close
+        self.cancellable = cancellable
+        self.timeit = timeit
+        if timeit:
+            self.start_time = time.time()
         self.default_title = title
 
         if view:
@@ -224,12 +228,12 @@ class Terminal:
 
     def close(self):
         logger.debug("close")
+        self.process.terminate()
         vid = self.view.id()
         if vid in self._terminals:
             del self._terminals[vid]
-        self.process.terminate()
 
-    def cleanup(self):
+    def cleanup(self, by_user=False):
         logger.debug("cleanup")
         if not self.view or self.view.id() not in self._terminals:
             return
@@ -241,14 +245,24 @@ class Terminal:
         # copy, paste etc to be functional
         self.process.terminate()
 
-        self.view.run_command(
-            "append",
-            {"characters": "\nprocess is terminated with return code {}.".format(
-                self.process.exitstatus)}),
-        self.view.set_read_only(True)
-
         if self.process.exitstatus == 0 and self.auto_close:
             self.view.run_command("terminus_close")
+
+        self.view.run_command("terminus_trim_trailing_lines")
+        if self.process.exitstatus is not None:
+            self.view.run_command(
+                "append",
+                {"characters": "\nprocess is terminated with return code {}.".format(
+                    self.process.exitstatus)})
+        elif by_user:
+            self.view.run_command("append", {"characters": "\nprocess is terminated by user."})
+
+        if self.process.exitstatus == 0 and self.timeit:
+            self.view.run_command(
+                "append",
+                {"characters": "\n[Finished in {:0.2f}s]".format(time.time() - self.start_time)})
+
+        self.view.set_read_only(True)
 
         # to avoid being reactivated
         self.view.settings().set("terminus_view.closed", True)

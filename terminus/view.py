@@ -1,4 +1,7 @@
 import sublime
+import sublime_plugin
+
+import re
 
 
 def panel_window(view):
@@ -46,3 +49,33 @@ def view_size(view):
         nb_rows = 1
 
     return (nb_rows, nb_columns)
+
+
+class TerminusInsertCommand(sublime_plugin.TextCommand):
+
+    def run(self, edit, point, character):
+        self.view.insert(edit, point, character)
+
+
+class TerminusTrimTrailingLinesCommand(sublime_plugin.TextCommand):
+
+    def run(self, edit):
+        view = self.view
+        lastrow = view.rowcol(view.size())[0]
+        if not self.is_empty(lastrow):
+            view.insert(edit, view.size(), "\n")
+            lastrow = lastrow + 1
+        row = lastrow
+        while row >= 1:
+            if self.is_empty(row-1):
+                R = view.line(view.text_point(row, 0))
+                a = R.a
+                b = R.b
+                view.erase(edit, sublime.Region(a-1, b))
+                row = row-1
+            else:
+                break
+
+    def is_empty(self, row):
+        view = self.view
+        return re.match(r"^\s*$", view.substr(view.line(view.text_point(row, 0))))

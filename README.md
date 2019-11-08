@@ -160,7 +160,8 @@ or by passing custom `cmd`, say `ipython`
 
 ## User Build System
 
-Use `Terminus` as a build system. For example, the following can be added to your project settings to run a bash command.
+Use `Terminus` as a build system. For example, the following can be added to your project settings to run a bash command. `terminus_exec` is a dropin replacement of the default target `exec`. It takes the exact same arguments as `terminus_open` except that some of the default values are different.
+
 
 ```json
 {
@@ -172,9 +173,8 @@ Use `Terminus` as a build system. For example, the following can be added to you
                 "bash", "-c", "echo helloworld"
             ],
             "name": "Hello World",
-            "target": "terminus_open",
-            "working_dir": "$folder",
-            "auto_close": false
+            "target": "terminus_exec",
+            "working_dir": "$folder"
         }
     ]
 }
@@ -231,11 +231,14 @@ window.run_command(
         "env": {},               # extra environmental variables
         "title": None,           # title of the view, let terminal configures it if leave empty
         "panel_name": None,      # the name of the panel if terminal should be opened in panel
+        "focus": True,           # focus to the panel
         "tag": None,             # a tag to identify the terminal
         "pre_window_hooks": [],  # a list of window hooks before opening terminal
         "post_window_hooks": [], # a list of window hooks after opening terminal
         "post_view_hooks": [],   # a list of view hooks after opening terminal
-        "auto_close": True       # auto close terminal if process exits successfully
+        "auto_close": True,      # auto close terminal if process exits successfully
+        "cancellable": False     # allow `cancel_build` command to terminate process
+        "timeit": False          # display elapsed time when the process terminates
     }
 )
 ```

@@ -24,11 +24,13 @@ else:
             del sys.modules[module_name]
 
 
-from .terminus.commands import (
+from .terminus.core import (
     TerminusCommandsEventListener,
     TerminusOpenCommand,
     TerminusCloseCommand,
     TerminusCloseAllCommand,
+    TerminusExecCommand,
+    TerminusCancelBuildCommand,
     TerminusViewEventListener,
     TerminusInitializeCommand,
     TerminusActivateCommand,
@@ -43,8 +45,7 @@ from .terminus.commands import (
     TerminusDeleteWordCommand,
     ToggleTerminusPanelCommand,
     TerminusSendStringCommand,
-    TerminusShowCursor,
-    TerminusInsertCommand
+    TerminusShowCursor
 )
 from .terminus.edit_settings import (
     TerminusEditSettingsListener,
@@ -64,22 +65,25 @@ from .terminus.theme import (
     plugin_unloaded as theme_plugin_unloaded
 )
 from .terminus.utils import settings_on_change
+from .terminus.view import TerminusInsertCommand, TerminusTrimTrailingLinesCommand
 
 
 __all__ = [
     "TerminusCommandsEventListener", "TerminusOpenCommand", "TerminusCloseCommand",
     "TerminusCloseAllCommand",
+    "TerminusExecCommand", "TerminusCancelBuildCommand",
     "TerminusViewEventListener", "TerminusInitializeCommand", "TerminusActivateCommand",
     "TerminusResetCommand", "TerminusMaximizeCommand", "TerminusMinimizeCommand",
     "TerminusRenderCommand", "TerminusKeypressCommand", "TerminusCopyCommand",
-    "TerminusPasteCommand", "TerminusShowCursor", "TerminusInsertCommand",
+    "TerminusPasteCommand", "TerminusShowCursor",
     "TerminusPasteFromHistoryCommand", "TerminusDeleteWordCommand", "ToggleTerminusPanelCommand",
     "TerminusSendStringCommand",
     "TerminusSelectThemeCommand", "TerminusGenerateThemeCommand",
     "TerminusEditSettingsListener", "TerminusEditSettingsCommand",
     "TerminusMouseEventListener", "TerminusOpenContextUrlCommand", "TerminusClickCommand",
     "TerminusOpenImageCommand",
-    "TerminusQueryContextListener"
+    "TerminusQueryContextListener",
+    "TerminusInsertCommand", "TerminusTrimTrailingLinesCommand"
 ]
 
 

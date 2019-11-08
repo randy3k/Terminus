@@ -24,7 +24,81 @@ KEYS = [
 logger = logging.getLogger('Terminus')
 
 
-class TerminusCommandsEventListener(sublime_plugin.EventListener):
+class TerminusFindTerminalMixin:
+
+    def find_terminal(self, window, tag=None, panel_only=False, visible_only=False):
+        if tag:
+            terminal = Terminal.from_tag(tag)
+            if terminal:
+                view = terminal.view
+        else:
+            view = TerminusViewEventListener.active_view(window)
+            if view and panel_only:
+                terminal = Terminal.from_id(view.id())
+                if not terminal or not terminal.panel_name:
+                    view = None
+            if not view:
+                view = self.get_terminus_panel(window, visible_only=True)
+            if not view and not panel_only:
+                view = self.get_terminus_view(window, visible_only=True)
+            if not view:
+                if panel_only:
+                    panel_name = TerminusViewEventListener.recent_panel(window)
+                    if panel_name:
+                        view = window.get_output_panel(panel_name)
+                        if view:
+                            terminal = Terminal.from_id(view.id())
+                            if not terminal or not panel_is_visible(view):
+                                view = None
+                else:
+                    view = TerminusViewEventListener.recent_view(window)
+                    if visible_only and view:
+                        terminal = Terminal.from_id(view.id())
+                        if terminal:
+                            if terminal.panel_name:
+                                if not panel_is_visible(view):
+                                    view = None
+                            else:
+                                if not view_is_visible(view):
+                                    view = None
+            if not visible_only:
+                if not view:
+                    view = self.get_terminus_panel(window, visible_only=False)
+                if not panel_only and not view:
+                    view = self.get_terminus_view(window, visible_only=False)
+
+        if view:
+            terminal = Terminal.from_id(view.id())
+        else:
+            terminal = None
+
+        return terminal
+
+    def get_terminus_panel(self, window, visible_only=False):
+        if visible_only:
+            active_panel = window.active_panel()
+            panels = [active_panel] if active_panel else []
+        else:
+            panels = window.panels()
+        for panel in panels:
+            panel_view = window.find_output_panel(panel.replace("output.", ""))
+            if panel_view:
+                terminal = Terminal.from_id(panel_view.id())
+                if terminal:
+                    return panel_view
+        return None
+
+    def get_terminus_view(self, window, visible_only=False):
+        for view in window.views():
+            if visible_only:
+                if not view_is_visible(view):
+                    continue
+            terminal = Terminal.from_id(view.id())
+            if terminal:
+                return view
+
+
+class TerminusCommandsEventListener(TerminusFindTerminalMixin, sublime_plugin.EventListener):
 
     @property
     def g_clipboard_history(self):
@@ -92,10 +166,16 @@ class TerminusCommandsEventListener(sublime_plugin.EventListener):
         if name == 'terminus_copy':
             self.g_clipboard_history.push_text(sublime.get_clipboard())
 
+    def on_window_command(self, window, command_name, args):
+        if command_name == "cancel_build":
+            terminal = self.find_terminal(window, panel_only=True, visible_only=True)
+            if terminal and terminal.cancellable:
+                return("terminus_cancel_build", {})
+
 
 class TerminusOpenCommand(sublime_plugin.WindowCommand):
-    def run(self, *args, **kwargs):
-        sublime.set_timeout_async(lambda: self.run_async(*args, **kwargs))
+    def run(self, **kwargs):
+        sublime.set_timeout_async(lambda: self.run_async(**kwargs))
 
     def run_async(
             self,
@@ -106,11 +186,14 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
             env={},
             title=None,
             panel_name=None,
+            focus=True,
             tag=None,
             pre_window_hooks=[],
             post_window_hooks=[],
             post_view_hooks=[],
-            auto_close=True):
+            auto_close=True,
+            cancellable=False,
+            timeit=False):
         config = None
 
         st_vars = self.window.extract_variables()
@@ -209,12 +292,15 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
                 "title": title,
                 "panel_name": panel_name,
                 "tag": tag,
-                "auto_close": auto_close
+                "auto_close": auto_close,
+                "cancellable": cancellable,
+                "timeit": timeit
             })
 
         if panel_name:
             self.window.run_command("show_panel", {"panel": "output.{}".format(panel_name)})
-            self.window.focus_view(terminus_view)
+            if focus:
+                self.window.focus_view(terminus_view)
 
         # post_window_hooks
         for hook in post_window_hooks:
@@ -341,13 +427,13 @@ class TerminusCloseCommand(sublime_plugin.TextCommand):
         terminal = Terminal.from_id(view.id())
         if terminal:
             terminal.close()
-        panel_name = terminal.panel_name
-        if panel_name:
-            window = panel_window(view)
-            if window:
-                window.destroy_output_panel(panel_name)
-        else:
-            view.close()
+            panel_name = terminal.panel_name
+            if panel_name:
+                window = panel_window(view)
+                if window:
+                    window.destroy_output_panel(panel_name)
+            else:
+                view.close()
 
 
 class TerminusCloseAllCommand(sublime_plugin.WindowCommand):
@@ -364,6 +450,30 @@ class TerminusCloseAllCommand(sublime_plugin.WindowCommand):
                 views.append(view)
         for view in views:
             view.run_command("terminus_close")
+
+
+# a dropbox replacement of target `exec` in sublime-build
+class TerminusExecCommand(sublime_plugin.WindowCommand):
+    def run(self, **kwargs):
+        if "panel_name" not in kwargs:
+            kwargs["panel_name"] = "Terminus Build Results"
+        if "focus" not in kwargs:
+            kwargs["focus"] = False
+        if "auto_close" not in kwargs:
+            kwargs["auto_close"] = False
+        if "cancellable" not in kwargs:
+            kwargs["cancellable"] = True
+        if "timeit" not in kwargs:
+            kwargs["timeit"] = True
+        self.window.run_command("terminus_open", kwargs)
+
+
+class TerminusCancelBuildCommand(TerminusFindTerminalMixin, sublime_plugin.WindowCommand):
+    def run(self):
+        terminal = self.find_terminal(self.window, panel_only=True, visible_only=True)
+        if not terminal:
+            return
+        terminal.cleanup(by_user=True)
 
 
 class TerminusViewEventListener(sublime_plugin.EventListener):
@@ -812,43 +922,13 @@ class ToggleTerminusPanelCommand(sublime_plugin.WindowCommand):
             window.run_command("terminus_open", kwargs)
 
 
-class TerminusSendStringCommand(sublime_plugin.WindowCommand):
+class TerminusSendStringCommand(TerminusFindTerminalMixin, sublime_plugin.WindowCommand):
     """
     Send string to a (tagged) terminal
     """
 
     def run(self, string, tag=None, visible_only=False):
-        if tag:
-            terminal = Terminal.from_tag(tag)
-            if terminal:
-                view = terminal.view
-        else:
-            view = TerminusViewEventListener.active_view(self.window)
-            if not view:
-                view = self.get_terminus_panel(visible_only=True)
-            if not view:
-                view = self.get_terminus_view(visible_only=True)
-            if not view:
-                view = TerminusViewEventListener.recent_view(self.window)
-                if visible_only and view:
-                    terminal = Terminal.from_id(view.id())
-                    if terminal:
-                        if terminal.panel_name:
-                            if not panel_is_visible(view):
-                                view = None
-                        else:
-                            if not view_is_visible(view):
-                                view = None
-            if not visible_only:
-                if not view:
-                    view = self.get_terminus_panel(visible_only=False)
-                if not view:
-                    view = self.get_terminus_view(visible_only=False)
-
-            if view:
-                terminal = Terminal.from_id(view.id())
-            else:
-                terminal = None
+        terminal = self.find_terminal(self.window, tag=tag, visible_only=visible_only)
 
         if not terminal:
             raise Exception("no terminal found")
@@ -860,36 +940,11 @@ class TerminusSendStringCommand(sublime_plugin.WindowCommand):
                 "panel": "output.{}".format(terminal.panel_name)
             })
         else:
-            self.bring_view_to_topmost(view)
+            self.bring_view_to_topmost(terminal.view)
 
         # terminal.view.run_command("terminus_render")
         terminal.view.run_command("terminus_show_cursor")
         terminal.send_string(string)
-
-    def get_terminus_panel(self, visible_only=False):
-        window = self.window
-        if visible_only:
-            active_panel = window.active_panel()
-            panels = [active_panel] if active_panel else []
-        else:
-            panels = window.panels()
-        for panel in panels:
-            panel_view = window.find_output_panel(panel.replace("output.", ""))
-            if panel_view:
-                terminal = Terminal.from_id(panel_view.id())
-                if terminal:
-                    return panel_view
-        return None
-
-    def get_terminus_view(self, visible_only=False):
-        window = self.window
-        for view in window.views():
-            if visible_only:
-                if not view_is_visible(view):
-                    continue
-            terminal = Terminal.from_id(view.id())
-            if terminal:
-                return view
 
     def bring_view_to_topmost(self, view):
         # move the view to the top of the group
@@ -904,6 +959,8 @@ class TerminusSendStringCommand(sublime_plugin.WindowCommand):
                 if window.get_view_index(window_active_view)[0] != group:
                     window.focus_view(window_active_view)
 
+
+# TODO: consolidate the following code with terminal.Terminal
 
 class TerminusViewMixin:
 
@@ -1144,9 +1201,3 @@ class TerminusShowCursor(sublime_plugin.TextCommand, TerminusViewMixin):
         y = max(offset_y, viewport_y)
         view.settings().set("terminus_view.viewport_y", y)
         view.set_viewport_position((0, y), True)
-
-
-class TerminusInsertCommand(sublime_plugin.TextCommand):
-
-    def run(self, edit, point, character):
-        self.view.insert(edit, point, character)
