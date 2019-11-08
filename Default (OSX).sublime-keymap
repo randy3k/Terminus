@@ -12,5 +12,11 @@
             "default": "{\n\t$0\n}\n"
         },
         "context": [{"key": "terminus_view"}]
+    },
+
+    { "keys": ["ctrl+c"], "command": "cancel_build",
+      "context": [
+        {"key": "terminus_view.cancellable", "operator": "equal", "operand": true}
+      ]
     }
 ]

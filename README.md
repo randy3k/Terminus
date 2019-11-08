@@ -160,7 +160,9 @@ or by passing custom `cmd`, say `ipython`
 
 ## Terminus Build System
 
-It is possible to use `Terminus` as a build system. The target `terminus_exec` is a drop in replacement of the default target `exec`. It takes the exact same arguments as `terminus_open` except that some of the default values are different.
+It is possible to use `Terminus` as a build system. The target `terminus_exec` is a drop in replacement of the default target `exec`. It takes exact same arguments as `terminus_open` except that their default values are set differently.
+
+`terminus_cancel_build` is used to cancel the build when user runs `cancel_build` triggered by <kbd>ctrl+c</kbd> (macOS) or <kbd>ctrl+break</kbd> (Windows / Linux).
 
 The following is an example of build system define in project settings that run a bash command.
 

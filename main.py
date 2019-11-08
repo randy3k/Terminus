@@ -25,13 +25,13 @@ else:
 
 
 from .terminus.core import (
-    TerminusCommandsEventListener,
+    TerminusCoreEventListener,
     TerminusOpenCommand,
     TerminusCloseCommand,
     TerminusCloseAllCommand,
     TerminusExecCommand,
     TerminusCancelBuildCommand,
-    TerminusViewEventListener,
+    TerminusRecencyEventListener,
     TerminusInitializeCommand,
     TerminusActivateCommand,
     TerminusResetCommand,
@@ -65,14 +65,18 @@ from .terminus.theme import (
     plugin_unloaded as theme_plugin_unloaded
 )
 from .terminus.utils import settings_on_change
-from .terminus.view import TerminusInsertCommand, TerminusTrimTrailingLinesCommand
+from .terminus.view import (
+    TerminusInsertCommand,
+    TerminusTrimTrailingLinesCommand,
+    TerminusNukeCommand
+)
 
 
 __all__ = [
-    "TerminusCommandsEventListener", "TerminusOpenCommand", "TerminusCloseCommand",
+    "TerminusCoreEventListener", "TerminusOpenCommand", "TerminusCloseCommand",
     "TerminusCloseAllCommand",
     "TerminusExecCommand", "TerminusCancelBuildCommand",
-    "TerminusViewEventListener", "TerminusInitializeCommand", "TerminusActivateCommand",
+    "TerminusRecencyEventListener", "TerminusInitializeCommand", "TerminusActivateCommand",
     "TerminusResetCommand", "TerminusMaximizeCommand", "TerminusMinimizeCommand",
     "TerminusRenderCommand", "TerminusKeypressCommand", "TerminusCopyCommand",
     "TerminusPasteCommand", "TerminusShowCursor",
@@ -83,7 +87,7 @@ __all__ = [
     "TerminusMouseEventListener", "TerminusOpenContextUrlCommand", "TerminusClickCommand",
     "TerminusOpenImageCommand",
     "TerminusQueryContextListener",
-    "TerminusInsertCommand", "TerminusTrimTrailingLinesCommand"
+    "TerminusInsertCommand", "TerminusTrimTrailingLinesCommand", "TerminusNukeCommand"
 ]
 
 

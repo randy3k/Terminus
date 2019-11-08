@@ -79,3 +79,10 @@ class TerminusTrimTrailingLinesCommand(sublime_plugin.TextCommand):
     def is_empty(self, row):
         view = self.view
         return re.match(r"^\s*$", view.substr(view.line(view.text_point(row, 0))))
+
+
+class TerminusNukeCommand(sublime_plugin.TextCommand):
+
+    def run(self, edit):
+        view = self.view
+        view.replace(edit, sublime.Region(0, view.size()), "")

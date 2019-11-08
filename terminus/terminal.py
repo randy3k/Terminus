@@ -263,6 +263,7 @@ class Terminal:
                 {"characters": "\n[Finished in {:0.2f}s]".format(time.time() - self.start_time)})
 
         self.view.set_read_only(True)
+        self.view.settings().set("scroll_past_end", False)
 
         # to avoid being reactivated
         self.view.settings().set("terminus_view.closed", True)
