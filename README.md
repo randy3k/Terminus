@@ -58,7 +58,8 @@ Package Control.
 
 - run `Terminus: Open Default Shell in View`
 
-- [OdatNurd](https://github.com/OdatNurd) made a [great video](https://www.youtube.com/watch?v=mV0ghkMwTQc) for Terminus
+- [OdatNurd](https://github.com/OdatNurd) made a [great video](https://www.youtube.com/watch?v=mV0ghkMwTQc) for Terminus. (PS: Since v0.3.0
+, it is recommended to use `terminal_exec` as the target of build systems, see [below](https://github.com/randy3k/Terminus#terminus-build-system)).
 
 ## User Key Bindings
 
