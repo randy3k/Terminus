@@ -166,11 +166,12 @@ class TerminusCommandsEventListener(TerminusFindTerminalMixin, sublime_plugin.Ev
         if name == 'terminus_copy':
             self.g_clipboard_history.push_text(sublime.get_clipboard())
 
-    def on_window_command(self, window, command_name, args):
-        if command_name == "cancel_build":
-            terminal = self.find_terminal(window, panel_only=True, visible_only=True)
-            if terminal and terminal.cancellable:
-                return("terminus_cancel_build", {})
+    # def on_window_command(self, window, command_name, args):
+    #     if command_name == "cancel_build":
+    #         print("on_window_command")
+    #         terminal = self.find_terminal(window, panel_only=True, visible_only=True)
+    #         if terminal and terminal.cancellable:
+    #             return("terminus_cancel_build", {})
 
 
 class TerminusOpenCommand(sublime_plugin.WindowCommand):
@@ -453,7 +454,7 @@ class TerminusCloseAllCommand(sublime_plugin.WindowCommand):
             view.run_command("terminus_close")
 
 
-# a dropbox replacement of target `exec` in sublime-build
+# a drop in replacement of target `exec` in sublime-build
 class TerminusExecCommand(sublime_plugin.WindowCommand):
     def run(self, **kwargs):
         if "panel_name" not in kwargs:
@@ -477,7 +478,7 @@ class TerminusExecCommand(sublime_plugin.WindowCommand):
 
 
 class TerminusCancelBuildCommand(TerminusFindTerminalMixin, sublime_plugin.WindowCommand):
-    def run(self):
+    def run(self, *args, **kwargs):
         terminal = self.find_terminal(self.window, panel_only=True, visible_only=True)
         if not terminal:
             return

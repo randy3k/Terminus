@@ -158,26 +158,42 @@ or by passing custom `cmd`, say `ipython`
 ]
 ```
 
-## User Build System
+## Terminus Build System
 
-Use `Terminus` as a build system. For example, the following can be added to your project settings to run a bash command. `terminus_exec` is a dropin replacement of the default target `exec`. It takes the exact same arguments as `terminus_open` except that some of the default values are different.
+It is possible to use `Terminus` as a build system. The target `terminus_exec` is a drop in replacement of the default target `exec`. It takes the exact same arguments as `terminus_open` except that some of the default values are different.
 
+The following is an example of build system define in project settings that run a bash command.
 
 ```json
 {
     "build_systems":
     [
         {
+            "name": "Hello World",
+            "target": "terminus_exec",
+            "cancel": "terminus_cancel_build",
             "cmd":
             [
                 "bash", "-c", "echo helloworld"
             ],
-            "name": "Hello World",
-            "target": "terminus_exec",
             "working_dir": "$folder"
         }
     ]
 }
+```
+
+The same example by using `*.sublime-build` file
+```json
+{
+    "cmd":
+    [
+        "bash", "-c", "echo helloworld"
+    ],
+    "target": "terminus_exec",
+    "cancel": "terminus_cancel_build",
+    "working_dir": "$folder"
+}
+
 ```
 
 ## Ctrl-W to close terminal
