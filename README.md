@@ -184,7 +184,7 @@ The following is an example of build system define in project settings that run 
 }
 ```
 
-The same example by using `*.sublime-build` file
+The same Hello World example could be specified via a `.sublime-build` file
 ```json
 {
     "cmd":
@@ -200,7 +200,7 @@ The same example by using `*.sublime-build` file
 
 ## Ctrl-W to close terminal
 
-Following keybind can be considered if one wants to use `ctrl+w` to close terminals.
+Following keybinding can be considered if one wants to use `ctrl+w` to close terminals.
 
 ```
 { 
