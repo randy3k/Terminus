@@ -249,18 +249,20 @@ class Terminal:
             self.view.run_command("terminus_close")
 
         self.view.run_command("terminus_trim_trailing_lines")
-        if self.process.exitstatus is not None:
-            self.view.run_command(
-                "append",
-                {"characters": "\nprocess is terminated with return code {}.".format(
-                    self.process.exitstatus)})
-        elif by_user:
-            self.view.run_command("append", {"characters": "\nprocess is terminated by user."})
 
-        if self.process.exitstatus == 0 and self.timeit:
+        if by_user:
+            self.view.run_command("append", {"characters": "[Cancelled]"})
+
+        elif self.process.exitstatus == 0 and self.timeit:
             self.view.run_command(
                 "append",
-                {"characters": "\n[Finished in {:0.2f}s]".format(time.time() - self.start_time)})
+                {"characters": "[Finished in {:0.2f}s]".format(time.time() - self.start_time)})
+
+        elif self.process.exitstatus is not None:
+            self.view.run_command(
+                "append",
+                {"characters": "process is terminated with return code {}.".format(
+                    self.process.exitstatus)})
 
         self.view.set_read_only(True)
         self.view.settings().set("scroll_past_end", False)
