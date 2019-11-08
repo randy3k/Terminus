@@ -457,6 +457,10 @@ class TerminusCloseAllCommand(sublime_plugin.WindowCommand):
 # a drop in replacement of target `exec` in sublime-build
 class TerminusExecCommand(sublime_plugin.WindowCommand):
     def run(self, **kwargs):
+        if "kill" in kwargs and kwargs["kill"]:
+            self.window.run_command("terminus_cancel_build")
+            return
+
         if "panel_name" not in kwargs:
             kwargs["panel_name"] = "Terminus Build Results"
         if "focus" not in kwargs:
