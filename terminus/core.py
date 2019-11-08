@@ -466,6 +466,13 @@ class TerminusExecCommand(sublime_plugin.WindowCommand):
             kwargs["cancellable"] = True
         if "timeit" not in kwargs:
             kwargs["timeit"] = True
+        for key in [
+                "shell_cmd", "file_regex", "line_regex", "encoding",
+                "quiet", "word_wrap", "syntax"]:
+            if key in kwargs:
+                del kwargs[key]
+        if "cmd" not in kwargs:
+            raise Exception("'cmd' cannot be empty")
         self.window.run_command("terminus_open", kwargs)
 
 
