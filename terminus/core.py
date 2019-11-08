@@ -21,7 +21,8 @@ KEYS = [
     "ctrl+p"
 ]
 
-BUILDRESULTS = "Terminus Build Results"
+DEFAULT_PANEL = "Terminus"
+EXEC_PANEL = "Terminus Build Results"
 
 logger = logging.getLogger('Terminus')
 
@@ -193,7 +194,7 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
             self.window.run_command(*hook)
 
         if panel_name:
-            if panel_name == "Terminus":
+            if panel_name == DEFAULT_PANEL:
                 panel_name = available_panel_name(self.window, panel_name)
 
             terminus_view = self.window.get_output_panel(panel_name)
@@ -280,7 +281,7 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
             if index == 0:
                 self.run(config_name)
             elif index == 1:
-                self.run(config_name, panel_name="Terminus")
+                self.run(config_name, panel_name=DEFAULT_PANEL)
 
     def get_config_by_name(self, name):
         default_config = self.default_config()
@@ -388,7 +389,7 @@ class TerminusExecCommand(sublime_plugin.WindowCommand):
             raise Exception("'cmd' cannot be empty")
         if "panel_name" in kwargs:
             raise Exception("'panel_name' must not be specified")
-        kwargs["panel_name"] = BUILDRESULTS
+        kwargs["panel_name"] = EXEC_PANEL
         if "focus" not in kwargs:
             kwargs["focus"] = False
         if "auto_close" not in kwargs:
@@ -410,7 +411,7 @@ class TerminusCancelBuildCommand(sublime_plugin.WindowCommand):
         window = self.window
         for panel_name in window.panels():
             panel_name = panel_name.replace("output.", "")
-            if panel_name != BUILDRESULTS:
+            if panel_name != EXEC_PANEL:
                 continue
             view = window.find_output_panel(panel_name)
             if not view:
@@ -474,7 +475,7 @@ class TerminusRecencyEventListener(sublime_plugin.EventListener):
             return
         logger.debug("set recent view: {}".format(view.id()))
         panel_name = terminal.panel_name
-        if panel_name and panel_name != BUILDRESULTS:
+        if panel_name and panel_name != EXEC_PANEL:
             window = panel_window(view)
             if window:
                 cls._recent_panel[window.id()] = panel_name
@@ -699,7 +700,7 @@ class TerminusMinimizeCommand(sublime_plugin.TextCommand):
                 else:
                     panel_name = view.settings().get("terminus_view.panel_name", None)
                     if not panel_name:
-                        panel_name = available_panel_name(window, "Terminus")
+                        panel_name = available_panel_name(window, DEFAULT_PANEL)
 
                 new_view = window.get_output_panel(panel_name)
 
@@ -858,7 +859,7 @@ class ToggleTerminusPanelCommand(sublime_plugin.WindowCommand):
         if "panel_name" in kwargs:
             panel_name = kwargs["panel_name"]
         else:
-            panel_name = TerminusRecencyEventListener.recent_panel(window) or "Terminus"
+            panel_name = TerminusRecencyEventListener.recent_panel(window) or DEFAULT_PANEL
             kwargs["panel_name"] = panel_name
 
         terminus_view = window.find_output_panel(panel_name)
@@ -929,7 +930,7 @@ class TerminusFindTerminalMixin:
             panels = window.panels()
         for panel in panels:
             panel_name = panel.replace("output.", "")
-            if panel_name == BUILDRESULTS:
+            if panel_name == EXEC_PANEL:
                 continue
             panel_view = window.find_output_panel(panel_name)
             if panel_view:
