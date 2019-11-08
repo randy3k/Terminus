@@ -271,8 +271,9 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
             self.window.run_command(*hook)
 
         if panel_name:
-            # panel_name = available_panel_name(self.window, panel_name)
-            # self.window.destroy_output_panel(panel_name)
+            if panel_name == "Terminus":
+                panel_name = available_panel_name(self.window, panel_name)
+
             terminus_view = self.window.get_output_panel(panel_name)
             terminal = Terminal.from_id(terminus_view.id())
             if terminal:
