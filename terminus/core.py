@@ -21,6 +21,8 @@ KEYS = [
     "ctrl+p"
 ]
 
+BUILDRESULTS = "Terminus Build Results"
+
 logger = logging.getLogger('Terminus')
 
 
@@ -386,7 +388,7 @@ class TerminusExecCommand(sublime_plugin.WindowCommand):
             raise Exception("'cmd' cannot be empty")
         if "panel_name" in kwargs:
             raise Exception("'panel_name' must not be specified")
-        kwargs["panel_name"] = "Terminus Build Results"
+        kwargs["panel_name"] = BUILDRESULTS
         if "focus" not in kwargs:
             kwargs["focus"] = False
         if "auto_close" not in kwargs:
@@ -407,7 +409,10 @@ class TerminusCancelBuildCommand(sublime_plugin.WindowCommand):
     def run(self, *args, **kwargs):
         window = self.window
         for panel_name in window.panels():
-            view = window.find_output_panel(panel_name.replace("output.", ""))
+            panel_name = panel_name.replace("output.", "")
+            if panel_name != BUILDRESULTS:
+                continue
+            view = window.find_output_panel(panel_name)
             if not view:
                 continue
             terminal = Terminal.from_id(view.id())
@@ -469,7 +474,7 @@ class TerminusRecencyEventListener(sublime_plugin.EventListener):
             return
         logger.debug("set recent view: {}".format(view.id()))
         panel_name = terminal.panel_name
-        if panel_name:
+        if panel_name and panel_name != BUILDRESULTS:
             window = panel_window(view)
             if window:
                 cls._recent_panel[window.id()] = panel_name
@@ -923,7 +928,10 @@ class TerminusFindTerminalMixin:
         else:
             panels = window.panels()
         for panel in panels:
-            panel_view = window.find_output_panel(panel.replace("output.", ""))
+            panel_name = panel.replace("output.", "")
+            if panel_name == BUILDRESULTS:
+                continue
+            panel_view = window.find_output_panel(panel_name)
             if panel_view:
                 terminal = Terminal.from_id(panel_view.id())
                 if terminal:
