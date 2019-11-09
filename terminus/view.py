@@ -69,11 +69,12 @@ class TerminusTrimTrailingLinesCommand(sublime_plugin.TextCommand):
         while row >= 1:
             if self.is_empty(row-1):
                 R = view.line(view.text_point(row, 0))
-                a = R.a
-                b = R.b
-                view.erase(edit, sublime.Region(a-1, b))
+                view.erase(edit, sublime.Region(R.a-1, R.b))
                 row = row-1
             else:
+                if self.is_empty(row):
+                    R = view.line(view.text_point(row, 0))
+                    view.erase(edit, sublime.Region(R.a, R.b))
                 break
 
     def is_empty(self, row):
