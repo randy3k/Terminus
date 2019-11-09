@@ -274,8 +274,12 @@ class Terminal:
         size = view_size(self.view)
         logger.debug("handle resize {} {} -> {} {}".format(
             self.screen.lines, self.screen.columns, size[0], size[1]))
-        self.process.setwinsize(*size)
-        self.screen.resize(*size)
+        try:
+            # pywinpty will rasie an runtime error
+            self.process.setwinsize(*size)
+            self.screen.resize(*size)
+        except RuntimeError:
+            pass
 
     @property
     def title(self):

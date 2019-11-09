@@ -245,6 +245,8 @@ window.run_command(
     "terminus_open", {
         "config_name": None,     # the shell config name, use `None` for the default config
         "cmd": None,             # the cmd to execute
+        "shell_cmd": None,       # a script to execute in a shell
+                                 # bash on Unix and cmd.exe on Windows
         "cwd": None,             # the working directory
         "working_dir": None,     # alias of "cwd"
         "env": {},               # extra environmental variables
@@ -256,7 +258,7 @@ window.run_command(
         "post_window_hooks": [], # a list of window hooks after opening terminal
         "post_view_hooks": [],   # a list of view hooks after opening terminal
         "auto_close": True,      # auto close terminal if process exits successfully
-        "cancellable": False     # allow `cancel_build` command to terminate process
+        "cancellable": False,     # allow `cancel_build` command to terminate process
         "timeit": False          # display elapsed time when the process terminates
     }
 )

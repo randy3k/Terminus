@@ -104,6 +104,7 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
             self,
             config_name=None,
             cmd=None,
+            shell_cmd=None,
             cwd=None,
             working_dir=None,
             env={},
@@ -129,6 +130,16 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
             config = self.get_config_by_name(config_name)
         else:
             config = self.get_config_by_name("Default")
+
+        if not cmd and shell_cmd:
+            # mimic exec target
+            if sys.platform.startswith("win"):
+                comspec = os.environ.get("COMSPEC", "cmd.exe")
+                cmd = [comspec, "/c", shell_cmd]
+            elif sys.platform == "darwin":
+                cmd = ["/usr/bin/env", "bash", "-l", "-c", shell_cmd]
+            else:
+                cmd = ["/usr/bin/env", "bash", "-c", shell_cmd]
 
         if cmd:
             config["cmd"] = cmd
@@ -385,8 +396,8 @@ class TerminusExecCommand(sublime_plugin.WindowCommand):
             self.window.run_command("terminus_cancel_build")
             return
 
-        if "cmd" not in kwargs:
-            raise Exception("'cmd' cannot be empty")
+        if "cmd" not in kwargs and "shell_cmd" not in kwargs:
+            raise Exception("'cmd' or 'shell_cmd' is required")
         if "panel_name" in kwargs:
             raise Exception("'panel_name' must not be specified")
         kwargs["panel_name"] = EXEC_PANEL
@@ -399,7 +410,7 @@ class TerminusExecCommand(sublime_plugin.WindowCommand):
         if "timeit" not in kwargs:
             kwargs["timeit"] = True
         for key in [
-                "shell_cmd", "file_regex", "line_regex", "encoding",
+                "file_regex", "line_regex", "encoding",
                 "quiet", "word_wrap", "syntax"]:
             if key in kwargs:
                 del kwargs[key]
