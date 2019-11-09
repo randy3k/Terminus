@@ -320,6 +320,11 @@ Settings`.
 }
 ```
 
+### Cmd.exe rendering issue in panel
+
+Due to a upstream bug (may winpty or cmd.exe?), there may be arbitrary empty lines inserted between prompts if the panel is too short. It seems that cmder and powershell are not affected by this bug.
+
+
 ### Acknowledgments
 
 This package won't be possible without [pyte](https://github.com/selectel/pyte), [pywinpty](https://github.com/spyder-ide/pywinpty) and [ptyprocess](https://github.com/pexpect/ptyprocess).
