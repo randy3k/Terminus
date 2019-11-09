@@ -70,7 +70,11 @@ Check the details for the arguments of `terminus_open` below.
 - toggle terminal panel
 ```json
 [
-    { "keys": ["alt+`"], "command": "toggle_terminus_panel" }
+    { 
+        "keys": ["alt+`"], "command": "toggle_terminus_panel", "args": {
+            "cwd": "${file_path:${folder}}"
+        }
+    }
 ]
 ```
 
@@ -188,15 +192,14 @@ The following is an example of build system define in project settings that run 
 The same Hello World example could be specified via a `.sublime-build` file
 ```json
 {
+    "target": "terminus_exec",
+    "cancel": "terminus_cancel_build",
     "cmd":
     [
         "bash", "-c", "echo helloworld"
     ],
-    "target": "terminus_exec",
-    "cancel": "terminus_cancel_build",
     "working_dir": "$folder"
 }
-
 ```
 
 ## Ctrl-W to close terminal
