@@ -290,9 +290,9 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
 
         def on_selection_method(index, config_name):
             if index == 0:
-                self.run(config_name)
+                self.run(config_name=config_name)
             elif index == 1:
-                self.run(config_name, panel_name=DEFAULT_PANEL)
+                self.run(config_name=config_name, panel_name=DEFAULT_PANEL)
 
     def get_config_by_name(self, name):
         default_config = self.default_config()
