@@ -71,9 +71,7 @@ Check the details for the arguments of `terminus_open` below.
 ```json
 [
     { 
-        "keys": ["alt+`"], "command": "toggle_terminus_panel", "args": {
-            "cwd": "${file_path:${folder}}"
-        }
+        "keys": ["alt+`"], "command": "toggle_terminus_panel"
     }
 ]
 ```
@@ -101,7 +99,6 @@ or by passing a custom `cmd`, say `ipython`
 ```
 
 - open terminal in a split view by using [Origami](https://github.com/SublimeText/Origami)'s `carry_file_to_pane`
-
 ```json
 [
     {
@@ -114,6 +111,16 @@ or by passing a custom `cmd`, say `ipython`
         }
     }
 ]
+```
+
+- <kbd>ctrl-w</kbd> to close terminal
+
+Following keybinding can be considered if one wants to use `ctrl+w` to close terminals.
+
+```json
+{ 
+    "keys": ["ctrl+w"], "command": "terminus_close", "context": [{ "key": "terminus_view"}]
+}
 ```
 
 ## User Commands in Palette
@@ -169,7 +176,7 @@ It is possible to use `Terminus` as a build system. The target `terminus_exec` i
 
 `terminus_cancel_build` is used to cancel the build when user runs `cancel_build` triggered by <kbd>ctrl+c</kbd> (macOS) or <kbd>ctrl+break</kbd> (Windows / Linux).
 
-The following is an example of build system define in project settings that run a bash command.
+The following is an example of build system define in project settings that run a python script
 
 ```json
 {
@@ -179,8 +186,7 @@ The following is an example of build system define in project settings that run 
             "name": "Hello World",
             "target": "terminus_exec",
             "cancel": "terminus_cancel_build",
-            "cmd":
-            [
+            "cmd": [
                 "bash", "-c", "echo helloworld"
             ],
             "working_dir": "$folder"
@@ -189,26 +195,14 @@ The following is an example of build system define in project settings that run 
 }
 ```
 
-The same Hello World example could be specified via a `.sublime-build` file
+The same Hello World example could be specified via a `.sublime-build` file. Instead of `cmd`, user could also specify `shell_cmd`. In macOS and linux, a bash shell will be invoked; and in Windows, cmd.exe will be invoked.
+
 ```json
 {
     "target": "terminus_exec",
     "cancel": "terminus_cancel_build",
-    "cmd":
-    [
-        "bash", "-c", "echo helloworld"
-    ],
+    "shell_cmd": "echo helloworld",
     "working_dir": "$folder"
-}
-```
-
-## Ctrl-W to close terminal
-
-Following keybinding can be considered if one wants to use `ctrl+w` to close terminals.
-
-```
-{ 
-    "keys": ["ctrl+w"], "command": "terminus_close", "context": [{ "key": "terminus_view"}]
 }
 ```
 
