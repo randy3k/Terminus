@@ -43,6 +43,14 @@
             "platforms": ["windows"]
         },
         {
+            "name": "Cmder",
+            "cmd": ["cmd.exe", "/k", "%CMDER_ROOT%\\vendor\\init.bat"],
+            "env": {},
+            "enable": false,
+            "default": false,
+            "platforms": ["windows"]
+        },
+        {
             "name": "WSL Login Shell",
             "cmd": "wsl.exe",
             "env": {},
