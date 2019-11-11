@@ -311,6 +311,7 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
             if name.lower() == config["name"].lower():
                 return config
 
+        # last chance
         if name.lower() == default_config["name"].lower():
             return default_config
         raise Exception("Config {} not found".format(name))
@@ -326,6 +327,21 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
             if "platforms" in config and platform not in config["platforms"]:
                 continue
             if "default" in config and config["default"]:
+                return config
+
+        default_config_name = settings.get("default_config", None)
+        if isinstance(default_config_name, dict):
+            if platform in default_config_name:
+                default_config_name = default_config_name[platform]
+            else:
+                default_config_name = None
+
+        for config in configs:
+            if "enable" in config and not config["enable"]:
+                continue
+            if "platforms" in config and platform not in config["platforms"]:
+                continue
+            if default_config_name.lower() == config["name"].lower():
                 return config
 
         return self._default_config()

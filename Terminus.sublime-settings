@@ -1,13 +1,18 @@
 {
+    // the default config, either a single config name or a platform
+    // specific dict
+    "default_config": {
+        "linux": null,    // login shell
+        "osx": null,      // login shell
+        "windows": "Command Prompt"
+    },
     // a list of available shells to execute
-    // the shell marked as "default" will the default shell
     "shell_configs": [
         {
             "name": "Bash",
             "cmd": ["bash", "-i", "-l"],
             "env": {},
             "enable": true,
-            "default": false,
             "platforms": ["linux", "osx"]
         },
         {
@@ -15,7 +20,6 @@
             "cmd": ["zsh", "-i", "-l"],
             "env": {},
             "enable": true,
-            "default": false,
             "platforms": ["linux", "osx"]
         },
         {
@@ -23,7 +27,6 @@
             "cmd": "cmd.exe",
             "env": {},
             "enable": true,
-            "default": true,
             "platforms": ["windows"]
         },
         {
@@ -31,7 +34,6 @@
             "cmd": "pwsh.exe",
             "env": {},
             "enable": true,
-            "default": false,
             "platforms": ["windows"]
         },
         {
@@ -39,7 +41,6 @@
             "cmd": "powershell.exe",
             "env": {},
             "enable": true,
-            "default": false,
             "platforms": ["windows"]
         },
         {
@@ -47,7 +48,6 @@
             "cmd": ["cmd.exe", "/k", "%CMDER_ROOT%\\vendor\\init.bat"],
             "env": {},
             "enable": false,
-            "default": false,
             "platforms": ["windows"]
         },
         {
@@ -55,7 +55,6 @@
             "cmd": "wsl.exe",
             "env": {},
             "enable": true,
-            "default": false,
             "platforms": ["windows"]
         }
     ],
