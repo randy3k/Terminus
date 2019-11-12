@@ -336,13 +336,14 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
             else:
                 default_config_name = None
 
-        for config in configs:
-            if "enable" in config and not config["enable"]:
-                continue
-            if "platforms" in config and platform not in config["platforms"]:
-                continue
-            if default_config_name.lower() == config["name"].lower():
-                return config
+        if default_config_name:
+            for config in configs:
+                if "enable" in config and not config["enable"]:
+                    continue
+                if "platforms" in config and platform not in config["platforms"]:
+                    continue
+                if default_config_name.lower() == config["name"].lower():
+                    return config
 
         return self._default_config()
 
