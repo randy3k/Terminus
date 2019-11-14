@@ -701,6 +701,20 @@ class TerminusMaximizeCommand(sublime_plugin.TextCommand):
         sublime.set_timeout_async(run_detach)
 
 
+
+def dont_close_windows_when_empty(func):
+    def f(*args, **kwargs):
+        s = sublime.load_settings('Preferences.sublime-settings')
+        close_windows_when_empty = s.get('close_windows_when_empty')
+        s.set('close_windows_when_empty', False)
+        func(*args, **kwargs)
+        if close_windows_when_empty:
+            sublime.set_timeout(
+                lambda: s.set('close_windows_when_empty', close_windows_when_empty),
+                1000)
+    return f
+
+
 class TerminusMinimizeCommand(sublime_plugin.TextCommand):
 
     def is_enabled(self):
@@ -719,6 +733,7 @@ class TerminusMinimizeCommand(sublime_plugin.TextCommand):
             all_text = view.substr(sublime.Region(0, view.size()))
             terminal.detach_view()
 
+            @dont_close_windows_when_empty
             def run_sync():
                 offset = terminal.offset
                 window = view.window()
