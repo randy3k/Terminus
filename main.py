@@ -24,6 +24,7 @@ else:
             del sys.modules[module_name]
 
 
+from .terminus.clipboard import TerminusClipboardHistoryUpdater
 from .terminus.core import (
     TerminusCoreEventListener,
     TerminusOpenCommand,

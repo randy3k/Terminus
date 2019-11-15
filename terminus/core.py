@@ -9,6 +9,7 @@ import time
 import logging
 from random import random
 
+from .clipboard import g_clipboard_history
 from .key import get_key_code
 from .terminal import Terminal, CONTINUATION
 from .ptty import segment_buffer_line
@@ -28,11 +29,6 @@ logger = logging.getLogger('Terminus')
 
 
 class TerminusCoreEventListener(sublime_plugin.EventListener):
-
-    @property
-    def g_clipboard_history(self):
-        import Default
-        return Default.paste_from_history.g_clipboard_history
 
     def on_pre_close(self, view):
         # panel doesn't trigger on_pre_close
@@ -93,7 +89,7 @@ class TerminusCoreEventListener(sublime_plugin.EventListener):
             return
 
         if name == 'terminus_copy':
-            self.g_clipboard_history.push_text(sublime.get_clipboard())
+            g_clipboard_history.push_text(sublime.get_clipboard())
 
 
 class TerminusOpenCommand(sublime_plugin.WindowCommand):
@@ -820,28 +816,23 @@ class TerminusPasteCommand(sublime_plugin.TextCommand):
 
 
 class TerminusPasteFromHistoryCommand(sublime_plugin.TextCommand):
-    @property
-    def g_clipboard_history(self):
-        import Default
-        return Default.paste_from_history.g_clipboard_history
-
     def run(self, edit):
         # provide paste choices
-        paste_list = self.g_clipboard_history.get()
+        paste_list = g_clipboard_history.get()
         keys = [x[0] for x in paste_list]
         self.view.show_popup_menu(keys, lambda choice_index: self.paste_choice(choice_index))
 
     def is_enabled(self):
-        return not self.g_clipboard_history.empty()
+        return not g_clipboard_history.empty()
 
     def paste_choice(self, choice_index):
         if choice_index == -1:
             return
         # use normal paste command
-        text = self.g_clipboard_history.get()[choice_index][1]
+        text = g_clipboard_history.get()[choice_index][1]
 
         # rotate to top
-        self.g_clipboard_history.push_text(text)
+        g_clipboard_history.push_text(text)
 
         sublime.set_clipboard(text)
         self.view.run_command("terminus_paste")
