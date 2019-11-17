@@ -662,18 +662,34 @@ class TerminusResetCommand(sublime_plugin.TextCommand):
 
 class TerminusRenameTitleCommand(sublime_plugin.TextCommand):
 
-    def run(self, _, **kwargs):
+    def run(self, _, title=None):
         view = self.view
         terminal = Terminal.from_id(view.id())
 
-        terminal.default_title = kwargs["text"]
+        terminal.default_title = title
         view.run_command("terminus_render")
 
     def input(self, _):
-        return sublime_plugin.TextInputHandler()
+        return TemrinusRenameTitleTextInputerHandler(self.view)
 
     def is_visible(self):
         return bool(Terminal.from_id(self.view.id()))
+
+
+class TemrinusRenameTitleTextInputerHandler(sublime_plugin.TextInputHandler):
+    def __init__(self, view):
+        self.view = view
+        super().__init__()
+
+    def name(self):
+        return "title"
+
+    def initial_text(self):
+        terminal = Terminal.from_id(self.view.id())
+        return terminal.default_title if terminal else ""
+
+    def placeholder(self):
+        return "new title"
 
 
 class TerminusMaximizeCommand(sublime_plugin.TextCommand):
