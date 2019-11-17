@@ -75,10 +75,12 @@ from .terminus.view import (
 
 
 __all__ = [
+    "TerminusClipboardHistoryUpdater",
     "TerminusCoreEventListener", "TerminusOpenCommand", "TerminusCloseCommand",
     "TerminusCloseAllCommand",
     "TerminusExecCommand", "TerminusCancelBuildCommand",
     "TerminusRecencyEventListener", "TerminusInitializeCommand", "TerminusActivateCommand",
+    "TerminusRenameTitleCommand",
     "TerminusResetCommand", "TerminusMaximizeCommand", "TerminusMinimizeCommand",
     "TerminusRenderCommand", "TerminusKeypressCommand", "TerminusCopyCommand",
     "TerminusPasteCommand", "TerminusShowCursor",
