@@ -21,21 +21,21 @@ def get_image_info(databytes):
     elif what == 'gif':
         width, height = struct.unpack('<HH', head[6:10])
     elif what == 'jpeg' or _is_jpg(head):
-            pos = 0
-            size = 2
-            ftype = 0
-            while not 0xc0 <= ftype <= 0xcf or ftype in (0xc4, 0xc8, 0xcc):
-                pos += size
+        pos = 0
+        size = 2
+        ftype = 0
+        while not 0xc0 <= ftype <= 0xcf or ftype in (0xc4, 0xc8, 0xcc):
+            pos += size
+            byte = databytes[pos:pos + 1]
+            while ord(byte) == 0xff:
                 byte = databytes[pos:pos + 1]
-                while ord(byte) == 0xff:
-                    byte = databytes[pos:pos + 1]
-                    pos += 1
-                ftype = ord(byte)
-                size = struct.unpack('>H', databytes[pos:pos + 2])[0] - 2
-                pos += 2
-            # We are at a SOFn block
-            pos += 1  # Skip `precision' byte.
-            height, width = struct.unpack('>HH', databytes[pos:pos + 4])
+                pos += 1
+            ftype = ord(byte)
+            size = struct.unpack('>H', databytes[pos:pos + 2])[0] - 2
+            pos += 2
+        # We are at a SOFn block
+        pos += 1  # Skip `precision' byte.
+        height, width = struct.unpack('>HH', databytes[pos:pos + 4])
 
     elif what == "bmp":
         if head[0:2].decode() != "BM":
