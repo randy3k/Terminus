@@ -660,7 +660,7 @@ class TerminusResetCommand(sublime_plugin.TextCommand):
         sublime.set_timeout_async(run_detach)
 
 
-class TerminusRenameTerminalViewCommand(sublime_plugin.TextCommand):
+class TerminusRenameTitleCommand(sublime_plugin.TextCommand):
 
     def run(self, _, **kwargs):
         view = self.view
