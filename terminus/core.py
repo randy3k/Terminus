@@ -660,6 +660,22 @@ class TerminusResetCommand(sublime_plugin.TextCommand):
         sublime.set_timeout_async(run_detach)
 
 
+class TerminusRenameTerminalViewCommand(sublime_plugin.TextCommand):
+
+    def run(self, _, **kwargs):
+        view = self.view
+        terminal = Terminal.from_id(view.id())
+
+        terminal.default_title = kwargs["text"]
+        view.run_command("terminus_render")
+
+    def input(self, _):
+        return sublime_plugin.TextInputHandler()
+
+    def is_visible(self):
+        return bool(Terminal.from_id(self.view.id()))
+
+
 class TerminusMaximizeCommand(sublime_plugin.TextCommand):
 
     def is_enabled(self):

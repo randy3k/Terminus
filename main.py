@@ -36,6 +36,7 @@ from .terminus.core import (
     TerminusInitializeCommand,
     TerminusActivateCommand,
     TerminusResetCommand,
+    TerminusRenameTerminalViewCommand,
     TerminusMaximizeCommand,
     TerminusMinimizeCommand,
     TerminusRenderCommand,

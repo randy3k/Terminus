@@ -33,6 +33,10 @@
         "command": "terminus_reset"
     },
     {
+        "caption": "Terminus: Rename Terminal View",
+        "command": "terminus_rename_terminal_view"
+    },
+    {
         "caption": "Terminus: Close",
         "command": "terminus_close"
     },
