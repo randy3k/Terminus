@@ -389,7 +389,21 @@ class TerminalScreen(pyte.Screen):
                 (how == 2 or (how == 0 and self.cursor.x == 0 and self.cursor.y == 0)):
             self.push_lines_into_history()
 
-        super().erase_in_display(how)
+        if how == 0:
+            interval = range(self.cursor.y + 1, self.lines)
+        elif how == 1:
+            interval = range(self.cursor.y)
+        elif how == 2 or how == 3:
+            interval = range(self.lines)
+
+        self.dirty.update(interval)
+        for y in interval:
+            line = self.buffer[y]
+            for x in range(self.columns):
+                line[x] = self.cursor.attrs
+
+        if how == 0 or how == 1:
+            self.erase_in_line(how)
 
         if how == 3:
             self.history.clear()

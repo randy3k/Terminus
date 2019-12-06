@@ -730,7 +730,6 @@ class TerminusMaximizeCommand(sublime_plugin.TextCommand):
         sublime.set_timeout_async(run_detach)
 
 
-
 def dont_close_windows_when_empty(func):
     def f(*args, **kwargs):
         s = sublime.load_settings('Preferences.sublime-settings')
