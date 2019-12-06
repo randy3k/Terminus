@@ -2,30 +2,34 @@ import sublime
 import sublime_plugin
 
 import os
-import json
 
 from Terminus.tools.theme_generator import generate_theme_file, ANSI_COLORS
 from .utils import settings_on_change
 
 
-THEMES = os.path.join(os.path.dirname(__file__), "..", "themes")
-
-
 class TerminusSelectThemeCommand(sublime_plugin.WindowCommand):
+    themefiles = []
+
+    def get_theme_files(self):
+        for f in sublime.find_resources("*.json"):
+            if f.startswith("Packages/Terminus/themes/"):
+                yield f.replace("Packages/Terminus/themes/", "")
+
     def run(self, theme=None):
+        if not self.themefiles:
+            self.themefiles = list(self.get_theme_files())
+
         if theme:
             if theme not in ["default", "user"]:
-                themefile = os.path.join(THEMES, "{}.json".format(theme))
-                if not os.path.isfile(themefile):
-                    raise IOError("{} not found".format(themefile))
-
+                if theme + ".json" not in self.themefiles:
+                    raise IOError("Theme '{}' not found".format(theme))
             settings = sublime.load_settings("Terminus.sublime-settings")
             settings.set("theme", theme)
             sublime.save_settings("Terminus.sublime-settings")
 
         else:
             self.themes = ["default", "user"] + \
-                sorted([f.replace(".json", "") for f in os.listdir(THEMES) if f.endswith(".json")])
+                sorted([f.replace(".json", "") for f in self.themefiles])
             settings = sublime.load_settings("Terminus.sublime-settings")
             self.original_theme = settings.get("theme", "default")
             try:
@@ -64,13 +68,9 @@ class TerminusGenerateThemeCommand(sublime_plugin.WindowCommand):
         elif theme == "default":
             variables = {}
         else:
-            themefile = os.path.join(THEMES, "{}.json".format(theme))
-            if not os.path.isfile(themefile):
-                raise IOError("{} not found".format(themefile))
-
-            with open(themefile, "r") as f:
-                theme_data = json.load(f)
-                variables = theme_data["theme_colors"]
+            content = sublime.load_resource("Packages/Terminus/themes/{}.json".format(theme))
+            theme_data = sublime.decode_value(content)
+            variables = theme_data["theme_colors"]
 
         path = os.path.join(
             sublime.packages_path(),
