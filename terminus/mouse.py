@@ -1,12 +1,13 @@
 import sublime
 import sublime_plugin
 
+import os
 import re
 import logging
 import webbrowser
 
 from .terminal import Terminal, CONTINUATION
-from .utils import highlight_key
+from .utils import highlight_key, istext
 
 logger = logging.getLogger('Terminus')
 
@@ -19,6 +20,30 @@ URL_REGEX = re.compile(
     /?[a-zA-Z0-9\-._?,!'(){}\[\]/+&@%$#=:"|~;]*                             # url path and query string
     [a-zA-Z0-9\-_~:/#@$*+=]                                                 # allowed end chars
     ''')
+
+
+FILE_REGEX = re.compile(r'''
+    (?x)
+    (?:\b|\/)(?:[a-zA-Z]:[\\/])?    # windows drive or unix root
+    (?:\\.|[^ ?%*:|"<>\n])+         # escaped space or not reserved symbols
+    (?:\.(?:[^ ?%*:|"<>.\n])+)      # must have extensions
+    (?::[0-9]+){0,2}
+    |
+    (?<=")                          # begin double quotation
+    (?:\b|\/)(?:[a-zA-Z]:[\\/])?    # windows drive or unix root
+    (?:[^?%*:|"<>\n])+              # not reserved symbols
+    (?:\.(?:[^ ?%*:|"<>.\n])+)      # must have extensions
+    (?::[0-9]+){0,2}
+    (?=")                           # end double quotation
+    |
+    (?<=')                          # begin single quotation
+    (?:\b|\/)(?:[a-zA-Z]:[\\/])?    # windows drive or unix root
+    (?:[^?%*:|"<>\n])+              # not reserved symbols
+    (?:\.(?:[^ ?%*:|"<>.\n])+)      # must have extensions
+    (?::[0-9]+){0,2}
+    (?=')                           # end single quotation
+''')
+
 
 POPUP = """
 <style>
@@ -41,7 +66,7 @@ div {
 """
 
 
-def find_thing(rex, view, event=None, pt=None):
+def find_regex(rex, view, event=None, pt=None):
     if event:
         pt = view.window_to_text((event["x"], event["y"]))
     line = view.line(pt)
@@ -66,10 +91,24 @@ def find_thing(rex, view, event=None, pt=None):
 
 
 def find_url(view, event=None, pt=None):
-    url, region = find_thing(URL_REGEX, view, event, pt)
+    url, region = find_regex(URL_REGEX, view, event, pt)
     if url and url[0:3] == "www":
         url = "http://" + url
     return url, region
+
+
+def find_file(view, event=None, pt=None):
+    # TODO: allow user file_regex
+    path, region = find_regex(FILE_REGEX, view, event, pt)
+    if not path:
+        return None, None, None, None, None
+    print(path)
+    path = path.replace("\\ ", " ").replace("\\(", "(").replace("\\)", ")")
+    m = re.match(r"^(.*?)(?::([0-9]+))?(?::([0-9]+))?$", path)
+    if not m:
+        return None, None, None, None, None
+    path, row, col = m.groups()
+    return path, row or '', col or '', "", region
 
 
 class TerminusMouseEventListener(sublime_plugin.EventListener):
@@ -88,14 +127,44 @@ class TerminusMouseEventListener(sublime_plugin.EventListener):
             return
         if hover_zone != sublime.HOVER_TEXT:
             return
-        url, url_region = find_url(view, pt=point)
+        url, region = find_url(view, pt=point)
 
-        if not url:
-            return
+        if url:
+            hover = "url"
+        else:
+            hover = "file"
+            path, row, col, _, region = find_file(view, pt=point)
+            if not path:
+                return
+            if os.path.isabs(path):
+                if not os.path.exists(path):
+                    return
+            else:
+                try:
+                    cwd = terminal.cwd()
+                except Exception:
+                    cwd = view.settings().get("terminus_view.args").get("cwd")
+                path = os.path.join(cwd, path)
+                if not os.path.exists(path):
+                    return
 
         def on_navigate(action):
             if action == "open":
-                webbrowser.open_new_tab(url)
+                if hover == "url":
+                    webbrowser.open_new_tab(url)
+                elif hover == "file":
+                    if istext(path):
+                        view.window().run_command(
+                            "open_file",
+                            {
+                                "file": path + row + col,
+                                "flags": sublime.ENCODED_POSITION | sublime.TRANSIENT
+                            }
+                        )
+                    else:
+                        view.window().run_command(
+                            "open_dir",
+                            {"dir": os.path.dirname(path), "file": os.path.basename(path)})
 
         def on_hide():
             view.erase_regions(link_key)
@@ -103,7 +172,7 @@ class TerminusMouseEventListener(sublime_plugin.EventListener):
         link_key = highlight_key(view)
         view.add_regions(
             link_key,
-            [sublime.Region(*url_region)],
+            [sublime.Region(*region)],
             "meta",
             flags=sublime.DRAW_NO_FILL | sublime.DRAW_NO_OUTLINE | sublime.DRAW_SOLID_UNDERLINE)
 

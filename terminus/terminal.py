@@ -6,6 +6,7 @@ import base64
 import logging
 import tempfile
 import threading
+import psutil
 from queue import Queue, Empty
 
 from .ptty import TerminalPtyProcess, TerminalScreen, TerminalStream
@@ -68,6 +69,9 @@ class Terminal:
 
         for terminal in terminals_to_close:
             terminal.close()
+
+    def cwd(self):
+        return psutil.Process(self.process.pid).cwd()
 
     def attach_view(self, view, offset=None):
         with self.lock:

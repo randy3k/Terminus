@@ -1,6 +1,7 @@
 {
     "windows": {
         ">3000": [
+            "psutil",
             "pyte",
             "pywinpty",
             "wcwidth"
@@ -9,6 +10,7 @@
 
     "*": {
         ">3000": [
+            "psutil",
             "ptyprocess",
             "pyte",
             "wcwidth"
