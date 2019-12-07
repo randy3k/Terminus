@@ -9,6 +9,19 @@
     //     }
     // },
 
+    { "keys": ["shift+escape"], "command": "show_panel", "args": {"panel": "output.Terminus Build Results"},
+        "context": [
+            {"key": "terminus_view.exec_panel_exists", "operand": true},
+            {"key": "terminus_view.exec_panel_visible", "operand": false}
+        ]
+    },
+    { "keys": ["shift+escape"], "command": "show_panel", "args": {"panel": "output.exec"},
+        "context": [
+            {"key": "terminus_view.exec_panel_exists", "operand": true},
+            {"key": "terminus_view.exec_panel_visible", "operand": true}
+        ]
+    },
+
     // Basic keys
     { "keys": ["up"], "command": "terminus_keypress", "args": {"key": "up"}, "context": [{"key": "terminus_view"}] },
     { "keys": ["down"], "command": "terminus_keypress", "args": {"key": "down"}, "context": [{"key": "terminus_view"}] },
