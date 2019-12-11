@@ -11,7 +11,7 @@
     //     }
     // },
     {
-        "caption": "Terminus: Open Default Shell in View",
+        "caption": "Terminus: Open Default Shell in Tab",
         "command": "terminus_open"
     },
     {
@@ -45,7 +45,7 @@
         "command": "terminus_close_all"
     },
     {
-        "caption": "Terminus: Maximize to View",
+        "caption": "Terminus: Maximize to Tab",
         "command": "terminus_maximize"
     },
     {

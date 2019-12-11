@@ -279,7 +279,7 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
             config_name = config["name"]
             sublime.set_timeout(
                 lambda: self.window.show_quick_panel(
-                    ["Open in View", "Open in Panel"],
+                    ["Open in Tab", "Open in Panel"],
                     lambda x: on_selection_method(x, config_name)
                 )
             )
