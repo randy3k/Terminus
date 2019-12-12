@@ -11,7 +11,7 @@
     //     }
     // },
     {
-        "caption": "Terminus: Open Default Shell in Tab",
+        "caption": "Terminus: Open Default Shell in Tab (View)",
         "command": "terminus_open"
     },
     {

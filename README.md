@@ -154,12 +154,12 @@ or by passing custom `cmd`, say `ipython`
 ]
 ```
 
-- open terminal in a split view by using [Origami](https://github.com/SublimeText/Origami)'s `carry_file_to_pane`
+- open terminal in a split tab by using [Origami](https://github.com/SublimeText/Origami)'s `carry_file_to_pane`
 
 ```json
 [
     {
-        "caption": "Terminus: Open Default Shell in Split View",
+        "caption": "Terminus: Open Default Shell in Split Tab",
         "command": "terminus_open",
         "args": {
             "post_window_hooks": [
