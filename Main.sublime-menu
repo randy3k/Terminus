@@ -16,7 +16,8 @@
                                 "caption": "Settings",
                                 "command": "edit_settings",
                                 "args": {
-                                    "base_file": "${packages}/Terminus/Terminus.sublime-settings"
+                                    "base_file": "${packages}/Terminus/Terminus.sublime-settings",
+                                    "default": "[\n\t$0\n]\n"
                                 }
                             },
                             {
@@ -30,9 +31,9 @@
                             },
                             {
                                 "caption": "Key Bindings",
-                                "command": "terminus_edit_settings",
+                                "command": "edit_settings",
                                 "args": {
-                                    "base_file": "${packages}/Terminus/Default ($platform).sublime-keymap",
+                                    "base_file": "${packages}/Terminus/Default.sublime-keymap",
                                     "user_file": "${packages}/User/Default ($platform).sublime-keymap",
                                     "default": "[\n\t$0\n]\n"
                                 }

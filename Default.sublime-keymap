@@ -1,4 +1,7 @@
 [
+    // You might also check the platform specific keymaps:
+    // https://github.com/randy3k/Terminus
+
     // Toggle the default shell in panel
     // { "keys": ["alt+`"], "command": "toggle_terminus_panel" },
 

@@ -49,10 +49,6 @@ from .terminus.core import (
     TerminusSendStringCommand,
     TerminusShowCursor
 )
-from .terminus.edit_settings import (
-    TerminusEditSettingsListener,
-    TerminusEditSettingsCommand
-)
 from .terminus.mouse import (
     TerminusMouseEventListener,
     TerminusOpenContextUrlCommand,
@@ -87,7 +83,6 @@ __all__ = [
     "TerminusPasteFromHistoryCommand", "TerminusDeleteWordCommand", "ToggleTerminusPanelCommand",
     "TerminusSendStringCommand",
     "TerminusSelectThemeCommand", "TerminusGenerateThemeCommand",
-    "TerminusEditSettingsListener", "TerminusEditSettingsCommand",
     "TerminusMouseEventListener", "TerminusOpenContextUrlCommand", "TerminusClickCommand",
     "TerminusOpenImageCommand",
     "TerminusQueryContextListener",
