@@ -6,7 +6,7 @@
     { "keys": ["super+left"], "command": "terminus_keypress", "args": {"key": "a", "ctrl": true}, "context": [{"key": "terminus_view"}] },
     { "keys": ["super+right"], "command": "terminus_keypress", "args": {"key": "e", "ctrl": true}, "context": [{"key": "terminus_view"}] },
 
-    { "keys": ["super+,"], "command": "terminus_edit_settings",
+    { "keys": ["super+,"], "command": "edit_settings",
         "args": {
             "base_file": "${packages}/Terminus/Terminus.sublime-settings",
             "default": "{\n\t$0\n}\n"

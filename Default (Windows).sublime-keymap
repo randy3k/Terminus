@@ -43,7 +43,7 @@
     { "keys": ["ctrl+backspace"], "command": "terminus_delete_word", "args": {"forward": false}, "context": [{"key": "terminus_view"}] },
     { "keys": ["ctrl+delete"], "command": "terminus_delete_word", "args": {"forward": true}, "context": [{"key": "terminus_view"}] },
 
-    { "keys": ["ctrl+,"], "command": "terminus_edit_settings",
+    { "keys": ["ctrl+,"], "command": "edit_settings",
         "args": {
             "base_file": "${packages}/Terminus/Terminus.sublime-settings",
             "default": "{\n\t$0\n}\n"
