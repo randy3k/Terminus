@@ -128,10 +128,13 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
             config = self.get_config_by_name("Default")
 
         if not cmd and shell_cmd:
+            if not isinstance(shell_cmd, str):
+                raise ValueError("shell_cmd should be a string")
             # mimic exec target
             if sys.platform.startswith("win"):
                 comspec = os.environ.get("COMSPEC", "cmd.exe")
-                cmd = [comspec, "/c", shell_cmd]
+                # let pywinpty handles the escapes
+                cmd = comspec + " /c " + shell_cmd
             elif sys.platform == "darwin":
                 cmd = ["/usr/bin/env", "bash", "-l", "-c", shell_cmd]
             else:
