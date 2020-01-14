@@ -146,7 +146,7 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
             config["env"] = env
 
         cmd = config["cmd"]
-        if isinstance(cmd, str):
+        if isinstance(cmd, str) and not sys.platform.startswith("win"):
             cmd = [cmd]
 
         if cmd:
