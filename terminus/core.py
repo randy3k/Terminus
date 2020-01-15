@@ -127,6 +127,9 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
         else:
             config = self.get_config_by_name("Default")
 
+        if cmd and isinstance(cmd, str):
+            cmd = [cmd]
+
         if not cmd and shell_cmd:
             if not isinstance(shell_cmd, str):
                 raise ValueError("shell_cmd should be a string")
@@ -141,16 +144,14 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
                 cmd = ["/usr/bin/env", "bash", "-c", shell_cmd]
 
         if cmd:
+            # override config's cmd
             config["cmd"] = cmd
-        if env:
-            config["env"] = env
-
         cmd = config["cmd"]
-        if isinstance(cmd, str) and not sys.platform.startswith("win"):
-            cmd = [cmd]
-
         if cmd:
             cmd = sublime.expand_variables(cmd, st_vars)
+
+        if env:
+            config["env"] = env
 
         if "env" in config:
             _env = config["env"]
