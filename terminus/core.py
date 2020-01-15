@@ -108,6 +108,8 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
             panel_name=None,
             focus=True,
             tag=None,
+            file_regex=None,
+            line_regex=None,
             pre_window_hooks=[],
             post_window_hooks=[],
             post_view_hooks=[],
@@ -231,7 +233,9 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
                 "tag": tag,
                 "auto_close": auto_close,
                 "cancellable": cancellable,
-                "timeit": timeit
+                "timeit": timeit,
+                "file_regex": file_regex,
+                "line_regex": line_regex
             })
 
         if panel_name:
@@ -426,9 +430,7 @@ class TerminusExecCommand(sublime_plugin.WindowCommand):
             kwargs["cancellable"] = True
         if "timeit" not in kwargs:
             kwargs["timeit"] = True
-        for key in [
-                "file_regex", "line_regex", "encoding",
-                "quiet", "word_wrap", "syntax"]:
+        for key in ["encoding", "quiet", "word_wrap", "syntax"]:
             if key in kwargs:
                 del kwargs[key]
         self.window.run_command("terminus_open", kwargs)
@@ -596,6 +598,13 @@ class TerminusInitializeCommand(sublime_plugin.TextCommand):
         # view_settings.set("caret_style", "blink")
         view_settings.set("scroll_past_end", True)
         view_settings.set("color_scheme", "Terminus.sublime-color-scheme")
+        # search
+        if "file_regex" in kwargs:
+            view_settings.set("result_file_regex", kwargs["file_regex"])
+        if "line_regex" in kwargs:
+            view_settings.set("result_line_regex", kwargs["line_regex"])
+        if "cwd" in kwargs:
+            view_settings.set("result_base_dir", kwargs["cwd"])
         # disable bracket highligher (not working)
         view_settings.set("bracket_highlighter.ignore", True)
         view_settings.set("bracket_highlighter.clone_locations", {})
@@ -614,7 +623,18 @@ class TerminusActivateCommand(sublime_plugin.TextCommand):
         view.run_command("terminus_initialize", kwargs)
         Terminal.cull_terminals()
         terminal = Terminal(view)
-        terminal.activate(**kwargs)
+        terminal.activate(
+            config_name=kwargs["config_name"],
+            cmd=kwargs["cmd"],
+            cwd=kwargs["cwd"],
+            env=kwargs["env"],
+            title=kwargs["title"],
+            panel_name=kwargs["panel_name"],
+            tag=kwargs["tag"],
+            auto_close=kwargs["auto_close"],
+            cancellable=kwargs["cancellable"],
+            timeit=kwargs["timeit"]
+        )
         TerminusRecencyEventListener.set_recent_terminal(view)
 
 

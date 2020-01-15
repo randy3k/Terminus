@@ -251,6 +251,9 @@ window.run_command(
         "panel_name": None,      # the name of the panel if terminal should be opened in panel
         "focus": True,           # focus to the panel
         "tag": None,             # a tag to identify the terminal
+        "file_regex": None       # the `file_regex` pattern in sublime build system
+                                 # see https://www.sublimetext.com/docs/3/build_systems.html
+        "line_regex": None       # the `file_regex` pattern in sublime build system
         "pre_window_hooks": [],  # a list of window hooks before opening terminal
         "post_window_hooks": [], # a list of window hooks after opening terminal
         "post_view_hooks": [],   # a list of view hooks after opening terminal
