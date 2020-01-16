@@ -102,7 +102,6 @@ def find_file(view, event=None, pt=None):
     path, region = find_regex(FILE_REGEX, view, event, pt)
     if not path:
         return None, None, None, None, None
-    print(path)
     path = path.replace("\\ ", " ").replace("\\(", "(").replace("\\)", ")")
     m = re.match(r"^(.*?)(?::([0-9]+))?(?::([0-9]+))?$", path)
     if not m:
@@ -153,6 +152,8 @@ class TerminusMouseEventListener(sublime_plugin.EventListener):
                 if hover == "url":
                     webbrowser.open_new_tab(url)
                 elif hover == "file":
+                    if not os.path.isfile(path):
+                        return
                     if istext(path):
                         view.window().run_command(
                             "open_file",

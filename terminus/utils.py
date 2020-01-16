@@ -120,4 +120,4 @@ def settings_on_change(settings, keys, clear=True):
 def istext(filename):
     s = open(filename, 'rb').read(512)
     t = s.decode("utf-8", "ignore").encode()
-    return len(t) / len(s) > 0.9
+    return len(t) == len(s)
