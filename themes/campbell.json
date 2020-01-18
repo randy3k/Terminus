@@ -1,0 +1,23 @@
+{
+    "name": "Campbell",
+    "theme_colors": {
+        "foreground": "#cccccc",
+        "background": "#0c0c0c",
+        "black": "#0c0c0c",
+        "red": "#c50f1f",
+        "green": "#13a10e",
+        "brown": "#c19c00",
+        "blue": "#0037da",
+        "magenta": "#881798",
+        "cyan": "#3a96dd",
+        "white": "#cccccc",
+        "light_black": "#767676",
+        "light_red": "#e74856",
+        "light_green": "#16c60c",
+        "light_brown": "#f9f1a5",
+        "light_blue": "#3b78ff",
+        "light_magenta": "#b4009e",
+        "light_cyan": "#61d6d6",
+        "light_white": "#f2f2f2"
+    }
+}

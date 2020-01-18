@@ -1,0 +1,23 @@
+{
+    "name": "Brackets Dark",
+    "theme_colors": {
+        "foreground": "#dddddd",
+        "background": "#1d1f21",
+        "black": "#000000",
+        "red": "#dc322f",
+        "green": "#229922",
+        "brown": "#d89333",
+        "blue": "#6c9ef8",
+        "magenta": "#8087e5",
+        "cyan": "#6c9ef8",
+        "white": "#ffffff",
+        "light_black": "#767676",
+        "light_red": "#dd4444",
+        "light_green": "#229922",
+        "light_brown": "#d3cd69",
+        "light_blue": "#6c9ef8",
+        "light_magenta": "#b77fdb",
+        "light_cyan": "#6c9ef8",
+        "light_white": "#ffffff"
+    }
+}
