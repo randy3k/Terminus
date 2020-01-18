@@ -1,0 +1,23 @@
+{
+    "name": "Brackets Light",
+    "theme_colors": {
+        "foreground": "#535353",
+        "background": "#f8f8f8",
+        "black": "#000000",
+        "red": "#dc322f",
+        "green": "#229922",
+        "brown": "#e88501",
+        "blue": "#446fbd",
+        "magenta": "#6c71c4",
+        "cyan": "#446fbd",
+        "white": "#ffffff",
+        "light_black": "#949494",
+        "light_red": "#dd4444",
+        "light_green": "#229922",
+        "light_brown": "#e88501",
+        "light_blue": "#446fbd",
+        "light_magenta": "#8757ad",
+        "light_cyan": "#446fbd",
+        "light_white": "#ffffff"
+    }
+}
