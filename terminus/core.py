@@ -129,8 +129,8 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
         else:
             config = self.get_config_by_name("Default")
 
-        if cmd and isinstance(cmd, str):
-            cmd = [cmd]
+        if cmd and shell_cmd:
+            raise ValueError("both cmd and shell_cmd are not empty")
 
         if not cmd and shell_cmd:
             if not isinstance(shell_cmd, str):
@@ -138,17 +138,20 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
             # mimic exec target
             if sys.platform.startswith("win"):
                 comspec = os.environ.get("COMSPEC", "cmd.exe")
-                # let pywinpty handles the escapes
                 cmd = comspec + " /c " + shell_cmd
             elif sys.platform == "darwin":
                 cmd = ["/usr/bin/env", "bash", "-l", "-c", shell_cmd]
             else:
                 cmd = ["/usr/bin/env", "bash", "-c", shell_cmd]
 
-        if cmd:
-            # override config's cmd
-            config["cmd"] = cmd
-        cmd = config["cmd"]
+        if not cmd:
+            cmd = config["cmd"]
+
+        # let upstream to handle string type cmd if shell_cmd
+        if not shell_cmd:
+            if cmd and isinstance(cmd, str):
+                cmd = [cmd]
+
         if cmd:
             cmd = sublime.expand_variables(cmd, st_vars)
 
