@@ -210,7 +210,7 @@ The same Hello World example could be specified via a `.sublime-build` file. Ins
 
 - Bash: add the following in `.bash_profile` or `.bashrc`
 ```
-if [ $TERM_PROGRAM == "Terminus-Sublime" ]; then
+if [ "$TERM_PROGRAM" == "Terminus-Sublime" ]; then
     bind '"\e[1;3C": forward-word'
     bind '"\e[1;3D": backward-word'
 fi
@@ -218,7 +218,7 @@ fi
 
 - Zsh: add the following in `.zshrc`
 ```
-if [ $TERM_PROGRAM = "Terminus-Sublime" ]; then
+if [ "$TERM_PROGRAM" = "Terminus-Sublime" ]; then
     bindkey "\e[1;3C" forward-word
     bindkey "\e[1;3D" backward-word
 fi
