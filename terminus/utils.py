@@ -2,6 +2,18 @@ import time
 from wcwidth import wcwidth
 from functools import wraps
 from contextlib import contextmanager
+import shlex
+
+
+def shlex_split(shell_cmd):
+    # it is a version of shlex.split which supports trimming quotes and windows path
+    args = shlex.split(shell_cmd, posix=False)
+    for i, a in enumerate(args):
+        if a.startswith('"') and a.endswith('"'):
+            args[i] = a[1:-1]
+        elif a.startswith("'") and a.endswith("'"):
+            args[i] = a[1:-1]
+    return args
 
 
 def available_panel_name(window, panel_name):
