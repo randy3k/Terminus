@@ -8,6 +8,8 @@ import math
 import time
 import logging
 from random import random
+import shlex
+from subprocess import list2cmdline
 
 from .clipboard import g_clipboard_history
 from .key import get_key_code
@@ -138,7 +140,13 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
             # mimic exec target
             if sys.platform.startswith("win"):
                 comspec = os.environ.get("COMSPEC", "cmd.exe")
-                cmd = comspec + " /c " + shell_cmd
+                shell_cmd_args = shlex.split(shell_cmd, posix=False)
+                if list2cmdline(shell_cmd_args) == shell_cmd:
+                    # shell_cmd is a path to a binary
+                    cmd = [comspec, "/c", shell_cmd]
+                else:
+                    # sublime shell_cmd are posix compatible
+                    cmd = [comspec, "/c"] + shlex.split(shell_cmd, posix=True)
             elif sys.platform == "darwin":
                 cmd = ["/usr/bin/env", "bash", "-l", "-c", shell_cmd]
             else:
@@ -147,10 +155,8 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
         if not cmd:
             cmd = config["cmd"]
 
-        # let upstream to handle string type cmd if shell_cmd
-        if not shell_cmd:
-            if cmd and isinstance(cmd, str):
-                cmd = [cmd]
+        if cmd and isinstance(cmd, str):
+            cmd = [cmd]
 
         if cmd:
             cmd = sublime.expand_variables(cmd, st_vars)
