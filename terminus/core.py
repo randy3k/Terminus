@@ -873,6 +873,45 @@ class TerminusPasteCommand(sublime_plugin.TextCommand):
             terminal.send_key("bracketed_paste_mode_end")
 
 
+class TerminusPasteSelectionCommand(sublime_plugin.WindowCommand):
+
+    def run(self, **kwargs):
+        window = self.window
+        if "panel_name" in kwargs:
+            panel_name = kwargs["panel_name"]
+        else:
+            panel_name = TerminusRecencyEventListener.recent_panel(window) or DEFAULT_PANEL
+
+        terminus_view = window.find_output_panel(panel_name)
+        if not terminus_view:
+            return
+
+        window.run_command("show_panel", {"panel": "output.{}".format(panel_name)})
+        window.focus_view(terminus_view)
+
+        terminal = Terminal.from_id(terminus_view.id())
+        window_view = window.active_view()
+        if not terminal or not window_view:
+            return
+
+        bracketed = kwargs["bracketed"] if "bracketed" in kwargs else terminal.bracketed_paste_mode_enabled()
+        if bracketed:
+            terminal.send_key("bracketed_paste_mode_start")
+
+        selection = "\n".join([window_view.substr(s) for s in window_view.sel()])
+
+        # terminus_view.run_command("terminus_render")
+        terminus_view.run_command("terminus_show_cursor")
+
+        terminal.send_string(selection)
+
+        if bracketed:
+            terminal.send_key("bracketed_paste_mode_end")
+
+        if "finish_key" in kwargs:
+            terminal.send_string(get_key_code(kwargs["finish_key"]), normalized=False)
+
+
 class TerminusPasteFromHistoryCommand(sublime_plugin.TextCommand):
     def run(self, edit):
         # provide paste choices

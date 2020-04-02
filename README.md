@@ -124,6 +124,16 @@ Following keybinding can be considered if one wants to use `ctrl+w` to close ter
 }
 ```
 
+- <kbd>alt-w</kbd> to send selected text into terminal
+
+You can change `finish_key` option to any other key, or even remove it from keybinding, to not send anything at the end of selection.
+
+```json
+{
+    "keys": ["alt+w"], "command": "terminus_paste_selection", "args": {"finish_key": "enter"}
+}
+```
+
 ## User Commands in Palette
 
 - run `Preferences: Terminus Command Palette`. Check the details for the arguments of `terminus_open` below
