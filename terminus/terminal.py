@@ -269,8 +269,16 @@ class Terminal:
                 {"characters": "process is terminated with return code {}.".format(
                     self.process.exitstatus)})
 
-        self.view.set_read_only(True)
-        self.view.settings().set("scroll_past_end", False)
+        self.view.sel().clear()
+
+        if not self.panel_name and self.view.settings().get("result_file_regex"):
+            # if it is a tab based build, we will to refocus to enable next_result
+            window = self.view.window()
+            if window:
+                active_view = window.active_view()
+                self.view.window().focus_view(self.view)
+                if active_view:
+                    self.view.window().focus_view(active_view)
 
         # to avoid being reactivated
         self.view.settings().set("terminus_view.closed", True)
