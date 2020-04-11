@@ -137,7 +137,8 @@ def plugin_loaded():
     )
 
     if settings.get("theme", "default") != "default":
-        if not os.path.isfile(path) or not os.path.isfile(path256):
+        if (not os.path.isfile(path) or
+                (settings.get("256color", False) and not os.path.isfile(path256))):
             sublime.set_timeout(
                 lambda: sublime.active_window().run_command("terminus_generate_theme"),
                 100)
