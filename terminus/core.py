@@ -599,7 +599,7 @@ class TerminusInitializeCommand(sublime_plugin.TextCommand):
         view_settings.set("draw_indent_guides", False)
         # view_settings.set("caret_style", "blink")
         view_settings.set("scroll_past_end", True)
-        view_settings.set("color_scheme", "Terminus.sublime-color-scheme")
+        view_settings.set("color_scheme", "Terminus.hidden-color-scheme")
         # search
         if "file_regex" in kwargs:
             view_settings.set("result_file_regex", kwargs["file_regex"])

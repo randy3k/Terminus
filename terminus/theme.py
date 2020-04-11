@@ -76,13 +76,13 @@ class TerminusGenerateThemeCommand(sublime_plugin.WindowCommand):
             sublime.packages_path(),
             "User",
             "Terminus",
-            "Terminus.sublime-color-scheme"
+            "Terminus.hidden-color-scheme"
         )
 
         path256 = os.path.join(
             sublime.packages_path(),
             "User",
-            "Terminus.sublime-color-scheme"
+            "Terminus.hidden-color-scheme"
         )
 
         if remove:
@@ -113,7 +113,9 @@ def plugin_loaded():
     # this is a hack to remove the deprecated sublime-color-scheme files
     deprecated_paths = [
         os.path.join(sublime.packages_path(), "User", "Console.sublime-color-scheme"),
-        os.path.join(sublime.packages_path(), "User", "SublimelyTerminal.sublime-color-scheme")
+        os.path.join(sublime.packages_path(), "User", "SublimelyTerminal.sublime-color-scheme"),
+        os.path.join(sublime.packages_path(), "User", "Terminus.sublime-color-scheme"),
+        os.path.join(sublime.packages_path(), "User", "Terminus", "Terminus.sublime-color-scheme")
     ]
     for deprecated_path in deprecated_paths:
         if os.path.isfile(deprecated_path):
@@ -125,12 +127,20 @@ def plugin_loaded():
         sublime.packages_path(),
         "User",
         "Terminus",
-        "Terminus.sublime-color-scheme"
+        "Terminus.hidden-color-scheme"
+    )
+
+    path256 = os.path.join(
+        sublime.packages_path(),
+        "User",
+        "Terminus.hidden-color-scheme"
     )
 
     if settings.get("theme", "default") != "default":
-        if not os.path.isfile(path):
-            sublime.active_window().run_command("terminus_generate_theme")
+        if not os.path.isfile(path) or not os.path.isfile(path256):
+            sublime.set_timeout(
+                lambda: sublime.active_window().run_command("terminus_generate_theme"),
+                100)
 
     settings_on_change(settings, ["256color", "user_theme_colors", "theme"])(
         lambda _: sublime.active_window().run_command("terminus_generate_theme")

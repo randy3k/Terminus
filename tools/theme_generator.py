@@ -122,7 +122,7 @@ def generate_theme_file(
 
 if __name__ == "__main__":
 
-    path = os.path.join(os.path.dirname(__file__), "..", "Terminus.sublime-color-scheme")
+    path = os.path.join(os.path.dirname(__file__), "..", "Terminus.hidden-color-scheme")
     variables = {
         "background": "#262626",
         "foreground": "#ffffff",
