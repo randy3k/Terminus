@@ -253,11 +253,16 @@ class Terminal:
         if by_user:
             self.view.run_command("append", {"characters": "[Cancelled]"})
 
-        elif self.process.exitstatus == 0 and self.timeit:
-            self.view.run_command(
-                "append",
-                {"characters": "[Finished in {:0.2f}s]".format(time.time() - self.start_time)})
-
+        elif self.timeit:
+            if self.process.exitstatus == 0:
+                self.view.run_command(
+                    "append",
+                    {"characters": "[Finished in {:0.2f}s]".format(time.time() - self.start_time)})
+            else:
+                self.view.run_command(
+                    "append",
+                    {"characters": "[Finished in {:0.2f}s with exit code {}]".format(
+                        time.time() - self.start_time, self.process.exitstatus)})
         elif self.process.exitstatus is not None:
             self.view.run_command(
                 "append",
