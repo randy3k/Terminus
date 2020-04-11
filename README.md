@@ -58,9 +58,15 @@ Package Control.
 
 - run `Terminus: Open Default Shell in Tab`
 
-- [OdatNurd](https://github.com/OdatNurd) has made serval videos on Terminus. See, for examples,
+- [OdatNurd](https://github.com/OdatNurd) has made several videos on Terminus. See, for examples,
     - https://www.youtube.com/watch?v=etIJMVIvVgg (most up to date)
     - https://www.youtube.com/watch?v=mV0ghkMwTQc
+
+
+## Shell configurations
+
+Terminus comes with several shell configurations. The settings file should be quite self explanatory. 
+
 
 ## User Key Bindings
 
