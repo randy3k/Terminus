@@ -238,6 +238,9 @@ class Terminal:
         if not self.view or self.view.id() not in self._terminals:
             return
 
+        if self.view.settings().get("terminus_view.closed"):
+            return
+
         self.view.run_command("terminus_render")
 
         # process might became orphan, make sure the process is terminated
