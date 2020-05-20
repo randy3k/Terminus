@@ -77,6 +77,10 @@
     // decreasing this value may improve performance
     "scrollback_history_size": 10000,
 
+    // set a minimum or maximum terminal width in characters
+    "min_columns": 20,
+    "max_columns": 500,
+
     // Windows and Linux only
     // use ctrl+c to copy
     // use ctrl+v to paste  (use ctrl+alt+v to send ctrl+v instead)
