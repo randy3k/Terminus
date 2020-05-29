@@ -47,21 +47,31 @@ def get_image_info(databytes):
 
 
 def image_resize(img_width, img_height, width, height, em_width, max_width, preserve_ratio=1):
-
     if width:
         if width.isdigit():
             width = int(width) * em_width
         elif width[-1] == "%":
-            width = int(img_width * int(width[:-1]) / 100)
-    else:
-        width = img_width
+            width = int(max_width * int(width[:-1]) / 100)
+        elif width[-2:] == "px":
+            width = int(width[:-2])
 
     if height:
         if height.isdigit():
             height = int(height) * em_width
         elif height[-1] == "%":
-            height = int(img_height * int(height[:-1]) / 100)
-    else:
+            max_height = max_width * img_height / img_width
+            height = int(max_height * int(height[:-1]) / 100)
+        elif height[-2:] == "px":
+            height = int(height[:-2])
+
+    if width and not height:
+        height = img_height * width / img_width
+    if height and not width:
+        width = img_width * height / img_height
+
+    if not width:
+        width = img_width
+    if not height:
         height = img_height
 
     ratio = img_width / img_height
