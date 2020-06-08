@@ -600,6 +600,14 @@ class TerminusInitializeCommand(sublime_plugin.TextCommand):
         # view_settings.set("caret_style", "blink")
         view_settings.set("scroll_past_end", True)
         view_settings.set("color_scheme", "Terminus.hidden-color-scheme")
+
+        max_columns = terminus_settings.get("max_columns")
+        if max_columns:
+            rulers = view_settings.get("rulers", [])
+            if max_columns not in rulers:
+                rulers.append(max_columns)
+                view_settings.set("rulers", rulers)
+
         # search
         if "file_regex" in kwargs:
             view_settings.set("result_file_regex", kwargs["file_regex"])
