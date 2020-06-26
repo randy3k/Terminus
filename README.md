@@ -231,7 +231,7 @@ if [ "$TERM_PROGRAM" = "Terminus-Sublime" ]; then
 fi
 ```
 
-Some programs, such as julia, does not recognize the standard keycodes for `alt+left` and `alt+right`. You could
+Some programs, such as julia, do not recognize the standard keycodes for `alt+left` and `alt+right`. You could
 bind them to `alt+b` and `alt+f` respectively
 ```json
 [
