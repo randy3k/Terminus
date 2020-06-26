@@ -65,7 +65,7 @@ Package Control.
 
 ## Shell configurations
 
-Terminus comes with several shell configurations. The settings file should be quite self explanatory. 
+Terminus comes with several shell configurations. The settings file should be quite self explanatory.
 
 
 ## User Key Bindings
@@ -77,7 +77,7 @@ Check the details for the arguments of `terminus_open` below.
 - toggle terminal panel
 ```json
 [
-    { 
+    {
         "keys": ["alt+`"], "command": "toggle_terminus_panel"
     }
 ]
@@ -86,7 +86,7 @@ Check the details for the arguments of `terminus_open` below.
 - open a terminal view at current file directory
 ```json
 [
-    { 
+    {
         "keys": ["ctrl+alt+t"], "command": "terminus_open", "args": {
             "cwd": "${file_path:${folder}}"
         }
@@ -96,7 +96,7 @@ Check the details for the arguments of `terminus_open` below.
 or by passing a custom `cmd`, say `ipython`
 ```json
 [
-    { 
+    {
         "keys": ["ctrl+alt+t"], "command": "terminus_open", "args": {
             "cmd": "ipython",
             "cwd": "${file_path:${folder}}"
@@ -125,7 +125,7 @@ or by passing a custom `cmd`, say `ipython`
 Following keybinding can be considered if one wants to use `ctrl+w` to close terminals.
 
 ```json
-{ 
+{
     "keys": ["ctrl+w"], "command": "terminus_close", "context": [{ "key": "terminus_view"}]
 }
 ```
@@ -231,7 +231,7 @@ if [ "$TERM_PROGRAM" = "Terminus-Sublime" ]; then
 fi
 ```
 
-Some programs, such as julia, does not recognize the standard keycodes for `alt+left` and `alt+right`. You could
+Some programs, such as julia, do not recognize the standard keycodes for `alt+left` and `alt+right`. You could
 bind them to `alt+b` and `alt+f` respectively
 ```json
 [
@@ -274,7 +274,7 @@ window.run_command(
 The fields `cmd` and `cwd` understand Sublime Text build system [variables](https://www.sublimetext.com/docs/3/build_systems.html#variables).
 
 
-- the setting `view.settings().get("terminus_view.tag")` can be used to identify the terminal and 
+- the setting `view.settings().get("terminus_view.tag")` can be used to identify the terminal and
 
 - keybind can be binded with specific tagged terminal
 
@@ -290,7 +290,7 @@ The fields `cmd` and `cwd` understand Sublime Text build system [variables](http
 
 ```py
 window.run_command(
-    "terminus_send_string", 
+    "terminus_send_string",
     {
         "string": "ls\n",
         "tag": "<YOUR_TAG>"        # ignore this or set it to None to send text to the first terminal found
