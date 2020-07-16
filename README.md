@@ -202,7 +202,20 @@ The following is an example of build system define in project settings that run 
 }
 ```
 
-The same Hello World example could be specified via a `.sublime-build` file. Instead of `cmd`, user could also specify `shell_cmd`. In macOS and linux, a bash shell will be invoked; and in Windows, cmd.exe will be invoked.
+The same Hello World example could be specified via a `.sublime-build` file.
+
+```json
+{
+    "target": "terminus_exec",
+    "cancel": "terminus_cancel_build",
+    "cmd": [
+        "bash", "-c", "echo helloworld"
+    ],
+    "working_dir": "$folder"
+}
+```
+
+Instead of `cmd`, user could also specify `shell_cmd`. In macOS and linux, a bash shell will be invoked; and in Windows, cmd.exe will be invoked.
 
 ```json
 {
@@ -216,20 +229,22 @@ The same Hello World example could be specified via a `.sublime-build` file. Ins
 ## Alt-Left/Right to move between words (Unix)
 
 - Bash: add the following in `.bash_profile` or `.bashrc`
-```
-if [ "$TERM_PROGRAM" == "Terminus-Sublime" ]; then
-    bind '"\e[1;3C": forward-word'
-    bind '"\e[1;3D": backward-word'
-fi
-```
+
+    ```sh
+    if [ "$TERM_PROGRAM" == "Terminus-Sublime" ]; then
+        bind '"\e[1;3C": forward-word'
+        bind '"\e[1;3D": backward-word'
+    fi
+    ```
 
 - Zsh: add the following in `.zshrc`
-```
-if [ "$TERM_PROGRAM" = "Terminus-Sublime" ]; then
-    bindkey "\e[1;3C" forward-word
-    bindkey "\e[1;3D" backward-word
-fi
-```
+
+    ```sh
+    if [ "$TERM_PROGRAM" = "Terminus-Sublime" ]; then
+        bindkey "\e[1;3C" forward-word
+        bindkey "\e[1;3D" backward-word
+    fi
+    ```
 
 Some programs, such as julia, do not recognize the standard keycodes for `alt+left` and `alt+right`. You could
 bind them to `alt+b` and `alt+f` respectively
@@ -265,7 +280,7 @@ window.run_command(
         "post_window_hooks": [], # a list of window hooks after opening terminal
         "post_view_hooks": [],   # a list of view hooks after opening terminal
         "auto_close": True,      # auto close terminal if process exits successfully
-        "cancellable": False,     # allow `cancel_build` command to terminate process
+        "cancellable": False,    # allow `cancel_build` command to terminate process, only relevent to panels
         "timeit": False          # display elapsed time when the process terminates
     }
 )
