@@ -204,24 +204,31 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
         if not os.path.isdir(cwd):
             raise Exception("{} does not exist".format(cwd))
 
-        # pre_window_hooks
-        for hook in pre_window_hooks:
-            self.window.run_command(*hook)
+        terminal = Terminal.from_tag(tag) if tag else None
+        terminus_view = terminal.view if terminal else None
+        window = terminus_view.window() if terminus_view else self.window
 
-        if panel_name:
+        if not terminus_view and panel_name:
             if panel_name == DEFAULT_PANEL:
-                panel_name = available_panel_name(self.window, panel_name)
+                panel_name = available_panel_name(window, panel_name)
 
-            terminus_view = self.window.get_output_panel(panel_name)
+            terminus_view = window.get_output_panel(panel_name)
+
+        if terminus_view:
             terminal = Terminal.from_id(terminus_view.id())
             if terminal:
                 terminal.close()
-                terminus_view.run_command("terminus_nuke")
-                terminus_view.settings().erase("terminus_view")
-                terminus_view.settings().erase("terminus_view.closed")
-                terminus_view.settings().erase("terminus_view.viewport_y")
-        else:
-            terminus_view = self.window.new_file()
+            terminus_view.run_command("terminus_nuke")
+            terminus_view.settings().erase("terminus_view")
+            terminus_view.settings().erase("terminus_view.closed")
+            terminus_view.settings().erase("terminus_view.viewport_y")
+
+        # pre_window_hooks
+        for hook in pre_window_hooks:
+            window.run_command(*hook)
+
+        if not terminus_view:
+            terminus_view = window.new_file()
 
         terminus_view.run_command(
             "terminus_activate",
@@ -241,13 +248,14 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
             })
 
         if panel_name:
-            self.window.run_command("show_panel", {"panel": "output.{}".format(panel_name)})
-            if focus:
-                self.window.focus_view(terminus_view)
+            window.run_command("show_panel", {"panel": "output.{}".format(panel_name)})
+
+        if focus:
+            window.focus_view(terminus_view)
 
         # post_window_hooks
         for hook in post_window_hooks:
-            self.window.run_command(*hook)
+            window.run_command(*hook)
 
         # post_view_hooks
         for hook in post_view_hooks:
@@ -423,6 +431,8 @@ class TerminusExecCommand(sublime_plugin.WindowCommand):
             raise Exception("'cmd' or 'shell_cmd' is required")
         if "panel_name" in kwargs:
             raise Exception("'panel_name' must not be specified")
+        if "tag" in kwargs:
+            raise Exception("'tag' must not be specified")
         kwargs["panel_name"] = EXEC_PANEL
         if "focus" not in kwargs:
             kwargs["focus"] = False
