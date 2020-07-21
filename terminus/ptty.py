@@ -641,7 +641,7 @@ class TerminalStream(pyte.Stream):
         osc_dispatch = create_dispatcher(self.osc)
 
         while True:
-            # ``True`` tells ``Screen.feed`` that it is allowed to send
+            # it is allowed to send
             # chunks of plain text directly to the listener, instead
             # of this generator.
             char = yield PLAIN_TEXT
