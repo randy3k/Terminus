@@ -644,7 +644,7 @@ class TerminalStream(pyte.Stream):
             # ``True`` tells ``Screen.feed`` that it is allowed to send
             # chunks of plain text directly to the listener, instead
             # of this generator.
-            char = yield True
+            char = yield PLAIN_TEXT
 
             if char == ESC:
                 # Most non-VT52 commands start with a left-bracket after the
