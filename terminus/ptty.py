@@ -399,8 +399,11 @@ class TerminalScreen(pyte.Screen):
         self.dirty.update(interval)
         for y in interval:
             line = self.buffer[y]
-            for x in range(self.columns):
-                line[x] = self.cursor.attrs
+            for i, x in list(enumerate(line)):
+                if i < self.columns:
+                    line[x] = self.cursor.attrs
+                else:
+                    line.pop(x, None)
 
         if how == 0 or how == 1:
             self.erase_in_line(how)
