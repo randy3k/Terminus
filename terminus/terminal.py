@@ -210,9 +210,7 @@ class Terminal:
             self.title = title
             self.set_offset()
 
-        size = view_size(view or sublime.active_window().active_view())
-        if size == (1, 1):
-            size = (40, 80)
+        size = view_size(view or sublime.active_window().active_view(), (40, 80))
         logger.debug("view size: {}".format(str(size)))
         _env = os.environ.copy()
         _env.update(env)

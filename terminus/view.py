@@ -32,27 +32,35 @@ def view_is_visible(view):
     return window.active_view_in_group(group) == view
 
 
-def view_size(view):
+def view_size(view, default=None):
     pixel_width, pixel_height = view.viewport_extent()
     pixel_per_line = view.line_height()
     pixel_per_char = view.em_width()
 
     if pixel_per_line == 0 or pixel_per_char == 0:
-        return (0, 0)
-
-    settings = sublime.load_settings("Terminus.sublime-settings")
-    min_columns = settings.get("min_columns", 20)
-    max_columns = settings.get("max_columns", 500)
+        if default:
+            return default
+        else:
+            return (1, 1)
 
     nb_columns = int(pixel_width / pixel_per_char) - 3
-    if nb_columns < min_columns:
-        nb_columns = min_columns
-    elif nb_columns > max_columns:
-        nb_columns = max_columns
+    if nb_columns < 1:
+        nb_columns = 1
 
     nb_rows = int(pixel_height / pixel_per_line)
     if nb_rows < 1:
         nb_rows = 1
+
+    if nb_columns == 1 and default:
+        return default
+
+    settings = sublime.load_settings("Terminus.sublime-settings")
+    min_columns = settings.get("min_columns", 20)
+    max_columns = settings.get("max_columns", 500)
+    if nb_columns < min_columns:
+        nb_columns = min_columns
+    elif nb_columns > max_columns:
+        nb_columns = max_columns
 
     return (nb_rows, nb_columns)
 
