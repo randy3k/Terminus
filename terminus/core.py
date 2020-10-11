@@ -130,6 +130,11 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
         else:
             config = self.get_config_by_name("Default")
 
+        if "cmd" in config:
+            cmd = config["cmd"]
+        if "shell_cmd" in config:
+            shell_cmd = config["shell_cmd"]
+
         if cmd and shell_cmd:
             raise ValueError("both cmd and shell_cmd are not empty")
 
