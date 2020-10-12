@@ -1,0 +1,23 @@
+{
+    "name": "Ultimate Dark Neo",
+    "theme_colors": {
+        "foreground": "#cbcfd2",
+        "background": "#313338",
+        "black": "#171819",
+        "red": "#bc565b",
+        "green": "#83ad7f",
+        "brown": "#d3a745",
+        "blue": "#7da8d4",
+        "magenta": "#ad79ad",
+        "cyan": "#518f8a",
+        "white": "#5f6266",
+        "light_black": "#25292a",
+        "light_red": "#e2696f",
+        "light_green": "#a7d2a3",
+        "light_brown": "#f7c657",
+        "light_blue": "#abcff4",
+        "light_magenta": "#d696d6",
+        "light_cyan": "#68b8b1",
+        "light_white": "#94999f"
+    }
+}
