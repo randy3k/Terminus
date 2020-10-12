@@ -129,30 +129,44 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
             config = self.get_config_by_name(config_name)
         else:
             config = self.get_config_by_name("Default")
+        config_name = config["name"]
+
+        if "cmd" in config and "shell_cmd" in config:
+            raise Exception(
+                "both `cmd` are `shell_cmd` are specified in config {}".format(config_name))
+
+        if "cmd" in config:
+            cmd_to_run = config["cmd"]
+        elif "shell_cmd" in config:
+            cmd_to_run = config["shell_cmd"]
+        else:
+            raise Exception(
+                "both `cmd` are `shell_cmd` are empty in config {}".format(config_name))
 
         if cmd and shell_cmd:
-            raise ValueError("both cmd and shell_cmd are not empty")
+            raise Exception("both `cmd` are `shell_cmd` are passed to terminus_open")
 
-        if not cmd and shell_cmd:
+        if cmd is not None:
+            cmd_to_run = cmd
+        elif shell_cmd is not None:
             if not isinstance(shell_cmd, str):
                 raise ValueError("shell_cmd should be a string")
             # mimic exec target
             if sys.platform.startswith("win"):
                 comspec = os.environ.get("COMSPEC", "cmd.exe")
-                cmd = [comspec, "/c"] + shlex_split(shell_cmd)
+                cmd_to_run = [comspec, "/c"] + shlex_split(shell_cmd)
             elif sys.platform == "darwin":
-                cmd = ["/usr/bin/env", "bash", "-l", "-c", shell_cmd]
+                cmd_to_run = ["/usr/bin/env", "bash", "-l", "-c", shell_cmd]
             else:
-                cmd = ["/usr/bin/env", "bash", "-c", shell_cmd]
+                cmd_to_run = ["/usr/bin/env", "bash", "-c", shell_cmd]
 
-        if not cmd:
-            cmd = config["cmd"]
+        if cmd_to_run is None:
+            raise ValueError("cannot determin command to run")
 
-        if cmd and isinstance(cmd, str):
-            cmd = [cmd]
+        if isinstance(cmd_to_run, str):
+            cmd_to_run = [cmd_to_run]
 
-        if cmd:
-            cmd = sublime.expand_variables(cmd, st_vars)
+        cmd_to_run = sublime.expand_variables(cmd_to_run, st_vars)
 
         if env:
             config["env"] = env
@@ -233,8 +247,8 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
         terminus_view.run_command(
             "terminus_activate",
             {
-                "config_name": config["name"],
-                "cmd": cmd,
+                "config_name": config_name,
+                "cmd": cmd_to_run,
                 "cwd": cwd,
                 "env": _env,
                 "title": title,
