@@ -130,9 +130,9 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
         else:
             config = self.get_config_by_name("Default")
 
-        if "cmd" in config:
+        if not cmd and "cmd" in config:
             cmd = config["cmd"]
-        if "shell_cmd" in config:
+        if not shell_cmd and "shell_cmd" in config:
             shell_cmd = config["shell_cmd"]
 
         if cmd and shell_cmd:
@@ -149,9 +149,6 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
                 cmd = ["/usr/bin/env", "bash", "-l", "-c", shell_cmd]
             else:
                 cmd = ["/usr/bin/env", "bash", "-c", shell_cmd]
-
-        if not cmd:
-            cmd = config["cmd"]
 
         if cmd and isinstance(cmd, str):
             cmd = [cmd]
