@@ -135,20 +135,13 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
             raise Exception(
                 "both `cmd` are `shell_cmd` are specified in config {}".format(config_name))
 
-        if "cmd" in config:
-            cmd_to_run = config["cmd"]
-        elif "shell_cmd" in config:
-            cmd_to_run = config["shell_cmd"]
-        else:
-            raise Exception(
-                "both `cmd` are `shell_cmd` are empty in config {}".format(config_name))
-
         if cmd and shell_cmd:
             raise Exception("both `cmd` are `shell_cmd` are passed to terminus_open")
 
-        if cmd is not None:
-            cmd_to_run = cmd
-        elif shell_cmd is not None:
+        if shell_cmd is not None or ("shell_cmd" in config and config["shell_cmd"] is not None):
+            if shell_cmd is None:
+                shell_cmd = config["shell_cmd"]
+
             if not isinstance(shell_cmd, str):
                 raise ValueError("shell_cmd should be a string")
             # mimic exec target
@@ -160,8 +153,18 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
             else:
                 cmd_to_run = ["/usr/bin/env", "bash", "-c", shell_cmd]
 
+        elif cmd is not None or ("cmd" in config and config["cmd"] is not None):
+
+            if cmd is None:
+                cmd = config["cmd"]
+
+            cmd_to_run = cmd
+
+        else:
+            raise Exception("both `cmd` are `shell_cmd` are empty")
+
         if cmd_to_run is None:
-            raise ValueError("cannot determin command to run")
+            raise ValueError("cannot determine command to run")
 
         if isinstance(cmd_to_run, str):
             cmd_to_run = [cmd_to_run]
