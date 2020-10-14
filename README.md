@@ -194,7 +194,7 @@ The following is an example of build system define in project settings that run 
             "target": "terminus_exec",
             "cancel": "terminus_cancel_build",
             "cmd": [
-                "bash", "-c", "echo helloworld"
+                "python", "helloworld.py"
             ],
             "working_dir": "$folder"
         }
@@ -209,7 +209,7 @@ The same Hello World example could be specified via a `.sublime-build` file.
     "target": "terminus_exec",
     "cancel": "terminus_cancel_build",
     "cmd": [
-        "bash", "-c", "echo helloworld"
+        "python", "helloworld.py"
     ],
     "working_dir": "$folder"
 }
@@ -221,7 +221,9 @@ Instead of `cmd`, user could also specify `shell_cmd`. In macOS and linux, a bas
 {
     "target": "terminus_exec",
     "cancel": "terminus_cancel_build",
-    "shell_cmd": "echo helloworld",
+    "shell_cmd": "python helloworld.py",
+    // to directly invoke bash command
+    // "shell_cmd": "echo helloworld",
     "working_dir": "$folder"
 }
 ```
