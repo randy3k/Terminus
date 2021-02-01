@@ -201,6 +201,9 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
 
         _env.update(env)
 
+        if "cwd" in config:
+            cwd = config["cwd"]
+
         if not cwd and working_dir:
             cwd = working_dir
 
