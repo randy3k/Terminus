@@ -677,10 +677,16 @@ class TerminusActivateCommand(sublime_plugin.TextCommand):
 
 class TerminusResetCommand(sublime_plugin.TextCommand):
 
-    def run(self, _, **kwargs):
+    def run(self, _, soft=False, **kwargs):
         view = self.view
         terminal = Terminal.from_id(view.id())
         if not terminal:
+            return
+
+        if soft:
+            view.run_command("terminus_nuke")
+            view.settings().erase("terminus_view.viewport_y")
+            terminal.set_offset()
             return
 
         def run_detach():
@@ -1153,7 +1159,7 @@ class TerminusRenderCommand(sublime_plugin.TextCommand, TerminusViewMixin):
         if terminal._pending_to_reset[0]:
             def _reset():
                 logger.debug("reset terminal")
-                view.run_command("terminus_reset")
+                view.run_command("terminus_reset", {"soft": True})
                 terminal._pending_to_reset[0] = False
 
             sublime.set_timeout(_reset)
