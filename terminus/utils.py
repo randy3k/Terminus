@@ -127,3 +127,9 @@ def settings_on_change(settings, keys, clear=True):
             settings.add_on_change(key, on_change_factory(key, on_change))
 
     return _
+
+
+def istext(filename):
+    s = open(filename, 'rb').read(512)
+    t = s.decode("utf-8", "ignore").encode()
+    return len(t) == len(s)
