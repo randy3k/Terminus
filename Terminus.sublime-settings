@@ -99,6 +99,8 @@
     // the name of the theme
     // Terminus comes with a number of themes - select a predefined theme using
     // `Terminus Utilities: Select Theme`.
+    // Setting this to "" prevents Terminus from specifying a color scheme
+    // for its views, falling back on the global default.
     "theme": "default",
 
     // change `theme` to "user" if you want to use customized theme

@@ -19,8 +19,8 @@ class TerminusSelectThemeCommand(sublime_plugin.WindowCommand):
         if not self.themefiles:
             self.themefiles = list(self.get_theme_files())
 
-        if theme:
-            if theme not in ["default", "user"]:
+        if theme is not None:
+            if theme and theme not in ["default", "user"]:
                 if theme + ".json" not in self.themefiles:
                     raise IOError("Theme '{}' not found".format(theme))
             settings = sublime.load_settings("Terminus.sublime-settings")
@@ -28,10 +28,10 @@ class TerminusSelectThemeCommand(sublime_plugin.WindowCommand):
             sublime.save_settings("Terminus.sublime-settings")
 
         else:
-            self.themes = ["default", "user"] + \
+            self.themes = ["", "default", "user"] + \
                 sorted([f.replace(".json", "") for f in self.themefiles])
             settings = sublime.load_settings("Terminus.sublime-settings")
-            self.original_theme = settings.get("theme", "default")
+            self.original_theme = get_theme(settings)
             try:
                 selected_index = self.themes.index(self.original_theme)
             except Exception:
@@ -57,7 +57,11 @@ class TerminusGenerateThemeCommand(sublime_plugin.WindowCommand):
         settings = sublime.load_settings("Terminus.sublime-settings")
 
         if not theme:
-            theme = settings.get("theme", "default")
+            theme = get_theme(settings)
+
+        if not theme:
+            return
+
         if theme == "user":
             variables = settings.get("user_theme_colors", {})
             for key, value in list(variables.items()):
@@ -67,6 +71,7 @@ class TerminusGenerateThemeCommand(sublime_plugin.WindowCommand):
 
         elif theme == "default":
             variables = {}
+
         else:
             content = sublime.load_resource("Packages/Terminus/themes/{}.json".format(theme))
             theme_data = sublime.decode_value(content)
@@ -136,7 +141,7 @@ def plugin_loaded():
         "Terminus.hidden-color-scheme"
     )
 
-    if settings.get("theme", "default") != "default":
+    if get_theme(settings) != "default":
         if (not os.path.isfile(path) or
                 (settings.get("256color", False) and not os.path.isfile(path256))):
             sublime.set_timeout(
@@ -151,3 +156,7 @@ def plugin_loaded():
 def plugin_unloaded():
     settings = sublime.load_settings("Terminus.sublime-settings")
     settings_on_change(settings, ["256color", "user_theme_colors", "theme"], clear=True)
+
+
+def get_theme(settings):
+    return settings.get("theme", "default")
