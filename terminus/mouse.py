@@ -13,7 +13,7 @@ logger = logging.getLogger('Terminus')
 rex = re.compile(
     r'''(?x)
     \b(?:
-        https?://(?:(?:[a-zA-Z0-9\-_]+(?:\.[a-zA-Z0-9\-._]+)+)|localhost)|  # http://
+        https?://(?:(?:[a-zA-Z0-9\-._]+)|localhost)|  # http://
         www\.[a-zA-Z0-9\-_]+(?:\.[a-zA-Z0-9\-._]+)+                         # www.
     )
     /?[a-zA-Z0-9\-._?,!'(){}\[\]/+&@%$#=:"|~;]*                             # url path and query string
@@ -117,6 +117,7 @@ class TerminusMouseEventListener(sublime_plugin.EventListener):
                 view.erase_regions(link_key)
 
         url_region = find_url_region(view, pt=point)
+        print(url_region)
         link_key = None
         if url_region:
             link_key = highlight_key(view)
