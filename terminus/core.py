@@ -16,6 +16,7 @@ from .ptty import segment_buffer_line
 from .utils import shlex_split
 from .utils import available_panel_name, rev_wcwidth, highlight_key
 from .view import panel_window, panel_is_visible, view_is_visible
+from .theme import get_theme
 
 
 KEYS = [
@@ -626,7 +627,9 @@ class TerminusInitializeCommand(sublime_plugin.TextCommand):
         view_settings.set("draw_indent_guides", False)
         # view_settings.set("caret_style", "blink")
         view_settings.set("scroll_past_end", True)
-        view_settings.set("color_scheme", "Terminus.hidden-color-scheme")
+
+        if get_theme(terminus_settings):
+            view_settings.set("color_scheme", "Terminus.hidden-color-scheme")
 
         max_columns = terminus_settings.get("max_columns")
         if max_columns:
