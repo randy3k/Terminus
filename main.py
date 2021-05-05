@@ -25,7 +25,7 @@ else:
 
 
 from .terminus.clipboard import TerminusClipboardHistoryUpdater
-from .terminus.core import (
+from .terminus.commands import (
     TerminusCoreEventListener,
     TerminusOpenCommand,
     TerminusCloseCommand,
@@ -39,15 +39,13 @@ from .terminus.core import (
     TerminusRenameTitleCommand,
     TerminusMaximizeCommand,
     TerminusMinimizeCommand,
-    TerminusRenderCommand,
     TerminusKeypressCommand,
     TerminusCopyCommand,
     TerminusPasteCommand,
     TerminusPasteFromHistoryCommand,
     TerminusDeleteWordCommand,
     ToggleTerminusPanelCommand,
-    TerminusSendStringCommand,
-    TerminusShowCursor
+    TerminusSendStringCommand
 )
 from .terminus.mouse import (
     TerminusMouseEventListener,
@@ -56,6 +54,10 @@ from .terminus.mouse import (
     TerminusOpenImageCommand
 )
 from .terminus.query import TerminusQueryContextListener
+from .terminus.render import (
+    TerminusRenderCommand,
+    TerminusShowCursor
+)
 from .terminus.theme import (
     TerminusSelectThemeCommand,
     TerminusGenerateThemeCommand,
