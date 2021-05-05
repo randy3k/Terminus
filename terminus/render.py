@@ -5,7 +5,7 @@ import time
 import logging
 
 from .ptty import segment_buffer_line
-from .terminal import Terminal
+from .terminal import Terminal, CONTINUATION
 from .utils import rev_wcwidth, highlight_key
 
 logger = logging.getLogger('Terminus')
