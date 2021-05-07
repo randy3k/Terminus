@@ -1,7 +1,7 @@
 import sublime
 import sublime_plugin
 
-from .commands import EXEC_PANEL
+from .const import EXEC_PANEL
 
 
 class TerminusQueryContextListener(sublime_plugin.EventListener):

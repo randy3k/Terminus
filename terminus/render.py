@@ -2,10 +2,12 @@ import sublime
 import sublime_plugin
 
 import time
+import math
 import logging
 
+from .const import CONTINUATION
 from .ptty import segment_buffer_line
-from .terminal import Terminal, CONTINUATION
+from .terminal import Terminal
 from .utils import rev_wcwidth, highlight_key
 
 logger = logging.getLogger('Terminus')

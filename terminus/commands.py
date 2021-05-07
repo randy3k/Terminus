@@ -4,14 +4,13 @@ import sublime_plugin
 import os
 import re
 import sys
-import math
-import time
 import logging
 from random import random
 
+from .const import DEFAULT_PANEL, EXEC_PANEL, CONTINUATION
 from .clipboard import g_clipboard_history
 from .key import get_key_code
-from .terminal import Terminal, CONTINUATION
+from .terminal import Terminal
 from .utils import shlex_split
 from .utils import available_panel_name
 from .view import panel_window, panel_is_visible, view_is_visible
@@ -21,9 +20,6 @@ KEYS = [
     "ctrl+k",
     "ctrl+p"
 ]
-
-DEFAULT_PANEL = "Terminus"
-EXEC_PANEL = "Terminus Build Results"
 
 logger = logging.getLogger('Terminus')
 

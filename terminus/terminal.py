@@ -15,8 +15,6 @@ from .key import get_key_code
 from .image import get_image_info, image_resize
 
 
-CONTINUATION = "\u200b\u200c\u200b"
-
 IMAGE = """
 <style>
 body {{
