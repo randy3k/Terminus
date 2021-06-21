@@ -3,6 +3,7 @@ import sublime_plugin
 
 import os
 
+from colorsys import rgb_to_hls
 from Terminus.tools.theme_generator import generate_theme_file, ANSI_COLORS
 from .utils import settings_on_change
 
@@ -20,7 +21,7 @@ class TerminusSelectThemeCommand(sublime_plugin.WindowCommand):
             self.themefiles = list(self.get_theme_files())
 
         if theme:
-            if theme not in ["default", "user"]:
+            if theme not in ["default", "adaptive", "user"]:
                 if theme + ".json" not in self.themefiles:
                     raise IOError("Theme '{}' not found".format(theme))
             settings = sublime.load_settings("Terminus.sublime-settings")
@@ -30,6 +31,8 @@ class TerminusSelectThemeCommand(sublime_plugin.WindowCommand):
         else:
             self.themes = ["default", "user"] + \
                 sorted([f.replace(".json", "") for f in self.themefiles])
+            if int(sublime.version()) >= 4096:
+                self.themes.insert(1, "adaptive")
             settings = sublime.load_settings("Terminus.sublime-settings")
             self.original_theme = settings.get("theme", "default")
             try:
@@ -67,6 +70,39 @@ class TerminusGenerateThemeCommand(sublime_plugin.WindowCommand):
 
         elif theme == "default":
             variables = {}
+        elif theme == "adaptive":
+            palette = sublime.ui_info()["color_scheme"]["palette"]
+            gray = "#888888"
+            view = sublime.active_window().active_view()
+            if view:
+                comment_foreground = view.style_for_scope("comment")["foreground"]
+                r = int(comment_foreground[1:3], 16)
+                g = int(comment_foreground[3:5], 16)
+                b = int(comment_foreground[5:7], 16)
+                _, _, s = rgb_to_hls(r/255, g/255, b/255)
+                if s < 0.2:
+                    gray = comment_foreground
+            light_color_template = "color({} l(+ 15%))"
+            variables = {
+                "background": palette["background"],
+                "foreground": palette["foreground"],
+                "black": "#000000",
+                "red": palette["redish"],
+                "green": palette["greenish"],
+                "brown": palette["yellowish"],
+                "blue": palette["bluish"],
+                "magenta": palette["pinkish"],
+                "cyan": palette["cyanish"],
+                "white": gray,
+                "light_black": light_color_template.format(gray),
+                "light_red": light_color_template.format(palette["redish"]),
+                "light_green": light_color_template.format(palette["greenish"]),
+                "light_brown": light_color_template.format(palette["yellowish"]),
+                "light_blue": light_color_template.format(palette["bluish"]),
+                "light_magenta": light_color_template.format(palette["pinkish"]),
+                "light_cyan": light_color_template.format(palette["cyanish"]),
+                "light_white": "#ffffff"
+            }
         else:
             content = sublime.load_resource("Packages/Terminus/themes/{}.json".format(theme))
             theme_data = sublime.decode_value(content)
@@ -147,6 +183,14 @@ def plugin_loaded():
         lambda _: sublime.active_window().run_command("terminus_generate_theme")
     )
 
+    def check_update_theme(value):
+        settings = sublime.load_settings("Terminus.sublime-settings")
+        if settings.get("theme", "default") == "adaptive":
+            sublime.active_window().run_command("terminus_generate_theme")
+
+    settings_on_change(sublime.load_settings("Preferences.sublime-settings"), "color_scheme")(
+        check_update_theme
+    )
 
 def plugin_unloaded():
     settings = sublime.load_settings("Terminus.sublime-settings")
