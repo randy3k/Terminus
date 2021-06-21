@@ -31,6 +31,9 @@ class TerminusRenderCommand(sublime_plugin.TextCommand, TerminusViewMixin):
         super().__init__(*args, **kwargs)
         # it keeps all the highlight keys
         self.colored_lines = {}
+        settings = sublime.load_settings("Terminus.sublime-settings")
+        self.scrollback_history_size = settings.get("scrollback_history_size", 10000)
+        self.brighten_bold_text = settings.get("brighten_bold_text", False)
 
     def run(self, edit):
         view = self.view
@@ -124,8 +127,13 @@ class TerminusRenderCommand(sublime_plugin.TextCommand, TerminusViewMixin):
             if line not in self.colored_lines:
                 self.colored_lines[line] = []
         for s in segments:
-            fg, bg = s[3:]
+            fg, bg, bold = s[3:]
             if fg != "default" or bg != "default":
+                if bold:
+                    if fg != "default" and not fg.startswith("light_"):
+                        fg = "light_" + fg
+                    if bg != "default" and not bg.startswith("light_"):
+                        bg = "light_" + bg
                 a = view.text_point(line, s[1])
                 b = view.text_point(line, s[2])
                 key = highlight_key(view)
@@ -172,10 +180,10 @@ class TerminusRenderCommand(sublime_plugin.TextCommand, TerminusViewMixin):
         If number of lines in view > n, remove n / 10 lines from the top
         """
         view = self.view
-        n = sublime.load_settings("Terminus.sublime-settings") \
-                   .get("scrollback_history_size", 10000)
+
         screen = terminal.screen
         lastrow = view.rowcol(view.size())[0]
+        n = self.scrollback_history_size
         if lastrow + 1 > n:
             m = max(lastrow + 1 - n, math.ceil(n / 10))
             logger.debug("removing {} lines from the top".format(m))

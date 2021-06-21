@@ -71,6 +71,7 @@ def segment_buffer_line(buffer_line):
     counter = 0
     fg = "default"
     bg = "default"
+    bold = False
     reverse = False
 
     if buffer_line:
@@ -89,12 +90,13 @@ def segment_buffer_line(buffer_line):
             counter = i
             text = " " * i
 
-        if fg != char.fg or bg != char.bg or reverse != char.reverse:
+        if fg != char.fg or bg != char.bg or bold != char.bold or reverse != char.reverse:
             if reverse:
                 fg, bg = reverse_fg_bg(fg, bg)
-            yield text, start, counter, fg, bg
+            yield text, start, counter, fg, bg, bold
             fg = char.fg
             bg = char.bg
+            bold = char.bold
             reverse = char.reverse
             text = char.data
             start = counter
@@ -105,7 +107,7 @@ def segment_buffer_line(buffer_line):
 
     if reverse:
         fg, bg = reverse_fg_bg(fg, bg)
-    yield text, start, counter, fg, bg
+    yield text, start, counter, fg, bg, bold
 
 
 class Char(namedtuple("Char", [

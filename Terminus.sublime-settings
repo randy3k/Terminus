@@ -96,6 +96,9 @@
         // "ctrl+p"   // to show Go to Anything
     ],
 
+    // brighten bold text
+    "brighten_bold_text": false,
+
     // the name of the theme
     // Terminus comes with a number of themes - select a predefined theme using
     // `Terminus Utilities: Select Theme`.
