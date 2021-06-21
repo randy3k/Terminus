@@ -64,6 +64,9 @@
     // 256 color is not working on Windows because of upstream winpty's issue
     // https://github.com/rprichard/winpty/issues/108
     "256color": false,
+    
+    // brighten bold text
+    "brighten_bold_text": false,
 
     // the default TERM variable of unix system. Possible values are
     // "linux", "xterm" and "xterm-256color".
@@ -95,9 +98,6 @@
         // "ctrl+k"   // there are a number of shortcuts with "ctrl+k" prefix.
         // "ctrl+p"   // to show Go to Anything
     ],
-
-    // brighten bold text
-    "brighten_bold_text": false,
 
     // the name of the theme
     // Terminus comes with a number of themes - select a predefined theme using
