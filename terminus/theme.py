@@ -190,9 +190,14 @@ def plugin_loaded():
         lambda _: sublime.active_window().run_command("terminus_generate_theme")
     )
 
-    # settings_on_change(sublime.load_settings("Preferences.sublime-settings"), "color_scheme")(
-    #     lambda _: sublime.active_window().run_command("terminus_generate_theme")
-    # )
+    def check_update_theme(value):
+        settings = sublime.load_settings("Terminus.sublime-settings")
+        if settings.get("theme", "default") == "adaptive":
+            sublime.active_window().run_command("terminus_generate_theme")
+
+    settings_on_change(sublime.load_settings("Preferences.sublime-settings"), "color_scheme")(
+        check_update_theme
+    )
 
 def plugin_unloaded():
     settings = sublime.load_settings("Terminus.sublime-settings")
