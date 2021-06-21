@@ -82,33 +82,26 @@ class TerminusGenerateThemeCommand(sublime_plugin.WindowCommand):
                 _, _, s = rgb_to_hls(r/255, g/255, b/255)
                 if s < 0.2:
                     gray = comment_foreground
-            color_template = "color({} l(- 15%))"
-            red = color_template.format(palette["redish"])
-            green = color_template.format(palette["greenish"])
-            yellow = color_template.format(palette["yellowish"])
-            blue = color_template.format(palette["bluish"])
-            magenta = color_template.format(palette["pinkish"])
-            cyan = color_template.format(palette["cyanish"])
-            white = color_template.format(gray)
+            light_color_template = "color({} l(+ 15%))"
             variables = {
                 "background": palette["background"],
                 "foreground": palette["foreground"],
-                "black": "#000000",                  # ANSI Black
-                "red": red,                          # ANSI Red
-                "green": green,                      # ANSI Green
-                "brown": yellow,                     # ANSI Yellow
-                "blue": blue,                        # ANSI Blue
-                "magenta": magenta,                  # ANSI Magenta
-                "cyan": cyan,                        # ANSI Cyan
-                "white": white,                      # ANSI White
-                "light_black": gray,                 # ANSI Bright Black (Gray)
-                "light_red": palette["redish"],      # ANSI Bright Red
-                "light_green": palette["greenish"],  # ANSI Bright Green
-                "light_brown": palette["yellowish"], # ANSI Bright Yellow
-                "light_blue": palette["bluish"],     # ANSI Bright Blue
-                "light_magenta": palette["pinkish"], # ANSI Bright Magenta
-                "light_cyan": palette["cyanish"],    # ANSI Bright Cyan
-                "light_white": "#ffffff"             # ANSI Bright White
+                "black": "#000000",
+                "red": palette["redish"],
+                "green": palette["greenish"],
+                "brown": palette["yellowish"],
+                "blue": palette["bluish"],
+                "magenta": palette["pinkish"],
+                "cyan": palette["cyanish"],
+                "white": gray,
+                "light_black": light_color_template.format(gray),
+                "light_red": light_color_template.format(palette["redish"]),
+                "light_green": light_color_template.format(palette["greenish"]),
+                "light_brown": light_color_template.format(palette["yellowish"]),
+                "light_blue": light_color_template.format(palette["bluish"]),
+                "light_magenta": light_color_template.format(palette["pinkish"]),
+                "light_cyan": light_color_template.format(palette["cyanish"]),
+                "light_white": "#ffffff"
             }
         else:
             content = sublime.load_resource("Packages/Terminus/themes/{}.json".format(theme))
