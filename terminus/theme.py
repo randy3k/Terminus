@@ -70,7 +70,7 @@ class TerminusGenerateThemeCommand(sublime_plugin.WindowCommand):
                     variables[ANSI_COLORS[int(key)]] = value
                     del variables[key]
 
-        elif theme == "default":
+        elif theme == "default" or theme == "classic":
             variables = {}
         elif theme == "adaptive":
             palette = sublime.ui_info()["color_scheme"]["palette"]

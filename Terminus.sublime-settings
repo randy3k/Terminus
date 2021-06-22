@@ -100,9 +100,9 @@
     ],
 
     // the name of the theme
-    // the theme could be either "default", "adaptive", "user" or any predefined themes
+    // the theme could be either "classic", "adaptive", "user" or any predefined themes
     // listed in the command `Terminus Utilities: Select Theme`.
-    // For Sublime Text before 4096, the adaptive theme will fallback to the default theme.
+    // For Sublime Text before 4096, the adaptive theme will fallback to the classic theme.
     "theme": "adaptive",
 
     // change `theme` to "user" if you want to use customized theme
