@@ -100,9 +100,10 @@
     ],
 
     // the name of the theme
-    // Terminus comes with a number of themes - select a predefined theme using
-    // `Terminus Utilities: Select Theme`.
-    "theme": "default",
+    // the theme could be either "default", "adaptive", "user" or any predefined themes
+    // listed in the command `Terminus Utilities: Select Theme`.
+    // For Sublime Text before 4096, the adaptive theme will fallback to the default theme.
+    "theme": "adaptive",
 
     // change `theme` to "user" if you want to use customized theme
     // see https://www.sublimetext.com/docs/3/color_schemes.html#colors for the
