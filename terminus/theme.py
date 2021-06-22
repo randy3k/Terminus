@@ -184,7 +184,6 @@ def plugin_loaded():
     )
 
     def check_update_theme(value):
-        settings = sublime.load_settings("Terminus.sublime-settings")
         if settings.get("theme", "default") == "adaptive":
             sublime.active_window().run_command("terminus_generate_theme")
 
