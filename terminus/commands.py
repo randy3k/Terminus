@@ -5,6 +5,7 @@ import os
 import re
 import sys
 import logging
+import difflib
 from random import random
 
 from .const import DEFAULT_PANEL, EXEC_PANEL, CONTINUATION
@@ -74,6 +75,8 @@ class TerminusCoreEventListener(sublime_plugin.EventListener):
             return ("terminus_paste", None)
         elif name == "paste_from_history":
             return ("terminus_paste_from_history", None)
+        elif name == "paste_selection_clipboard":
+            self.pre_paste = view.substr(view.visible_region())
         elif name == "undo":
             return ("noop", None)
 
@@ -86,6 +89,11 @@ class TerminusCoreEventListener(sublime_plugin.EventListener):
 
         if name == 'terminus_copy':
             g_clipboard_history.push_text(sublime.get_clipboard())
+        elif name == "paste_selection_clipboard":
+            terminal = Terminal.from_id(view.id())
+            if terminal and terminal.process.isalive():
+                added = [df[2:] for df in difflib.ndiff(self.pre_paste, view.substr(view.visible_region())) if df[0] == '+']
+                terminal.send_string(''.join(added))
 
 
 class TerminusOpenCommand(sublime_plugin.WindowCommand):
