@@ -84,6 +84,9 @@
     "min_columns": 20,
     "max_columns": 500,
 
+    // force the terminal size
+    "size": [null, null],
+
     // Windows and Linux only
     // use ctrl+c to copy
     // use ctrl+v to paste  (use ctrl+alt+v to send ctrl+v instead)

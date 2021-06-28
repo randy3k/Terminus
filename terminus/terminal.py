@@ -35,6 +35,7 @@ class Terminal:
         self._title = ""
         self.view = view
         self._cached_cursor = [0, 0]
+        self._size = sublime.load_settings('Terminus.sublime-settings').get('size', (None, None))
         self._cached_cursor_is_hidden = [True]
         self.image_count = 0
         self.images = {}
@@ -120,7 +121,7 @@ class Terminal:
 
         @responsive(period=1, default=False)
         def was_resized():
-            size = view_size(self.view)
+            size = view_size(self.view, force=self._size)
             return self.screen.lines != size[0] or self.screen.columns != size[1]
 
         def reader():
@@ -208,7 +209,7 @@ class Terminal:
             self.title = title
             self.set_offset()
 
-        size = view_size(view or sublime.active_window().active_view(), (40, 80))
+        size = view_size(view or sublime.active_window().active_view(), default=(40, 80), force=self._size)
         logger.debug("view size: {}".format(str(size)))
         _env = os.environ.copy()
         _env.update(env)
@@ -283,7 +284,7 @@ class Terminal:
         self.view.settings().set("terminus_view.closed", True)
 
     def handle_resize(self):
-        size = view_size(self.view)
+        size = view_size(self.view, force=self._size)
         logger.debug("handle resize {} {} -> {} {}".format(
             self.screen.lines, self.screen.columns, size[0], size[1]))
         try:
