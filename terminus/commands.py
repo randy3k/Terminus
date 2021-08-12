@@ -66,7 +66,6 @@ class TerminusCoreEventListener(sublime_plugin.EventListener):
     def on_text_command(self, view, name, args):
         if not view.settings().get('terminus_view'):
             return
-        print("on_text_command:", name)
         if name == "copy":
             return ("terminus_copy", None)
         elif name == "paste":
