@@ -130,9 +130,9 @@ class TerminusRenderCommand(sublime_plugin.TextCommand, TerminusViewMixin):
             fg, bg, bold = s[3:]
             if fg != "default" or bg != "default":
                 if bold and self.brighten_bold_text:
-                    if fg != "default" and not fg.startswith("light_"):
+                    if fg != "default" and fg != "reverse_default" and not fg.startswith("light_"):
                         fg = "light_" + fg
-                    if bg != "default" and not bg.startswith("light_"):
+                    if bg != "default" and bg != "reverse_default" and not bg.startswith("light_"):
                         bg = "light_" + bg
                 a = view.text_point(line, s[1])
                 b = view.text_point(line, s[2])
