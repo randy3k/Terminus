@@ -43,6 +43,7 @@ from .terminus.commands import (
     TerminusCopyCommand,
     TerminusPasteCommand,
     TerminusPasteFromHistoryCommand,
+    TerminusPasteTextCommand,
     TerminusDeleteWordCommand,
     ToggleTerminusPanelCommand,
     TerminusSendStringCommand
@@ -82,7 +83,8 @@ __all__ = [
     "TerminusResetCommand", "TerminusMaximizeCommand", "TerminusMinimizeCommand",
     "TerminusRenderCommand", "TerminusKeypressCommand", "TerminusCopyCommand",
     "TerminusPasteCommand", "TerminusShowCursor",
-    "TerminusPasteFromHistoryCommand", "TerminusDeleteWordCommand", "ToggleTerminusPanelCommand",
+    "TerminusPasteFromHistoryCommand", "TerminusPasteTextCommand",
+    "TerminusDeleteWordCommand", "ToggleTerminusPanelCommand",
     "TerminusSendStringCommand",
     "TerminusSelectThemeCommand", "TerminusGenerateThemeCommand",
     "TerminusMouseEventListener", "TerminusOpenContextUrlCommand", "TerminusClickCommand",
