@@ -46,11 +46,11 @@ class TerminusCoreEventListener(sublime_plugin.EventListener):
             chars = args["characters"]
             current_cursor = view.sel()[0].end()
             region = sublime.Region(
-                max(current_cursor - len(chars), self.cursor), current_cursor)
+                max(current_cursor - len(chars), self._cursor), current_cursor)
             text = view.substr(region)
-            self.cursor = current_cursor
+            self._cursor = current_cursor
             logger.debug("text {} detected".format(text))
-            terminal.send_string(text)
+            view.run_command("terminus_paste_text", {"text": text, "bracketed": False})
         elif command:
             logger.debug("undo {}".format(command))
             view.run_command("soft_undo")
@@ -61,12 +61,11 @@ class TerminusCoreEventListener(sublime_plugin.EventListener):
             return
         if len(view.sel()) != 1 or not view.sel()[0].empty():
             return
-        self.cursor = view.sel()[0].end()
+        self._cursor = view.sel()[0].end()
 
     def on_text_command(self, view, name, args):
         if not view.settings().get('terminus_view'):
             return
-
         if name == "copy":
             return ("terminus_copy", None)
         elif name == "paste":
@@ -76,24 +75,20 @@ class TerminusCoreEventListener(sublime_plugin.EventListener):
         elif name == "paste_from_history":
             return ("terminus_paste_from_history", None)
         elif name == "paste_selection_clipboard":
-            self.pre_paste = view.substr(view.visible_region())
+            self._pre_paste = view.substr(view.visible_region())
         elif name == "undo":
             return ("noop", None)
 
     def on_post_text_command(self, view, name, args):
-        """
-        help panel terminal to capture copied text
-        """
         if not view.settings().get('terminus_view'):
             return
-
         if name == 'terminus_copy':
             g_clipboard_history.push_text(sublime.get_clipboard())
         elif name == "paste_selection_clipboard":
-            terminal = Terminal.from_id(view.id())
-            if terminal and terminal.process.isalive():
-                added = [df[2:] for df in difflib.ndiff(self.pre_paste, view.substr(view.visible_region())) if df[0] == '+']
-                terminal.send_string(''.join(added))
+            added = [
+                df[2:] for df in difflib.ndiff(self._pre_paste, view.substr(view.visible_region()))
+                if df[0] == '+']
+            view.run_command("terminus_paste_text", {"text": "".join(added)})
 
 
 class TerminusOpenCommand(sublime_plugin.WindowCommand):
@@ -895,26 +890,9 @@ class TerminusCopyCommand(sublime_plugin.TextCommand):
 
 
 class TerminusPasteCommand(sublime_plugin.TextCommand):
-
-    def run(self, edit, bracketed=False):
-        view = self.view
-        terminal = Terminal.from_id(view.id())
-        if not terminal:
-            return
-
-        bracketed = bracketed or terminal.bracketed_paste_mode_enabled()
-        if bracketed:
-            terminal.send_key("bracketed_paste_mode_start")
-
+    def run(self, edit, bracketed=True):
         copied = sublime.get_clipboard()
-
-        # self.view.run_command("terminus_render")
-        self.view.run_command("terminus_show_cursor")
-
-        terminal.send_string(copied)
-
-        if bracketed:
-            terminal.send_key("bracketed_paste_mode_end")
+        self.view.run_command("terminus_paste_text", {"text": copied, "bracketed": bracketed})
 
 
 class TerminusPasteFromHistoryCommand(sublime_plugin.TextCommand):
@@ -938,6 +916,26 @@ class TerminusPasteFromHistoryCommand(sublime_plugin.TextCommand):
 
         sublime.set_clipboard(text)
         self.view.run_command("terminus_paste")
+
+
+class TerminusPasteTextCommand(sublime_plugin.TextCommand):
+    def run(self, edit, text, bracketed=True):
+        view = self.view
+        terminal = Terminal.from_id(view.id())
+        if not terminal:
+            return
+
+        bracketed = bracketed and terminal.bracketed_paste_mode_enabled()
+        if bracketed:
+            terminal.send_key("bracketed_paste_mode_start")
+
+        # self.view.run_command("terminus_render")
+        self.view.run_command("terminus_show_cursor")
+
+        terminal.send_string(text)
+
+        if bracketed:
+            terminal.send_key("bracketed_paste_mode_end")
 
 
 class TerminusDeleteWordCommand(sublime_plugin.TextCommand):
@@ -1090,7 +1088,7 @@ class TerminusSendStringCommand(TerminusFindTerminalMixin, sublime_plugin.Window
     Send string to a (tagged) terminal
     """
 
-    def run(self, string, tag=None, visible_only=False):
+    def run(self, string, tag=None, visible_only=False, bracketed=False):
         terminal = self.find_terminal(self.window, tag=tag, visible_only=visible_only)
 
         if not terminal:
@@ -1106,8 +1104,9 @@ class TerminusSendStringCommand(TerminusFindTerminalMixin, sublime_plugin.Window
             self.bring_view_to_topmost(terminal.view)
 
         # terminal.view.run_command("terminus_render")
-        terminal.view.run_command("terminus_show_cursor")
-        terminal.send_string(string)
+        # terminal.view.run_command("terminus_show_cursor")
+        terminal.view.run_command(
+            "terminus_paste_text", {"text": string, "bracketed": bracketed})
 
     def bring_view_to_topmost(self, view):
         # move the view to the top of the group
