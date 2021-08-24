@@ -178,12 +178,11 @@ def plugin_loaded():
         "Terminus.hidden-color-scheme"
     )
 
-    if settings.get("theme", "default") != "default":
-        if (not os.path.isfile(path) or
-                (settings.get("256color", False) and not os.path.isfile(path256))):
-            sublime.set_timeout(
-                lambda: sublime.active_window().run_command("terminus_generate_theme"),
-                100)
+    if (not os.path.isfile(path) or
+            (settings.get("256color", False) and not os.path.isfile(path256))):
+        sublime.set_timeout(
+            lambda: sublime.active_window().run_command("terminus_generate_theme"),
+            100)
 
     settings_on_change(settings, ["256color", "user_theme_colors", "theme"])(
         lambda _: sublime.active_window().run_command("terminus_generate_theme")
@@ -191,7 +190,7 @@ def plugin_loaded():
 
     def check_update_theme(value):
         settings = sublime.load_settings("Terminus.sublime-settings")
-        if settings.get("theme", "default") == "adaptive":
+        if settings.get("theme", "adaptive") == "adaptive":
             sublime.active_window().run_command("terminus_generate_theme")
 
     settings_on_change(preferences, "color_scheme")(check_update_theme)
