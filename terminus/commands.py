@@ -493,6 +493,8 @@ class TerminusRecencyEventListener(sublime_plugin.EventListener):
         if random() > 0.7:
             # occassionally cull zombie terminals
             Terminal.cull_terminals()
+            # clear undo stack
+            view.run_command("terminus_clear_undo_stack")
 
         window = view.window()
         if window:
@@ -673,6 +675,17 @@ class TerminusActivateCommand(sublime_plugin.TextCommand):
         TerminusRecencyEventListener.set_recent_terminal(view)
 
 
+class TerminusClearUndoStackCommand(sublime_plugin.TextCommand):
+    def run(self, _):
+        if sublime.version() >= "4114":
+            sublime.set_timeout(self.run_async)
+
+    def run_async(self):
+        view = self.view
+        if view:
+            view.clear_undo_stack()
+
+
 class TerminusResetCommand(sublime_plugin.TextCommand):
 
     def run(self, _, soft=False, **kwargs):
@@ -680,6 +693,8 @@ class TerminusResetCommand(sublime_plugin.TextCommand):
         terminal = Terminal.from_id(view.id())
         if not terminal:
             return
+
+        view.run_command("terminus_clear_undo_stack")
 
         if soft:
             view.run_command("terminus_nuke")
