@@ -752,13 +752,13 @@ class TerminusRenameTitleCommand(sublime_plugin.TextCommand):
         view.run_command("terminus_render")
 
     def input(self, _):
-        return TemrinusRenameTitleTextInputerHandler(self.view)
+        return TerminusRenameTitleTextInputerHandler(self.view)
 
     def is_visible(self):
         return bool(Terminal.from_id(self.view.id()))
 
 
-class TemrinusRenameTitleTextInputerHandler(sublime_plugin.TextInputHandler):
+class TerminusRenameTitleTextInputerHandler(sublime_plugin.TextInputHandler):
     def __init__(self, view):
         self.view = view
         super().__init__()
