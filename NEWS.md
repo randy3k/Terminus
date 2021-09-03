@@ -1,3 +1,15 @@
+# v0.3.18 - v 0.3.20
+
+- Added theme: Ultimate Dark Neo
+- adds new theme, Solarized Light
+- improve url detection
+- support brightening bold text
+- Add adaptive theme and now it is the default
+- fix middle mouse paste under Linux
+- improve send string command (Merge 0f99062)
+- clear undo stack to release memory
+
+
 # v0.3.13 - v0.3.17
 
 - more themes
