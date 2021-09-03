@@ -486,8 +486,10 @@ class TerminusRecencyEventListener(sublime_plugin.EventListener):
     _active_view = {}
 
     def on_activated_async(self, view):
-        if view.settings().get("is_widget", False) and \
-                not view.settings().get("terminus_view", False):
+        if not view.settings().get("terminus_view", False):
+            return
+
+        if view.settings().get("is_widget", False):
             return
 
         if random() > 0.7:
