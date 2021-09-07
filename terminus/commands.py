@@ -489,9 +489,6 @@ class TerminusRecencyEventListener(sublime_plugin.EventListener):
         if not view.settings().get("terminus_view", False):
             return
 
-        if view.settings().get("is_widget", False):
-            return
-
         if random() > 0.7:
             # occassionally cull zombie terminals
             Terminal.cull_terminals()
