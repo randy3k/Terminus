@@ -1,4 +1,10 @@
-# v0.3.18 - v 0.3.20
+# v0.3.21 - v0.3.23
+
+ - do not check if the view is widget
+ - fix an issue of tagged panel
+
+
+# v0.3.18 - v0.3.20
 
 - Added theme: Ultimate Dark Neo
 - adds new theme, Solarized Light
