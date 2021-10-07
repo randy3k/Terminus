@@ -221,12 +221,13 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
 
         terminal = Terminal.from_tag(tag) if tag else None
         terminus_view = terminal.view if terminal else None
+        window = None
         if terminus_view:
             if panel_name:
                 window = panel_window(terminus_view)
             else:
                 window = terminus_view.window()
-        else:
+        if not window:
             window = self.window
 
         if not terminus_view and panel_name:
