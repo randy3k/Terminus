@@ -114,7 +114,9 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
             post_view_hooks=[],
             auto_close=True,
             cancellable=False,
-            timeit=False):
+            timeit=False,
+            paths=[],
+            ):
         config = None
 
         st_vars = self.window.extract_variables()
@@ -199,11 +201,17 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
 
         _env.update(env)
 
-        if not cwd and working_dir:
-            cwd = working_dir
+        # paths is passed if this was invoked from the side bar context menu
+        if paths:
+            cwd = paths[0]
+            if not os.path.isdir(cwd):
+                cwd = os.path.dirname(cwd)
+        else:
+            if not cwd and working_dir:
+                cwd = working_dir
 
-        if cwd:
-            cwd = sublime.expand_variables(cwd, st_vars)
+            if cwd:
+                cwd = sublime.expand_variables(cwd, st_vars)
 
         if not cwd:
             if self.window.folders():
