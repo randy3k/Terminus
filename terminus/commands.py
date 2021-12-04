@@ -770,7 +770,6 @@ class TerminusRenameTitleCommand(sublime_plugin.TextCommand):
         terminal = Terminal.from_id(view.id())
 
         terminal.hard_title = title
-        terminal.title = title
 
         view.run_command("terminus_render")
 

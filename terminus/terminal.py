@@ -32,7 +32,6 @@ class Terminal:
     _detached_terminals = []
 
     def __init__(self, view=None):
-        self._title = ""
         self.view = view
         self._cached_cursor = [0, 0]
         self._cached_cursor_is_hidden = [True]
@@ -218,10 +217,6 @@ class Terminal:
         self.hard_title = hard_title
 
         if view:
-            if hard_title is not None:
-                self.title = hard_title
-            else:
-                self.title = init_title
             self.set_offset()
 
         size = view_size(view or sublime.active_window().active_view(), (40, 80))
@@ -308,17 +303,6 @@ class Terminal:
             self.screen.resize(*size)
         except RuntimeError:
             pass
-
-    @property
-    def title(self):
-        return self._title
-
-    @title.setter
-    def title(self, value):
-        if not self.detached:
-            if self._title != value:
-                self._title = value
-                self.view.set_name(value)
 
     def clear_callback(self):
         self._pending_to_clear_scrollback[0] = True
