@@ -136,9 +136,9 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
         config_name = config["name"] if config else None
 
         if config_name:
-            init_title = config_name
+            default_title = config_name
         else:
-            init_title = DEFAULT_TITLE
+            default_title = DEFAULT_TITLE
 
         if config and "cmd" in config and "shell_cmd" in config:
             raise Exception(
@@ -275,7 +275,7 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
                 "cmd": cmd_to_run,
                 "cwd": cwd,
                 "env": _env,
-                "init_title": init_title,
+                "default_title": default_title,
                 "hard_title": title,
                 "panel_name": panel_name,
                 "tag": tag,
@@ -687,7 +687,7 @@ class TerminusActivateCommand(sublime_plugin.TextCommand):
             cmd=kwargs["cmd"],
             cwd=kwargs["cwd"],
             env=kwargs["env"],
-            init_title=kwargs["init_title"],
+            default_title=kwargs["default_title"],
             hard_title=kwargs["hard_title"],
             panel_name=kwargs["panel_name"],
             tag=kwargs["tag"],

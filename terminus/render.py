@@ -70,10 +70,12 @@ class TerminusRenderCommand(sublime_plugin.TextCommand, TerminusViewMixin):
             if current_title != terminal.hard_title:
                 view.set_name(terminal.hard_title)
         else:
-            if screen.title and current_title != screen.title:
-                view.set_name(screen.title)
+            if screen.title:
+                if current_title != screen.title:
+                    view.set_name(screen.title)
             else:
-                view.set_name(terminal.init_title)
+                if current_title != terminal.default_title:
+                    view.set_name(terminal.default_title)
 
         # we should not clear dirty lines here, it shoud be done in the eventloop
         # screen.dirty.clear()
