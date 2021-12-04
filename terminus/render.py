@@ -65,10 +65,12 @@ class TerminusRenderCommand(sublime_plugin.TextCommand, TerminusViewMixin):
             self.trim_history(edit, terminal)
             view.run_command("terminus_show_cursor")
 
-        if terminal.default_title:
-            terminal.title = terminal.default_title
-        elif screen.title != terminal.title:
-            terminal.title = screen.title
+        if not terminal.hard_title:
+            if terminal.title != screen.title:
+                if screen.title:
+                    terminal.title = screen.title
+                else:
+                    terminal.title = terminal.init_title
 
         # we should not clear dirty lines here, it shoud be done in the eventloop
         # screen.dirty.clear()

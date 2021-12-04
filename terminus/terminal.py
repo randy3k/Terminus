@@ -56,10 +56,9 @@ class Terminal:
         for terminal in cls._terminals.values():
             if terminal.tag == tag:
                 if current_window_only:
-                    view = terminal.view
                     active_window = sublime.active_window()
-                    if view and active_window:
-                        if view.window() == active_window:
+                    if terminal.window and active_window:
+                        if terminal.window == active_window:
                             return terminal
                 else:
                     return terminal
@@ -74,6 +73,15 @@ class Terminal:
 
         for terminal in terminals_to_close:
             terminal.close()
+
+    @property
+    def window(self):
+        if self.detached:
+            return None
+        if self.panel_name:
+            return panel_window(self.view)
+        else:
+            return self.view.window()
 
     def attach_view(self, view, offset=None):
         with self.lock:
@@ -101,10 +109,7 @@ class Terminal:
         if self.detached:
             # irrelevant if terminal is detached
             return True
-        if self.panel_name:
-            return panel_window(self.view) or False
-        else:
-            return self.view.window() or False
+        return self.window is not None
 
     def _need_to_render(self):
         flag = False
@@ -191,7 +196,7 @@ class Terminal:
         logger.debug("activating with offset %s", self.offset)
 
     def activate(
-            self, config_name, cmd, cwd=None, env=None, title=None,
+            self, cmd, cwd=None, env=None, init_title=None, hard_title=None,
             panel_name=None, tag=None, auto_close=True, cancellable=False, timeit=False):
 
         view = self.view
@@ -202,7 +207,6 @@ class Terminal:
             Terminal._detached_terminals.append(self)
             self.detached = True
 
-        self.config_name = config_name
         self.panel_name = panel_name
         self.tag = tag
         self.auto_close = auto_close
@@ -210,10 +214,14 @@ class Terminal:
         self.timeit = timeit
         if timeit:
             self.start_time = time.time()
-        self.default_title = view.name() if view.name() else title
+        self.init_title = init_title
+        self.hard_title = hard_title
 
         if view:
-            self.title = title
+            if hard_title is not None:
+                self.title = hard_title
+            else:
+                self.title = init_title
             self.set_offset()
 
         size = view_size(view or sublime.active_window().active_view(), (40, 80))
@@ -308,9 +316,9 @@ class Terminal:
     @title.setter
     def title(self, value):
         if not self.detached:
-            value = value if value else self.config_name
-            self._title = value
-            self.view.set_name(value)
+            if self._title != value:
+                self._title = value
+                self.view.set_name(value)
 
     def clear_callback(self):
         self._pending_to_clear_scrollback[0] = True

@@ -8,7 +8,7 @@ import logging
 import difflib
 from random import random
 
-from .const import DEFAULT_PANEL, EXEC_PANEL, CONTINUATION
+from .const import DEFAULT_PANEL, DEFAULT_TITLE, EXEC_PANEL, CONTINUATION
 from .clipboard import g_clipboard_history
 from .key import get_key_code
 from .terminal import Terminal
@@ -104,6 +104,7 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
             working_dir=None,
             env={},
             title=None,
+            show_in_panel=None,
             panel_name=None,
             focus=True,
             tag=None,
@@ -127,18 +128,26 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
 
         if config_name:
             config = self.get_config_by_name(config_name)
+        elif cmd or shell_cmd:
+            config = {}
         else:
             config = self.get_config_by_name("Default")
-        config_name = config["name"]
 
-        if "cmd" in config and "shell_cmd" in config:
+        config_name = config["name"] if config else None
+
+        if config_name:
+            init_title = config_name
+        else:
+            init_title = DEFAULT_TITLE
+
+        if config and "cmd" in config and "shell_cmd" in config:
             raise Exception(
                 "both `cmd` are `shell_cmd` are specified in config {}".format(config_name))
 
         if cmd and shell_cmd:
             raise Exception("both `cmd` are `shell_cmd` are passed to terminus_open")
 
-        if shell_cmd is not None or ("shell_cmd" in config and config["shell_cmd"] is not None):
+        if shell_cmd is not None or ("shell_cmd" in config and config["shell_cmd"]):
             if shell_cmd is None:
                 shell_cmd = config["shell_cmd"]
 
@@ -153,7 +162,7 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
             else:
                 cmd_to_run = ["/usr/bin/env", "bash", "-c", shell_cmd]
 
-        elif cmd is not None or ("cmd" in config and config["cmd"] is not None):
+        elif cmd is not None or ("cmd" in config and config["cmd"]):
 
             if cmd is None:
                 cmd = config["cmd"]
@@ -263,11 +272,11 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
         terminus_view.run_command(
             "terminus_activate",
             {
-                "config_name": config_name,
                 "cmd": cmd_to_run,
                 "cwd": cwd,
                 "env": _env,
-                "title": title,
+                "init_title": init_title,
+                "hard_title": title,
                 "panel_name": panel_name,
                 "tag": tag,
                 "auto_close": auto_close,
@@ -675,11 +684,11 @@ class TerminusActivateCommand(sublime_plugin.TextCommand):
         Terminal.cull_terminals()
         terminal = Terminal(view)
         terminal.activate(
-            config_name=kwargs["config_name"],
             cmd=kwargs["cmd"],
             cwd=kwargs["cwd"],
             env=kwargs["env"],
-            title=kwargs["title"],
+            init_title=kwargs["init_title"],
+            hard_title=kwargs["hard_title"],
             panel_name=kwargs["panel_name"],
             tag=kwargs["tag"],
             auto_close=kwargs["auto_close"],
@@ -760,7 +769,9 @@ class TerminusRenameTitleCommand(sublime_plugin.TextCommand):
         view = self.view
         terminal = Terminal.from_id(view.id())
 
-        terminal.default_title = title
+        terminal.hard_title = title
+        terminal.title = title
+
         view.run_command("terminus_render")
 
     def input(self, _):
@@ -780,7 +791,7 @@ class TerminusRenameTitleTextInputerHandler(sublime_plugin.TextInputHandler):
 
     def initial_text(self):
         terminal = Terminal.from_id(self.view.id())
-        return terminal.default_title if terminal else ""
+        return terminal.hard_title if terminal else ""
 
     def placeholder(self):
         return "new title"
