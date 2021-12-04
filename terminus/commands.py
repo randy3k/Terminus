@@ -276,7 +276,7 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
                 "cwd": cwd,
                 "env": _env,
                 "default_title": default_title,
-                "hard_title": title,
+                "title": title,
                 "panel_name": panel_name,
                 "tag": tag,
                 "auto_close": auto_close,
@@ -688,7 +688,7 @@ class TerminusActivateCommand(sublime_plugin.TextCommand):
             cwd=kwargs["cwd"],
             env=kwargs["env"],
             default_title=kwargs["default_title"],
-            hard_title=kwargs["hard_title"],
+            title=kwargs["title"],
             panel_name=kwargs["panel_name"],
             tag=kwargs["tag"],
             auto_close=kwargs["auto_close"],
@@ -769,7 +769,7 @@ class TerminusRenameTitleCommand(sublime_plugin.TextCommand):
         view = self.view
         terminal = Terminal.from_id(view.id())
 
-        terminal.hard_title = title
+        terminal.title = title
 
         view.run_command("terminus_render")
 
@@ -790,7 +790,7 @@ class TerminusRenameTitleTextInputerHandler(sublime_plugin.TextInputHandler):
 
     def initial_text(self):
         terminal = Terminal.from_id(self.view.id())
-        return terminal.hard_title if terminal else ""
+        return terminal.title if terminal else ""
 
     def placeholder(self):
         return "new title"

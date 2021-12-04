@@ -195,7 +195,7 @@ class Terminal:
         logger.debug("activating with offset %s", self.offset)
 
     def activate(
-            self, cmd, cwd=None, env=None, default_title=None, hard_title=None,
+            self, cmd, cwd=None, env=None, default_title=None, title=None,
             panel_name=None, tag=None, auto_close=True, cancellable=False, timeit=False):
 
         view = self.view
@@ -214,7 +214,7 @@ class Terminal:
         if timeit:
             self.start_time = time.time()
         self.default_title = default_title
-        self.hard_title = hard_title
+        self.title = title
 
         if view:
             self.set_offset()

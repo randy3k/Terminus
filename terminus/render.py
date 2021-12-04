@@ -66,9 +66,9 @@ class TerminusRenderCommand(sublime_plugin.TextCommand, TerminusViewMixin):
             view.run_command("terminus_show_cursor")
 
         current_title = view.name()
-        if terminal.hard_title:
-            if current_title != terminal.hard_title:
-                view.set_name(terminal.hard_title)
+        if terminal.title:
+            if current_title != terminal.title:
+                view.set_name(terminal.title)
         else:
             if screen.title:
                 if current_title != screen.title:
