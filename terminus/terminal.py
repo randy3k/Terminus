@@ -51,10 +51,18 @@ class Terminal:
         return cls._terminals[vid]
 
     @classmethod
-    def from_tag(cls, tag):
+    def from_tag(cls, tag, current_window_only=True):
+        # restrict to only current window
         for terminal in cls._terminals.values():
             if terminal.tag == tag:
-                return terminal
+                if current_window_only:
+                    view = terminal.view
+                    active_window = sublime.active_window()
+                    if view and active_window:
+                        if view.window() == active_window:
+                            return terminal
+                else:
+                    return terminal
         return None
 
     @classmethod
