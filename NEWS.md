@@ -1,3 +1,7 @@
+# v0.3.24
+
+- tags are restricted to each window
+
 # v0.3.21 - v0.3.23
 
  - do not check if the view is widget
