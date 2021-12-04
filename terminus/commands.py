@@ -256,7 +256,7 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
         if terminus_view:
             terminal = Terminal.from_id(terminus_view.id())
             if terminal:
-                terminal.close()
+                terminal.cancel(silently=True)
             terminus_view.run_command("terminus_nuke")
             terminus_view.settings().erase("terminus_view")
             terminus_view.settings().erase("terminus_view.closed")
@@ -501,7 +501,7 @@ class TerminusCancelBuildCommand(sublime_plugin.WindowCommand):
             if not terminal:
                 continue
             if terminal.cancellable:
-                terminal.cleanup(by_user=True)
+                terminal.cancel(by_user=True)
 
 
 class TerminusRecencyEventListener(sublime_plugin.EventListener):

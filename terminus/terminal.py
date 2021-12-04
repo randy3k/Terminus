@@ -179,7 +179,7 @@ class Terminal:
 
             feed_data()
             done[0] = True
-            sublime.set_timeout(lambda: self.cleanup())
+            sublime.set_timeout(lambda: self.cancel())
 
         threading.Thread(target=renderer).start()
 
@@ -240,18 +240,21 @@ class Terminal:
         if vid in self._terminals:
             del self._terminals[vid]
 
-    def cleanup(self, by_user=False):
-        logger.debug("cleanup")
+    def cancel(self, by_user=False, silently=False):
+        logger.debug("cancel")
         if not self.view or self.view.id() not in self._terminals:
             return
 
         if self.view.settings().get("terminus_view.closed"):
             return
 
+        # to avoid double cancel
+        self.view.settings().set("terminus_view.closed", True)
+
         self.view.run_command("terminus_render")
 
         # process might became orphan, make sure the process is terminated
-        # however, we do not immediately from it from _terminals to allow
+        # however, we do not immediately remove it from _terminals to allow
         # copy, paste etc to be functional
         self.process.terminate()
 
@@ -260,7 +263,9 @@ class Terminal:
 
         self.view.run_command("terminus_trim_trailing_lines")
 
-        if by_user:
+        if silently:
+            pass
+        elif by_user:
             self.view.run_command("append", {"characters": "[Cancelled]"})
 
         elif self.timeit:
@@ -289,9 +294,6 @@ class Terminal:
                 self.view.window().focus_view(self.view)
                 if active_view:
                     self.view.window().focus_view(active_view)
-
-        # to avoid being reactivated
-        self.view.settings().set("terminus_view.closed", True)
 
     def handle_resize(self):
         size = view_size(self.view)
