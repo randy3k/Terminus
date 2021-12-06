@@ -1067,17 +1067,19 @@ class TerminusFindTerminalMixin:
                         view = None
 
         if not view:
-            view = TerminusRecencyEventListener.recent_panel(window)
-            if view:
-                terminal = Terminal.from_id(view.id())
-                if not terminal:
-                    view = None
+            panel_name = TerminusRecencyEventListener.recent_panel(window)
+            if panel_name:
+                view = window.find_output_panel(panel_name)
                 if view:
-                    if terminal.show_in_panel:
-                        if not panel_is_visible(view):
-                            view = None
-                    elif not view_is_visible(view):
+                    terminal = Terminal.from_id(view.id())
+                    if not terminal:
                         view = None
+                    if view:
+                        if terminal.show_in_panel:
+                            if not panel_is_visible(view):
+                                view = None
+                        elif not view_is_visible(view):
+                            view = None
 
         if not view:
             view = self.get_terminus_panel(window, visible_only=True)
@@ -1094,11 +1096,13 @@ class TerminusFindTerminalMixin:
                         view = None
 
             if not view:
-                view = TerminusRecencyEventListener.recent_panel(window)
-                if view:
-                    terminal = Terminal.from_id(view.id())
-                    if not terminal:
-                        view = None
+                panel_name = TerminusRecencyEventListener.recent_panel(window)
+                if panel_name:
+                    view = window.find_output_panel(panel_name)
+                    if view:
+                        terminal = Terminal.from_id(view.id())
+                        if not terminal:
+                            view = None
 
             if not view:
                 view = self.get_terminus_panel(window, visible_only=False)
