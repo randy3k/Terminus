@@ -77,7 +77,7 @@ class Terminal:
     def window(self):
         if self.detached:
             return None
-        if self.panel_name:
+        if self.show_in_panel:
             return panel_window(self.view)
         else:
             return self.view.window()
@@ -196,7 +196,8 @@ class Terminal:
 
     def activate(
             self, cmd, cwd=None, env=None, default_title=None, title=None,
-            panel_name=None, tag=None, auto_close=True, cancellable=False, timeit=False):
+            show_in_panel=None, panel_name=None, tag=None, auto_close=True, cancellable=False,
+            timeit=False):
 
         view = self.view
         if view:
@@ -206,6 +207,7 @@ class Terminal:
             Terminal._detached_terminals.append(self)
             self.detached = True
 
+        self.show_in_panel = show_in_panel
         self.panel_name = panel_name
         self.tag = tag
         self.auto_close = auto_close
@@ -286,7 +288,7 @@ class Terminal:
 
         self.view.sel().clear()
 
-        if not self.panel_name and self.view.settings().get("result_file_regex"):
+        if not self.show_in_panel and self.view.settings().get("result_file_regex"):
             # if it is a tab based build, we will to refocus to enable next_result
             window = self.view.window()
             if window:

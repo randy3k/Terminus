@@ -236,40 +236,41 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
         if not os.path.isdir(cwd):
             raise Exception("{} does not exist".format(cwd))
 
-        terminal = Terminal.from_tag(tag) if tag else None
-        terminus_view = terminal.view if terminal else None
-        window = None
-        if terminus_view:
-            if panel_name:
-                window = panel_window(terminus_view)
-            else:
-                window = terminus_view.window()
-        if not window:
-            window = self.window
+        if show_in_panel is None and panel_name:
+            show_in_panel = True
 
-        if not terminus_view and panel_name:
-            if panel_name == DEFAULT_PANEL:
-                panel_name = available_panel_name(window, panel_name)
+        if show_in_panel and not panel_name:
+            panel_name = DEFAULT_PANEL
 
-            terminus_view = window.get_output_panel(panel_name)
+        window = self.window
+        view = None
 
-        if terminus_view:
-            terminal = Terminal.from_id(terminus_view.id())
+        if tag:
+            terminal = Terminal.from_tag(tag)
             if terminal:
+                window = terminal.window
+                view = terminal.view
+                # reset view
                 terminal.cancel(silently=True)
-            terminus_view.run_command("terminus_nuke")
-            terminus_view.settings().erase("terminus_view")
-            terminus_view.settings().erase("terminus_view.closed")
-            terminus_view.settings().erase("terminus_view.viewport_y")
+                view.run_command("terminus_nuke")
+                view.settings().erase("terminus_view")
+                view.settings().erase("terminus_view.closed")
+                view.settings().erase("terminus_view.viewport_y")
+
+        if panel_name == DEFAULT_PANEL:
+            panel_name = available_panel_name(window, panel_name)
+
+        if not view:
+            if show_in_panel:
+                view = window.get_output_panel(panel_name)
+            else:
+                view = window.new_file()
 
         # pre_window_hooks
         for hook in pre_window_hooks:
             window.run_command(*hook)
 
-        if not terminus_view:
-            terminus_view = window.new_file()
-
-        terminus_view.run_command(
+        view.run_command(
             "terminus_activate",
             {
                 "cmd": cmd_to_run,
@@ -277,6 +278,7 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
                 "env": _env,
                 "default_title": default_title,
                 "title": title,
+                "show_in_panel": show_in_panel,
                 "panel_name": panel_name,
                 "tag": tag,
                 "auto_close": auto_close,
@@ -286,11 +288,11 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
                 "line_regex": line_regex
             })
 
-        if panel_name:
+        if show_in_panel:
             window.run_command("show_panel", {"panel": "output.{}".format(panel_name)})
 
         if focus:
-            window.focus_view(terminus_view)
+            window.focus_view(view)
 
         # post_window_hooks
         for hook in post_window_hooks:
@@ -298,7 +300,7 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
 
         # post_view_hooks
         for hook in post_view_hooks:
-            terminus_view.run_command(*hook)
+            view.run_command(*hook)
 
     def show_configs(self):
         settings = sublime.load_settings("Terminus.sublime-settings")
@@ -434,11 +436,10 @@ class TerminusCloseCommand(sublime_plugin.TextCommand):
         terminal = Terminal.from_id(view.id())
         if terminal:
             terminal.close()
-            panel_name = terminal.panel_name
-            if panel_name:
+            if terminal.show_in_panel:
                 window = panel_window(view)
                 if window:
-                    window.destroy_output_panel(panel_name)
+                    window.destroy_output_panel(terminal.panel_name)
             else:
                 view.close()
 
@@ -547,7 +548,7 @@ class TerminusRecencyEventListener(sublime_plugin.EventListener):
             view = window.find_output_panel(panel)
             if view:
                 terminal = Terminal.from_id(view.id())
-                if terminal and terminal.panel_name:
+                if terminal and terminal.show_in_panel:
                     TerminusRecencyEventListener.set_recent_terminal(view)
 
     @classmethod
@@ -556,11 +557,10 @@ class TerminusRecencyEventListener(sublime_plugin.EventListener):
         if not terminal:
             return
         logger.debug("set recent view: {}".format(view.id()))
-        panel_name = terminal.panel_name
-        if panel_name and panel_name != EXEC_PANEL:
+        if terminal.show_in_panel and terminal.panel_name != EXEC_PANEL:
             window = panel_window(view)
             if window:
-                cls._recent_panel[window.id()] = panel_name
+                cls._recent_panel[window.id()] = terminal.panel_name
                 cls._recent_view[window.id()] = view
         else:
             window = view.window()
@@ -617,13 +617,12 @@ class TerminusInitializeViewCommand(sublime_plugin.TextCommand):
         view_settings.set("terminus_view", True)
         view_settings.set("terminus_view.args", kwargs)
 
-        terminus_settings = sublime.load_settings("Terminus.sublime-settings")
-        if "panel_name" in kwargs:
-            view_settings.set("terminus_view.panel_name", kwargs["panel_name"])
         if "tag" in kwargs:
             view_settings.set("terminus_view.tag", kwargs["tag"])
         if "cancellable" in kwargs:
             view_settings.set("terminus_view.cancellable", kwargs["cancellable"])
+
+        terminus_settings = sublime.load_settings("Terminus.sublime-settings")
         view_settings.set(
             "terminus_view.natural_keyboard",
             terminus_settings.get("natural_keyboard", True))
@@ -689,6 +688,7 @@ class TerminusActivateCommand(sublime_plugin.TextCommand):
             env=kwargs["env"],
             default_title=kwargs["default_title"],
             title=kwargs["title"],
+            show_in_panel=kwargs["show_in_panel"],
             panel_name=kwargs["panel_name"],
             tag=kwargs["tag"],
             auto_close=kwargs["auto_close"],
@@ -729,7 +729,7 @@ class TerminusResetCommand(sublime_plugin.TextCommand):
             terminal.detach_view()
 
             def run_sync():
-                if terminal.panel_name:
+                if terminal.show_in_panel:
                     panel_name = terminal.panel_name
                     window = panel_window(view)
                     window.destroy_output_panel(panel_name)  # do not reuse
@@ -801,7 +801,7 @@ class TerminusMaximizeCommand(sublime_plugin.TextCommand):
     def is_enabled(self):
         view = self.view
         terminal = Terminal.from_id(view.id())
-        if terminal and terminal.panel_name:
+        if terminal and terminal.show_in_panel:
             return True
         else:
             return False
@@ -824,7 +824,7 @@ class TerminusMaximizeCommand(sublime_plugin.TextCommand):
                     new_view.run_command("terminus_initialize_view")
                     new_view.run_command(
                         "terminus_insert", {"point": 0, "character": all_text})
-                    terminal.panel_name = None
+                    terminal.show_in_panel = False
                     terminal.attach_view(new_view, offset)
 
                 sublime.set_timeout_async(run_attach)
@@ -852,7 +852,7 @@ class TerminusMinimizeCommand(sublime_plugin.TextCommand):
     def is_enabled(self):
         view = self.view
         terminal = Terminal.from_id(view.id())
-        if terminal and not terminal.panel_name:
+        if terminal and not terminal.show_in_panel:
             return True
         else:
             return False
@@ -873,13 +873,14 @@ class TerminusMinimizeCommand(sublime_plugin.TextCommand):
                 if "panel_name" in kwargs:
                     panel_name = kwargs["panel_name"]
                 else:
-                    panel_name = view.settings().get("terminus_view.panel_name", None)
+                    panel_name = terminal.panel_name
                     if not panel_name:
                         panel_name = available_panel_name(window, DEFAULT_PANEL)
 
                 new_view = window.get_output_panel(panel_name)
 
                 def run_attach():
+                    terminal.show_in_panel = True
                     terminal.panel_name = panel_name
                     new_view.run_command("terminus_initialize_view", {"panel_name": panel_name})
                     new_view.run_command(
@@ -1135,7 +1136,7 @@ class TerminusSendStringCommand(TerminusFindTerminalMixin, sublime_plugin.Window
         elif not terminal.process.isalive():
             raise Exception("process is terminated")
 
-        if terminal.panel_name:
+        if terminal.show_in_panel:
             self.window.run_command("show_panel", {
                 "panel": "output.{}".format(terminal.panel_name)
             })
