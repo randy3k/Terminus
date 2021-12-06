@@ -14,7 +14,7 @@ from .key import get_key_code
 from .terminal import Terminal
 from .utils import shlex_split
 from .utils import available_panel_name
-from .view import panel_window, panel_is_visible, view_is_visible
+from .view import panel_window, view_is_visible
 
 
 KEYS = [
@@ -510,7 +510,6 @@ class TerminusCancelBuildCommand(sublime_plugin.WindowCommand):
 class TerminusRecencyEventListener(sublime_plugin.EventListener):
     _recent_panel = {}
     _recent_view = {}
-    _active_view = {}
 
     def on_activated_async(self, view):
         if not view.settings().get("terminus_view", False):
@@ -521,10 +520,6 @@ class TerminusRecencyEventListener(sublime_plugin.EventListener):
             Terminal.cull_terminals()
             # clear undo stack
             view.run_command("terminus_clear_undo_stack")
-
-        window = view.window()
-        if window:
-            TerminusRecencyEventListener._active_view[window.id()] = view
 
         terminal = Terminal.from_id(view.id())
         if terminal:
@@ -587,19 +582,6 @@ class TerminusRecencyEventListener(sublime_plugin.EventListener):
             return
         try:
             view = cls._recent_view[window.id()]
-            if view:
-                terminal = Terminal.from_id(view.id())
-                if terminal:
-                    return view
-        except KeyError:
-            return
-
-    @classmethod
-    def active_view(cls, window):
-        if not window:
-            return
-        try:
-            view = cls._active_view[window.id()]
             if view:
                 terminal = Terminal.from_id(view.id())
                 if terminal:
@@ -1034,13 +1016,11 @@ class TerminusDeleteWordCommand(sublime_plugin.TextCommand):
 
 class ToggleTerminusPanelCommand(sublime_plugin.WindowCommand):
 
-    def run(self, **kwargs):
+    def run(self, panel_name=None, **kwargs):
         window = self.window
-        if "panel_name" in kwargs:
-            panel_name = kwargs["panel_name"]
-        else:
+
+        if not panel_name:
             panel_name = TerminusRecencyEventListener.recent_panel(window) or DEFAULT_PANEL
-            kwargs["panel_name"] = panel_name
 
         terminus_view = window.find_output_panel(panel_name)
         if terminus_view:
@@ -1048,52 +1028,42 @@ class ToggleTerminusPanelCommand(sublime_plugin.WindowCommand):
                 "show_panel", {"panel": "output.{}".format(panel_name), "toggle": True})
             window.focus_view(terminus_view)
         else:
+            kwargs["panel_name"] = panel_name
             window.run_command("terminus_open", kwargs)
 
 
 class TerminusFindTerminalMixin:
 
     def find_terminal(self, window, tag=None, panel_only=False, visible_only=False):
+
         if tag:
             terminal = Terminal.from_tag(tag)
             if terminal:
-                view = terminal.view
-        else:
-            view = TerminusRecencyEventListener.active_view(window)
-            if view and panel_only:
+                return terminal
+
+        view = self.get_terminus_panel(window, visible_only=True)
+
+        if not view and not panel_only:
+            view = self.get_terminus_view(window, visible_only=True)
+
+        if not view:
+            view = TerminusRecencyEventListener.recent_view(window)
+            if view:
                 terminal = Terminal.from_id(view.id())
-                if not terminal or not terminal.panel_name:
+                if not terminal or not terminal.show_in_panel:
                     view = None
+
             if not view:
-                view = self.get_terminus_panel(window, visible_only=True)
+                view = TerminusRecencyEventListener.recent_panel(window)
+                terminal = Terminal.from_id(view.id())
+                if not terminal:
+                    view = None
+
+        if not visible_only:
+            if not view:
+                view = self.get_terminus_panel(window, visible_only=False)
             if not view and not panel_only:
-                view = self.get_terminus_view(window, visible_only=True)
-            if not view:
-                # get visible recent panel / view
-                if panel_only:
-                    panel_name = TerminusRecencyEventListener.recent_panel(window)
-                    if visible_only and panel_name:
-                        view = window.get_output_panel(panel_name)
-                        if view:
-                            terminal = Terminal.from_id(view.id())
-                            if not terminal or not panel_is_visible(view):
-                                view = None
-                else:
-                    view = TerminusRecencyEventListener.recent_view(window)
-                    if visible_only and view:
-                        terminal = Terminal.from_id(view.id())
-                        if terminal:
-                            if terminal.panel_name:
-                                if not panel_is_visible(view):
-                                    view = None
-                            else:
-                                if not view_is_visible(view):
-                                    view = None
-            if not visible_only:
-                if not view:
-                    view = self.get_terminus_panel(window, visible_only=False)
-                if not panel_only and not view:
-                    view = self.get_terminus_view(window, visible_only=False)
+                view = self.get_terminus_view(window, visible_only=False)
 
         if view:
             terminal = Terminal.from_id(view.id())

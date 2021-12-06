@@ -311,7 +311,7 @@ window.run_command(
     {
         "string": "ls\n",
         "tag": "<YOUR_TAG>"        # ignore this or set it to None to send text to the first terminal found
-        "visible_only": False      # send to visible panels only, default is `False`. Only relevent when `tag` is None
+        "visible_only": False      # send to visible terminal only, default is `False`. Only relevent when `tag` is None
     }
 )
 ```
