@@ -4,7 +4,7 @@ import sys
 import logging
 
 # from PackageDev
-# https://github.com/SublimeText/PackageDev/blob/20a4966c60c487b30badd2dac9238872e6918af3/main.py
+# https://github.com/SublimeText/PackageDev/blob/35a68969f94459d38341ea373ab2e583e60d8cda/main.py
 try:
     from package_control import events
 except ImportError:
@@ -12,11 +12,12 @@ except ImportError:
 else:
     if events.post_upgrade(__package__):
         # clean up sys.modules to ensure all submodules are reloaded
-        modules_to_clear = set()
         prefix = __package__ + "."  # don't clear the base package
-        for module_name in sys.modules:
-            if module_name.startswith(prefix) and module_name != __name__:
-                modules_to_clear.add(module_name)
+        modules_to_clear = {
+            module_name
+            for module_name in sys.modules
+            if module_name.startswith(prefix) and module_name != __name__
+        }
 
         print("[{}] Cleaning up {} cached modules after update…"
               .format(__package__, len(modules_to_clear)))
