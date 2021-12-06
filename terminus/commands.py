@@ -242,20 +242,26 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
         if show_in_panel and not panel_name:
             panel_name = DEFAULT_PANEL
 
+        terminal = None
         window = self.window
         view = None
 
         if tag:
             terminal = Terminal.from_tag(tag)
-            if terminal:
-                window = terminal.window
-                view = terminal.view
-                # reset view
-                terminal.cancel(silently=True)
-                view.run_command("terminus_nuke")
-                view.settings().erase("terminus_view")
-                view.settings().erase("terminus_view.closed")
-                view.settings().erase("terminus_view.viewport_y")
+
+        if not terminal and show_in_panel:
+            view = window.get_output_panel(panel_name)
+            if view:
+                terminal = Terminal.from_id(view.id())
+
+        if terminal:
+            # cleanup existing terminal
+            window = terminal.window
+            view = terminal.view
+            # reset view
+            terminal.cancel(silently=True)
+            view.run_command("terminus_nuke")
+            view.settings().erase("terminus_view")
 
         if panel_name == DEFAULT_PANEL:
             panel_name = available_panel_name(window, panel_name)
@@ -469,6 +475,8 @@ class TerminusExecCommand(sublime_plugin.WindowCommand):
 
         if "cmd" not in kwargs and "shell_cmd" not in kwargs:
             raise Exception("'cmd' or 'shell_cmd' is required")
+        if "show_in_panel" in kwargs and kwargs["show_in_panel"] is False:
+            raise Exception("'show_in_panel must be True")
         if "panel_name" in kwargs:
             raise Exception("'panel_name' must not be specified")
         if "tag" in kwargs:
@@ -613,6 +621,10 @@ class TerminusInitializeViewCommand(sublime_plugin.TextCommand):
 
         if view_settings.get("terminus_view", False):
             return
+
+        # if it is an reused view
+        view.settings().erase("terminus_view.closed")
+        view.settings().erase("terminus_view.viewport_y")
 
         view_settings.set("terminus_view", True)
         view_settings.set("terminus_view.args", kwargs)
