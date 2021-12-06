@@ -606,7 +606,7 @@ class TerminusRecencyEventListener(sublime_plugin.EventListener):
             return
 
 
-class TerminusInitializeCommand(sublime_plugin.TextCommand):
+class TerminusInitializeViewCommand(sublime_plugin.TextCommand):
     def run(self, _, **kwargs):
         view = self.view
         view_settings = view.settings()
@@ -680,7 +680,7 @@ class TerminusActivateCommand(sublime_plugin.TextCommand):
 
     def run(self, _, **kwargs):
         view = self.view
-        view.run_command("terminus_initialize", kwargs)
+        view.run_command("terminus_initialize_view", kwargs)
         Terminal.cull_terminals()
         terminal = Terminal(view)
         terminal.activate(
@@ -734,7 +734,7 @@ class TerminusResetCommand(sublime_plugin.TextCommand):
                     window = panel_window(view)
                     window.destroy_output_panel(panel_name)  # do not reuse
                     new_view = window.get_output_panel(panel_name)
-                    new_view.run_command("terminus_initialize")
+                    new_view.run_command("terminus_initialize_view")
 
                     def run_attach():
                         terminal.attach_view(new_view)
@@ -748,7 +748,7 @@ class TerminusResetCommand(sublime_plugin.TextCommand):
                         window.focus_view(view)
                     new_view = window.new_file()
                     view.close()
-                    new_view.run_command("terminus_initialize")
+                    new_view.run_command("terminus_initialize_view")
 
                     def run_attach():
                         window.run_command("set_layout", layout)
@@ -821,7 +821,7 @@ class TerminusMaximizeCommand(sublime_plugin.TextCommand):
                 new_view = window.new_file()
 
                 def run_attach():
-                    new_view.run_command("terminus_initialize")
+                    new_view.run_command("terminus_initialize_view")
                     new_view.run_command(
                         "terminus_insert", {"point": 0, "character": all_text})
                     terminal.panel_name = None
@@ -881,7 +881,7 @@ class TerminusMinimizeCommand(sublime_plugin.TextCommand):
 
                 def run_attach():
                     terminal.panel_name = panel_name
-                    new_view.run_command("terminus_initialize", {"panel_name": panel_name})
+                    new_view.run_command("terminus_initialize_view", {"panel_name": panel_name})
                     new_view.run_command(
                         "terminus_insert", {"point": 0, "character": all_text})
                     window.run_command("show_panel", {"panel": "output.{}".format(panel_name)})
