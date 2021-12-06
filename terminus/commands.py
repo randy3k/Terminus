@@ -239,9 +239,6 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
         if show_in_panel is None and panel_name:
             show_in_panel = True
 
-        if show_in_panel and not panel_name:
-            panel_name = DEFAULT_PANEL
-
         terminal = None
         window = self.window
         view = None
@@ -249,7 +246,7 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
         if tag:
             terminal = Terminal.from_tag(tag)
 
-        if not terminal and show_in_panel:
+        if not terminal and show_in_panel and panel_name:
             view = window.find_output_panel(panel_name)
             if view:
                 terminal = Terminal.from_id(view.id())
@@ -260,10 +257,10 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
             # reset view
             terminal.cancel(silently=True)
 
-        if panel_name == DEFAULT_PANEL:
-            panel_name = available_panel_name(window, panel_name)
-
         if not view:
+            if not panel_name:
+                panel_name = available_panel_name(window, DEFAULT_PANEL)
+
             if show_in_panel:
                 view = window.get_output_panel(panel_name)
             else:
