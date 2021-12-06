@@ -14,7 +14,7 @@ from .key import get_key_code
 from .terminal import Terminal
 from .utils import shlex_split
 from .utils import available_panel_name
-from .view import panel_window, view_is_visible
+from .view import panel_window, panel_is_visible, view_is_visible
 
 
 KEYS = [
@@ -1041,7 +1041,46 @@ class TerminusFindTerminalMixin:
             if terminal:
                 return terminal
 
-        view = self.get_terminus_panel(window, visible_only=True)
+        view = None
+
+        # The order of discovery is the following:
+        # 1. the most recent view (including panel) if it is visible
+        # 2. the most recent panel if it is visible
+        # 3. any visible panbel
+        # 4. any visible view
+        # 5. the most recent view (including panel)
+        # 6. the most recent panel
+        # 7. any panel
+        # 8. any view
+
+        if not view:
+            view = TerminusRecencyEventListener.recent_view(window)
+            if view:
+                terminal = Terminal.from_id(view.id())
+                if not terminal or (panel_only and not terminal.show_in_panel):
+                    view = None
+                if view:
+                    if terminal.show_in_panel:
+                        if not panel_is_visible(view):
+                            view = None
+                    elif not view_is_visible(view):
+                        view = None
+
+        if not view:
+            view = TerminusRecencyEventListener.recent_panel(window)
+            if view:
+                terminal = Terminal.from_id(view.id())
+                if not terminal:
+                    view = None
+                if view:
+                    if terminal.show_in_panel:
+                        if not panel_is_visible(view):
+                            view = None
+                    elif not view_is_visible(view):
+                        view = None
+
+        if not view:
+            view = self.get_terminus_panel(window, visible_only=True)
 
         if not view and not panel_only:
             view = self.get_terminus_view(window, visible_only=True)
@@ -1050,11 +1089,12 @@ class TerminusFindTerminalMixin:
             view = TerminusRecencyEventListener.recent_view(window)
             if view:
                 terminal = Terminal.from_id(view.id())
-                if not terminal or not terminal.show_in_panel:
+                if not terminal or (panel_only and not terminal.show_in_panel):
                     view = None
 
-            if not view:
-                view = TerminusRecencyEventListener.recent_panel(window)
+        if not view:
+            view = TerminusRecencyEventListener.recent_panel(window)
+            if view:
                 terminal = Terminal.from_id(view.id())
                 if not terminal:
                     view = None
