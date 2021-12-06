@@ -250,18 +250,15 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
             terminal = Terminal.from_tag(tag)
 
         if not terminal and show_in_panel:
-            view = window.get_output_panel(panel_name)
+            view = window.find_output_panel(panel_name)
             if view:
                 terminal = Terminal.from_id(view.id())
 
         if terminal:
             # cleanup existing terminal
-            window = terminal.window
             view = terminal.view
             # reset view
             terminal.cancel(silently=True)
-            view.run_command("terminus_nuke")
-            view.settings().erase("terminus_view")
 
         if panel_name == DEFAULT_PANEL:
             panel_name = available_panel_name(window, panel_name)
@@ -443,7 +440,7 @@ class TerminusCloseCommand(sublime_plugin.TextCommand):
         if terminal:
             terminal.close()
             if terminal.show_in_panel:
-                window = panel_window(view)
+                window = panel_window(terminal.view)
                 if window:
                     window.destroy_output_panel(terminal.panel_name)
             else:
@@ -620,11 +617,11 @@ class TerminusInitializeViewCommand(sublime_plugin.TextCommand):
         view_settings = view.settings()
 
         if view_settings.get("terminus_view", False):
-            return
-
-        # if it is an reused view
-        view.settings().erase("terminus_view.closed")
-        view.settings().erase("terminus_view.viewport_y")
+            # if it is an reused view
+            view.run_command("terminus_nuke")
+            view.settings().erase("terminus_view.closed")
+            view.settings().erase("terminus_view.detached")
+            view.settings().erase("terminus_view.viewport_y")
 
         view_settings.set("terminus_view", True)
         view_settings.set("terminus_view.args", kwargs)
