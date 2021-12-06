@@ -1085,21 +1085,21 @@ class TerminusFindTerminalMixin:
         if not view and not panel_only:
             view = self.get_terminus_view(window, visible_only=True)
 
-        if not view:
-            view = TerminusRecencyEventListener.recent_view(window)
-            if view:
-                terminal = Terminal.from_id(view.id())
-                if not terminal or (panel_only and not terminal.show_in_panel):
-                    view = None
-
-        if not view:
-            view = TerminusRecencyEventListener.recent_panel(window)
-            if view:
-                terminal = Terminal.from_id(view.id())
-                if not terminal:
-                    view = None
-
         if not visible_only:
+            if not view:
+                view = TerminusRecencyEventListener.recent_view(window)
+                if view:
+                    terminal = Terminal.from_id(view.id())
+                    if not terminal or (panel_only and not terminal.show_in_panel):
+                        view = None
+
+            if not view:
+                view = TerminusRecencyEventListener.recent_panel(window)
+                if view:
+                    terminal = Terminal.from_id(view.id())
+                    if not terminal:
+                        view = None
+
             if not view:
                 view = self.get_terminus_panel(window, visible_only=False)
             if not view and not panel_only:
