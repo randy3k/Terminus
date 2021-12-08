@@ -271,28 +271,23 @@ class TerminusShowCursorCommand(sublime_plugin.TextCommand, TerminusViewMixin):
 
 class TerminusCleanupCommand(sublime_plugin.TextCommand):
     def run(self, edit, by_user=False):
-        self.cleanup(by_user)
-
-    def cleanup(self, by_user=False):
         logger.debug("cleanup")
         view = self.view
         terminal = Terminal.from_id(view.id())
         if not terminal:
             return
 
-        if view.settings().get("terminus_view.closed"):
+        if view.settings().get("terminus_view.finished"):
             return
 
         # to avoid double cancel
-        view.settings().set("terminus_view.closed", True)
+        view.settings().set("terminus_view.finished", True)
 
         view.run_command("terminus_render")
 
         # process might became orphan, make sure the process is terminated
-        # however, we do not immediately remove it from _terminals to allow
-        # copy, paste etc to be functional
+        terminal.close()
         process = terminal.process
-        process.terminate()
 
         if process.exitstatus == 0 and terminal.auto_close:
             view.run_command("terminus_close")

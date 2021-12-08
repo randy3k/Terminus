@@ -255,7 +255,7 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
             # cleanup existing terminal
             view = terminal.view
             # avoid terminus_cleanup
-            view.settings().set("terminus_view.closed", True)
+            view.settings().set("terminus_view.finished", True)
             terminal.close()
 
         if not view:
@@ -531,7 +531,7 @@ class TerminusRecencyEventListener(sublime_plugin.EventListener):
         if not settings.has("terminus_view.args"):
             return
 
-        if settings.get("terminus_view.closed", False):
+        if settings.get("terminus_view.finished", False):
             return
 
         kwargs = settings.get("terminus_view.args")
@@ -599,7 +599,7 @@ class TerminusInitializeViewCommand(sublime_plugin.TextCommand):
         if view_settings.get("terminus_view", False):
             # if it is an reused view
             view.run_command("terminus_nuke")
-            view.settings().erase("terminus_view.closed")
+            view.settings().erase("terminus_view.finished")
             view.settings().erase("terminus_view.viewport_y")
 
         view_settings.set("terminus_view", True)
