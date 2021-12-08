@@ -492,11 +492,11 @@ class TerminusExecCommand(sublime_plugin.WindowCommand):
 
 
 class TerminusCancelBuildCommand(sublime_plugin.WindowCommand):
-    def run(self, *args, **kwargs):
+    def run(self, *args, exec_panel=EXEC_PANEL, **kwargs):
         window = self.window
         for panel_name in window.panels():
             panel_name = panel_name.replace("output.", "")
-            if panel_name != EXEC_PANEL:
+            if panel_name != exec_panel:
                 continue
             view = window.find_output_panel(panel_name)
             if not view:
