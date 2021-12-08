@@ -199,7 +199,7 @@ class Terminal:
                 self.offset = 0
         logger.debug("activating with offset %s", self.offset)
 
-    def activate(
+    def start(
             self, cmd, cwd=None, env=None, default_title=None, title=None,
             show_in_panel=None, panel_name=None, tag=None, auto_close=True, cancellable=False,
             timeit=False):

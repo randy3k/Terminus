@@ -670,7 +670,7 @@ class TerminusActivateCommand(sublime_plugin.TextCommand):
         view.run_command("terminus_initialize_view", kwargs)
         Terminal.cull_terminals()
         terminal = Terminal(view)
-        terminal.activate(
+        terminal.start(
             cmd=kwargs["cmd"],
             cwd=kwargs["cwd"],
             env=kwargs["env"],
