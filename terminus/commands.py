@@ -254,7 +254,8 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
         if terminal:
             # cleanup existing terminal
             view = terminal.view
-            # reset view
+            # avoid terminus_cleanup
+            view.settings().set("terminus_view.closed", True)
             terminal.close()
 
         if not view:
@@ -527,7 +528,7 @@ class TerminusRecencyEventListener(sublime_plugin.EventListener):
             return
 
         settings = view.settings()
-        if not settings.has("terminus_view.args") or settings.get("terminus_view.detached"):
+        if not settings.has("terminus_view.args"):
             return
 
         if settings.get("terminus_view.closed", False):
@@ -599,7 +600,6 @@ class TerminusInitializeViewCommand(sublime_plugin.TextCommand):
             # if it is an reused view
             view.run_command("terminus_nuke")
             view.settings().erase("terminus_view.closed")
-            view.settings().erase("terminus_view.detached")
             view.settings().erase("terminus_view.viewport_y")
 
         view_settings.set("terminus_view", True)
@@ -707,6 +707,8 @@ class TerminusResetCommand(sublime_plugin.TextCommand):
 
         view.run_command("terminus_clear_undo_stack")
 
+        args = view.settings().get("terminus_view.args", {})
+
         if soft:
             view.run_command("terminus_nuke")
             view.settings().erase("terminus_view.viewport_y")
@@ -722,9 +724,9 @@ class TerminusResetCommand(sublime_plugin.TextCommand):
                     window = panel_window(view)
                     window.destroy_output_panel(panel_name)  # do not reuse
                     new_view = window.get_output_panel(panel_name)
-                    new_view.run_command("terminus_initialize_view")
 
                     def run_attach():
+                        new_view.run_command("terminus_initialize_view", args)
                         terminal.attach_view(new_view)
                         window.run_command("show_panel", {"panel": "output.{}".format(panel_name)})
                         window.focus_view(new_view)
@@ -736,9 +738,9 @@ class TerminusResetCommand(sublime_plugin.TextCommand):
                         window.focus_view(view)
                     new_view = window.new_file()
                     view.close()
-                    new_view.run_command("terminus_initialize_view")
 
                     def run_attach():
+                        new_view.run_command("terminus_initialize_view", args)
                         window.run_command("set_layout", layout)
                         if has_focus:
                             window.focus_view(new_view)

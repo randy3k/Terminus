@@ -89,7 +89,6 @@ class Terminal:
             Terminal._terminals[view.id()] = self
             if self in Terminal._detached_terminals:
                 Terminal._detached_terminals.remove(self)
-            self.view.settings().erase("terminus_view.detached")
             # allow screen to be rerendered
             self.screen.dirty.update(range(self.screen.lines))
             self.set_offset(offset)
@@ -100,7 +99,6 @@ class Terminal:
             Terminal._detached_terminals.append(self)
             if self.view.id() in Terminal._terminals:
                 del Terminal._terminals[self.view.id()]
-            self.view.settings().set("terminus_view.detached", True)
             self.view = None
 
     @responsive(period=1, default=True)
@@ -242,10 +240,6 @@ class Terminal:
 
     def close(self):
         logger.debug("close")
-
-        if self.view:
-            # cleanup is not necessary
-            self.view.settings().set("terminus_view.closed", True)
 
         self.process.terminate()
         vid = self.view.id()
