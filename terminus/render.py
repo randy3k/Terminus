@@ -216,7 +216,7 @@ class TerminusRenderCommand(sublime_plugin.TextCommand, TerminusViewMixin):
             view.erase(edit, tail_region)
 
 
-class TerminusShowCursor(sublime_plugin.TextCommand, TerminusViewMixin):
+class TerminusShowCursorCommand(sublime_plugin.TextCommand, TerminusViewMixin):
 
     def run(self, edit, focus=True, scroll=True):
         view = self.view
@@ -267,3 +267,65 @@ class TerminusShowCursor(sublime_plugin.TextCommand, TerminusViewMixin):
         y = max(offset_y, viewport_y)
         view.settings().set("terminus_view.viewport_y", y)
         view.set_viewport_position((0, y), True)
+
+
+class TerminusCleanupCommand(sublime_plugin.TextCommand):
+    def run(self, edit, by_user=False):
+        self.cleanup(by_user)
+
+    def cleanup(self, by_user=False):
+        logger.debug("cleanup")
+        view = self.view
+        terminal = Terminal.from_id(view.id())
+        if not terminal:
+            return
+
+        if view.settings().get("terminus_view.closed"):
+            return
+
+        # to avoid double cancel
+        view.settings().set("terminus_view.closed", True)
+
+        view.run_command("terminus_render")
+
+        # process might became orphan, make sure the process is terminated
+        # however, we do not immediately remove it from _terminals to allow
+        # copy, paste etc to be functional
+        process = terminal.process
+        process.terminate()
+
+        if process.exitstatus == 0 and terminal.auto_close:
+            view.run_command("terminus_close")
+
+        view.run_command("terminus_trim_trailing_lines")
+
+        if by_user:
+            view.run_command("append", {"characters": "[Cancelled]"})
+
+        elif terminal.timeit:
+            if process.exitstatus == 0:
+                view.run_command(
+                    "append",
+                    {"characters": "[Finished in {:0.2f}s]".format(
+                        time.time() - terminal.start_time)})
+            else:
+                view.run_command(
+                    "append",
+                    {"characters": "[Finished in {:0.2f}s with exit code {}]".format(
+                        time.time() - terminal.start_time, process.exitstatus)})
+        elif process.exitstatus is not None:
+            view.run_command(
+                "append",
+                {"characters": "process is terminated with return code {}.".format(
+                    process.exitstatus)})
+
+        view.sel().clear()
+
+        if not terminal.show_in_panel and view.settings().get("result_file_regex"):
+            # if it is a tab based build, we will to refocus to enable next_result
+            window = view.window()
+            if window:
+                active_view = window.active_view()
+                view.window().focus_view(view)
+                if active_view:
+                    view.window().focus_view(active_view)

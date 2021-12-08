@@ -179,7 +179,12 @@ class Terminal:
 
             feed_data()
             done[0] = True
-            sublime.set_timeout(lambda: self.cancel())
+
+            def _cleanup():
+                if self.view:
+                    self.view.run_command("terminus_cleanup")
+
+            sublime.set_timeout(_cleanup)
 
         threading.Thread(target=renderer).start()
 
@@ -237,65 +242,15 @@ class Terminal:
 
     def close(self):
         logger.debug("close")
+
+        if self.view:
+            # cleanup is not necessary
+            self.view.settings().set("terminus_view.closed", True)
+
         self.process.terminate()
         vid = self.view.id()
         if vid in self._terminals:
             del self._terminals[vid]
-
-    def cancel(self, by_user=False, silently=False):
-        logger.debug("cancel")
-        if not self.view or self.view.id() not in self._terminals:
-            return
-
-        if self.view.settings().get("terminus_view.closed"):
-            return
-
-        # to avoid double cancel
-        self.view.settings().set("terminus_view.closed", True)
-
-        self.view.run_command("terminus_render")
-
-        # process might became orphan, make sure the process is terminated
-        # however, we do not immediately remove it from _terminals to allow
-        # copy, paste etc to be functional
-        self.process.terminate()
-
-        if self.process.exitstatus == 0 and self.auto_close:
-            self.view.run_command("terminus_close")
-
-        self.view.run_command("terminus_trim_trailing_lines")
-
-        if silently:
-            pass
-        elif by_user:
-            self.view.run_command("append", {"characters": "[Cancelled]"})
-
-        elif self.timeit:
-            if self.process.exitstatus == 0:
-                self.view.run_command(
-                    "append",
-                    {"characters": "[Finished in {:0.2f}s]".format(time.time() - self.start_time)})
-            else:
-                self.view.run_command(
-                    "append",
-                    {"characters": "[Finished in {:0.2f}s with exit code {}]".format(
-                        time.time() - self.start_time, self.process.exitstatus)})
-        elif self.process.exitstatus is not None:
-            self.view.run_command(
-                "append",
-                {"characters": "process is terminated with return code {}.".format(
-                    self.process.exitstatus)})
-
-        self.view.sel().clear()
-
-        if not self.show_in_panel and self.view.settings().get("result_file_regex"):
-            # if it is a tab based build, we will to refocus to enable next_result
-            window = self.view.window()
-            if window:
-                active_view = window.active_view()
-                self.view.window().focus_view(self.view)
-                if active_view:
-                    self.view.window().focus_view(active_view)
 
     def handle_resize(self):
         size = view_size(self.view)

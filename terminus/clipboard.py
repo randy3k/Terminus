@@ -2,8 +2,6 @@ import sublime
 import sublime_plugin
 from Default.paste_from_history import ClipboardHistory
 
-
-
 g_clipboard_history = ClipboardHistory()
 
 

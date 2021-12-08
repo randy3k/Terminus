@@ -255,7 +255,7 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
             # cleanup existing terminal
             view = terminal.view
             # reset view
-            terminal.cancel(silently=True)
+            terminal.close()
 
         if not view:
             if not panel_name:
@@ -504,7 +504,7 @@ class TerminusCancelBuildCommand(sublime_plugin.WindowCommand):
             if not terminal:
                 continue
             if terminal.cancellable:
-                terminal.cancel(by_user=True)
+                view.run_command("terminus_cleanup", {"by_user": True})
 
 
 class TerminusRecencyEventListener(sublime_plugin.EventListener):

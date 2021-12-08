@@ -27,72 +27,92 @@ else:
 
 from .terminus.clipboard import TerminusClipboardHistoryUpdater
 from .terminus.commands import (
-    TerminusCoreEventListener,
-    TerminusOpenCommand,
-    TerminusCloseCommand,
-    TerminusCloseAllCommand,
-    TerminusExecCommand,
-    TerminusCancelBuildCommand,
-    TerminusRecencyEventListener,
-    TerminusInitializeViewCommand,
     TerminusActivateCommand,
+    TerminusCancelBuildCommand,
     TerminusClearUndoStackCommand,
-    TerminusResetCommand,
-    TerminusRenameTitleCommand,
+    TerminusCloseAllCommand,
+    TerminusCloseCommand,
+    TerminusCopyCommand,
+    TerminusCoreEventListener,
+    TerminusDeleteWordCommand,
+    TerminusExecCommand,
+    TerminusInitializeViewCommand,
+    TerminusKeypressCommand,
     TerminusMaximizeCommand,
     TerminusMinimizeCommand,
-    TerminusKeypressCommand,
-    TerminusCopyCommand,
+    TerminusOpenCommand,
     TerminusPasteCommand,
     TerminusPasteFromHistoryCommand,
     TerminusPasteTextCommand,
-    TerminusDeleteWordCommand,
-    ToggleTerminusPanelCommand,
-    TerminusSendStringCommand
+    TerminusRecencyEventListener,
+    TerminusRenameTitleCommand,
+    TerminusResetCommand,
+    TerminusSendStringCommand,
+    ToggleTerminusPanelCommand
 )
 from .terminus.mouse import (
+    TerminusClickCommand,
     TerminusMouseEventListener,
     TerminusOpenContextUrlCommand,
-    TerminusClickCommand,
     TerminusOpenImageCommand
 )
 from .terminus.query import TerminusQueryContextListener
 from .terminus.render import (
+    TerminusCleanupCommand,
     TerminusRenderCommand,
-    TerminusShowCursor
+    TerminusShowCursorCommand
 )
 from .terminus.theme import (
-    TerminusSelectThemeCommand,
     TerminusGenerateThemeCommand,
+    TerminusSelectThemeCommand,
     plugin_loaded as theme_plugin_loaded,
     plugin_unloaded as theme_plugin_unloaded
 )
 from .terminus.utils import settings_on_change
 from .terminus.view import (
     TerminusInsertCommand,
-    TerminusTrimTrailingLinesCommand,
-    TerminusNukeCommand
+    TerminusNukeCommand,
+    TerminusTrimTrailingLinesCommand
 )
 
 
 __all__ = [
+    "TerminusActivateCommand",
+    "TerminusCancelBuildCommand",
+    "TerminusCleanupCommand",
+    "TerminusClearUndoStackCommand",
+    "TerminusClickCommand",
     "TerminusClipboardHistoryUpdater",
-    "TerminusCoreEventListener", "TerminusOpenCommand", "TerminusCloseCommand",
     "TerminusCloseAllCommand",
-    "TerminusExecCommand", "TerminusCancelBuildCommand",
-    "TerminusRecencyEventListener", "TerminusInitializeViewCommand", "TerminusActivateCommand",
-    "TerminusClearUndoStackCommand", "TerminusRenameTitleCommand",
-    "TerminusResetCommand", "TerminusMaximizeCommand", "TerminusMinimizeCommand",
-    "TerminusRenderCommand", "TerminusKeypressCommand", "TerminusCopyCommand",
-    "TerminusPasteCommand", "TerminusShowCursor",
-    "TerminusPasteFromHistoryCommand", "TerminusPasteTextCommand",
-    "TerminusDeleteWordCommand", "ToggleTerminusPanelCommand",
-    "TerminusSendStringCommand",
-    "TerminusSelectThemeCommand", "TerminusGenerateThemeCommand",
-    "TerminusMouseEventListener", "TerminusOpenContextUrlCommand", "TerminusClickCommand",
+    "TerminusCloseCommand",
+    "TerminusCopyCommand",
+    "TerminusCoreEventListener",
+    "TerminusDeleteWordCommand",
+    "TerminusExecCommand",
+    "TerminusGenerateThemeCommand",
+    "TerminusInitializeViewCommand",
+    "TerminusInsertCommand",
+    "TerminusKeypressCommand",
+    "TerminusMaximizeCommand",
+    "TerminusMinimizeCommand",
+    "TerminusMouseEventListener",
+    "TerminusNukeCommand",
+    "TerminusOpenCommand",
+    "TerminusOpenContextUrlCommand",
     "TerminusOpenImageCommand",
+    "TerminusPasteCommand",
+    "TerminusPasteFromHistoryCommand",
+    "TerminusPasteTextCommand",
     "TerminusQueryContextListener",
-    "TerminusInsertCommand", "TerminusTrimTrailingLinesCommand", "TerminusNukeCommand"
+    "TerminusRecencyEventListener",
+    "TerminusRenameTitleCommand",
+    "TerminusRenderCommand",
+    "TerminusResetCommand",
+    "TerminusSelectThemeCommand",
+    "TerminusSendStringCommand",
+    "TerminusShowCursorCommand",
+    "TerminusTrimTrailingLinesCommand",
+    "ToggleTerminusPanelCommand"
 ]
 
 
