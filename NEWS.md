@@ -1,3 +1,7 @@
+# v0.3.25 - v0.3.26
+- improve clean up code
+- improve title rendering code
+
 # v0.3.24
 
 - tags are restricted to each window
