@@ -14,7 +14,7 @@ from .key import get_key_code
 from .terminal import Terminal
 from .utils import shlex_split
 from .utils import available_panel_name
-from .view import panel_window, panel_is_visible, view_is_visible, get_panel_name
+from .view import get_panel_window, get_panel_name, panel_is_visible, view_is_visible
 
 
 KEYS = [
@@ -440,7 +440,7 @@ class TerminusCloseCommand(sublime_plugin.TextCommand):
 
         panel_name = get_panel_name(view)
         if panel_name:
-            window = panel_window(view)
+            window = get_panel_window(view)
             if window:
                 window.destroy_output_panel(panel_name)
         else:
@@ -558,7 +558,7 @@ class TerminusRecencyEventListener(sublime_plugin.EventListener):
             return
         logger.debug("set recent view: {}".format(view.id()))
         if terminal.show_in_panel and terminal.panel_name != EXEC_PANEL:
-            window = panel_window(view)
+            window = get_panel_window(view)
             if window:
                 cls._recent_panel[window.id()] = terminal.panel_name
                 cls._recent_view[window.id()] = view
@@ -723,7 +723,7 @@ class TerminusResetCommand(sublime_plugin.TextCommand):
             def run_sync():
                 if terminal.show_in_panel:
                     panel_name = terminal.panel_name
-                    window = panel_window(view)
+                    window = get_panel_window(view)
                     window.destroy_output_panel(panel_name)  # do not reuse
                     new_view = window.get_output_panel(panel_name)
 
@@ -808,7 +808,7 @@ class TerminusMaximizeCommand(sublime_plugin.TextCommand):
 
             def run_sync():
                 offset = terminal.offset
-                window = panel_window(view)
+                window = get_panel_window(view)
                 window.destroy_output_panel(terminal.panel_name)
                 new_view = window.new_file()
 

@@ -10,7 +10,7 @@ from queue import Queue, Empty
 
 from .ptty import TerminalPtyProcess, TerminalScreen, TerminalStream
 from .utils import responsive, intermission
-from .view import panel_window, view_size
+from .view import get_panel_window, view_size
 from .key import get_key_code
 from .image import get_image_info, image_resize
 
@@ -78,7 +78,7 @@ class Terminal:
         if self.detached:
             return None
         if self.show_in_panel:
-            return panel_window(self.view)
+            return get_panel_window(self.view)
         else:
             return self.view.window()
 

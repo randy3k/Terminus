@@ -4,7 +4,7 @@ import sublime_plugin
 import re
 
 
-def panel_window(view):
+def get_panel_window(view):
     for w in sublime.windows():
         for panel in w.panels():
             v = w.find_output_panel(panel.replace("output.", ""))
@@ -23,7 +23,7 @@ def get_panel_name(view):
 
 
 def panel_is_visible(view):
-    window = panel_window(view)
+    window = get_panel_window(view)
     if not window:
         return False
     active_panel = window.active_panel()
