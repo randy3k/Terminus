@@ -1017,9 +1017,26 @@ class TerminusDeleteWordCommand(sublime_plugin.TextCommand):
 
 
 class ToggleTerminusPanelCommand(sublime_plugin.WindowCommand):
+    cycled_panels = []
 
-    def run(self, panel_name=None, **kwargs):
+    def run(self, panel_name=None, cycle=False, **kwargs):
         window = self.window
+
+        if cycle and not panel_name:
+            panels = list(self.list_panels())
+            if any(a for _, a in panels):
+                active_panel_index = next(i for i, x in enumerate(panels) if x[1])
+                self.cycled_panels.append(panels[active_panel_index][0])
+
+                panels = panels[active_panel_index:] + panels[:active_panel_index]
+                next_panel = next((p for p, active in panels
+                                  if not active and p not in self.cycled_panels), None)
+                if next_panel:
+                    panel_name = next_panel
+                else:
+                    self.cycled_panels = []
+            else:
+                self.cycled_panels = []
 
         if not panel_name:
             panel_name = TerminusRecencyEventListener.recent_panel(window) or DEFAULT_PANEL
@@ -1032,6 +1049,19 @@ class ToggleTerminusPanelCommand(sublime_plugin.WindowCommand):
         else:
             kwargs["panel_name"] = panel_name
             window.run_command("terminus_open", kwargs)
+
+    def list_panels(self):
+        window = self.window
+        panels = window.panels()
+        active_panel = window.active_panel()
+        for p in panels:
+            active = p == active_panel
+            panel_name = p.replace("output.", "")
+            view = window.find_output_panel(panel_name)
+            if view:
+                terminal = Terminal.from_id(view.id())
+                if terminal:
+                    yield panel_name, active
 
 
 class TerminusFindTerminalMixin:
