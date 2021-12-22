@@ -13,6 +13,15 @@ def panel_window(view):
     return None
 
 
+def get_panel_name(view):
+    for w in sublime.windows():
+        for panel in w.panels():
+            v = w.find_output_panel(panel.replace("output.", ""))
+            if v and v.id() == view.id():
+                return panel.replace("output.", "")
+    return None
+
+
 def panel_is_visible(view):
     window = panel_window(view)
     if not window:

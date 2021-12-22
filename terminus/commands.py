@@ -14,7 +14,7 @@ from .key import get_key_code
 from .terminal import Terminal
 from .utils import shlex_split
 from .utils import available_panel_name
-from .view import panel_window, panel_is_visible, view_is_visible
+from .view import panel_window, panel_is_visible, view_is_visible, get_panel_name
 
 
 KEYS = [
@@ -437,12 +437,14 @@ class TerminusCloseCommand(sublime_plugin.TextCommand):
         terminal = Terminal.from_id(view.id())
         if terminal:
             terminal.close()
-            if terminal.show_in_panel:
-                window = panel_window(terminal.view)
-                if window:
-                    window.destroy_output_panel(terminal.panel_name)
-            else:
-                view.close()
+
+        panel_name = get_panel_name(view)
+        if panel_name:
+            window = panel_window(view)
+            if window:
+                window.destroy_output_panel(panel_name)
+        else:
+            view.close()
 
 
 class TerminusCloseAllCommand(sublime_plugin.WindowCommand):
