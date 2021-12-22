@@ -31,7 +31,7 @@ class TerminusCoreEventListener(sublime_plugin.EventListener):
         # panel doesn't trigger on_pre_close
         terminal = Terminal.from_id(view.id())
         if terminal:
-            terminal.close()
+            terminal.kill()
 
     def on_modified(self, view):
         # to catch unicode input
@@ -256,7 +256,7 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
             view = terminal.view
             # avoid terminus_cleanup
             view.settings().set("terminus_view.finished", True)
-            terminal.close()
+            terminal.kill()
 
         if not view:
             if not panel_name:
@@ -436,7 +436,7 @@ class TerminusCloseCommand(sublime_plugin.TextCommand):
 
         terminal = Terminal.from_id(view.id())
         if terminal:
-            terminal.close()
+            terminal.kill()
 
         panel_name = get_panel_name(view)
         if panel_name:

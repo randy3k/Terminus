@@ -65,13 +65,13 @@ class Terminal:
 
     @classmethod
     def cull_terminals(cls):
-        terminals_to_close = []
+        terminals_to_kill = []
         for terminal in cls._terminals.values():
             if not terminal.is_hosted():
-                terminals_to_close.append(terminal)
+                terminals_to_kill.append(terminal)
 
-        for terminal in terminals_to_close:
-            terminal.close()
+        for terminal in terminals_to_kill:
+            terminal.kill()
 
     @property
     def window(self):
@@ -238,8 +238,8 @@ class Terminal:
 
         self._start_rendering()
 
-    def close(self):
-        logger.debug("close")
+    def kill(self):
+        logger.debug("kill")
 
         self.process.terminate()
         vid = self.view.id()

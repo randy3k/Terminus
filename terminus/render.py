@@ -286,7 +286,7 @@ class TerminusCleanupCommand(sublime_plugin.TextCommand):
         view.run_command("terminus_render")
 
         # process might became orphan, make sure the process is terminated
-        terminal.close()
+        terminal.kill()
         process = terminal.process
 
         if process.exitstatus == 0 and terminal.auto_close:
