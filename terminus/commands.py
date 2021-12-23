@@ -1059,11 +1059,11 @@ class ToggleTerminusPanelCommand(sublime_plugin.WindowCommand):
         for p in panels:
             active = p == active_panel
             panel_name = p.replace("output.", "")
+            if panel_name == EXEC_PANEL:
+                continue
             view = window.find_output_panel(panel_name)
-            if view:
-                terminal = Terminal.from_id(view.id())
-                if terminal:
-                    yield panel_name, active
+            if view and view.settings().get("terminus_view"):
+                yield panel_name, active
 
 
 class TerminusFindTerminalMixin:
