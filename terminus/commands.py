@@ -1019,26 +1019,26 @@ class TerminusDeleteWordCommand(sublime_plugin.TextCommand):
 
 
 class ToggleTerminusPanelCommand(sublime_plugin.WindowCommand):
-    cycled_panels = []
+    def __init__(self, *args, **kwargs):
+        self.cycled_panels = []
+        super().__init__(*args, **kwargs)
 
     def run(self, panel_name=None, cycle=False, **kwargs):
         window = self.window
 
-        if cycle and not panel_name:
-            panels = list(self.list_panels())
-            if any(a for _, a in panels):
-                active_panel_index = next(i for i, x in enumerate(panels) if x[1])
-                self.cycled_panels.append(panels[active_panel_index][0])
-
-                panels = panels[active_panel_index:] + panels[:active_panel_index]
-                next_panel = next((p for p, active in panels
-                                  if not active and p not in self.cycled_panels), None)
-                if next_panel:
-                    panel_name = next_panel
+        if cycle:
+            if panel_name:
+                raise ValueError("panel_name has to be None when cycle is True")
+            # TODO: stop cycling if out of focus
+            panels = self.list_cycle_panels()
+            if panels:
+                panel_name = next((p for p in panels if p not in self.cycled_panels), None)
+                if panel_name:
+                    self.cycled_panels.append(panel_name)
                 else:
-                    self.cycled_panels = []
+                    self.cycled_panels[:] = []
             else:
-                self.cycled_panels = []
+                self.cycled_panels[:] = []
 
         if not panel_name:
             panel_name = TerminusRecencyEventListener.recent_panel(window) or DEFAULT_PANEL
@@ -1052,18 +1052,35 @@ class ToggleTerminusPanelCommand(sublime_plugin.WindowCommand):
             kwargs["panel_name"] = panel_name
             window.run_command("terminus_open", kwargs)
 
-    def list_panels(self):
+    def list_cycle_panels(self):
         window = self.window
-        panels = window.panels()
+        panels = []
         active_panel = window.active_panel()
-        for p in panels:
-            active = p == active_panel
+        active_index = -1
+
+        for p in window.panels():
             panel_name = p.replace("output.", "")
             if panel_name == EXEC_PANEL:
                 continue
             view = window.find_output_panel(panel_name)
             if view and view.settings().get("terminus_view"):
-                yield panel_name, active
+                if p == active_panel:
+                    active_index = len(panels)
+                panels.append(panel_name)
+
+        if active_index != -1:
+            panels = panels[active_index+1:] + panels[:active_index+1]
+        else:
+            self.cycled_panels[:] = []
+            recent_panel_name = TerminusRecencyEventListener.recent_panel(window)
+            try:
+                recent_index = panels.index(recent_panel_name)
+            except ValueError:
+                recent_index = -1
+            if recent_index != -1:
+                panels = panels[recent_index:] + panels[:recent_index]
+
+        return panels
 
 
 class TerminusFindTerminalMixin:
