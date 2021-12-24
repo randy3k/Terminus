@@ -511,11 +511,13 @@ class TerminusCancelBuildCommand(sublime_plugin.WindowCommand):
 
 
 class TerminusRecencyEventListener(sublime_plugin.EventListener):
+    cycling_panels = False
     _recent_panel = {}
     _recent_view = {}
 
     def on_activated_async(self, view):
         if not view.settings().get("terminus_view", False):
+            TerminusRecencyEventListener.cycling_panels = False
             return
 
         if random() > 0.7:
@@ -1029,7 +1031,11 @@ class ToggleTerminusPanelCommand(sublime_plugin.WindowCommand):
         if cycle:
             if panel_name:
                 raise ValueError("panel_name has to be None when cycle is True")
-            # TODO: stop cycling if out of focus
+
+            if not TerminusRecencyEventListener.cycling_panels:
+                self.cycled_panels[:] = []
+                TerminusRecencyEventListener.cycling_panels = True
+
             panels = self.list_cycle_panels()
             if panels:
                 panel_name = next((p for p in panels if p not in self.cycled_panels), None)
