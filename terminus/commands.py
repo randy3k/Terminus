@@ -535,7 +535,7 @@ class TerminusActivateCommand(sublime_plugin.TextCommand):
             cancellable=kwargs["cancellable"],
             timeit=kwargs["timeit"]
         )
-        RecencyManager.set_recent_terminal(view)
+        RecencyManager.from_view(view).set_recent_terminal(view)
 
 
 class TerminusClearUndoStackCommand(sublime_plugin.TextCommand):
@@ -875,14 +875,14 @@ class ToggleTerminusPanelCommand(sublime_plugin.WindowCommand):
 
     def run(self, panel_name=None, cycle=False, **kwargs):
         window = self.window
-
+        recency_manager = RecencyManager.from_window(window)
         if cycle:
             if panel_name:
                 raise ValueError("panel_name has to be None when cycle is True")
 
-            if not RecencyManager.cycling_panels:
+            if not recency_manager.cycling_panels:
                 self.cycled_panels[:] = []
-                RecencyManager.cycling_panels = True
+                recency_manager.cycling_panels = True
 
             panels = self.list_cycle_panels()
             if panels:
@@ -895,7 +895,7 @@ class ToggleTerminusPanelCommand(sublime_plugin.WindowCommand):
                 self.cycled_panels[:] = []
 
         if not panel_name:
-            panel_name = RecencyManager.recent_panel(window) or DEFAULT_PANEL
+            panel_name = recency_manager.recent_panel() or DEFAULT_PANEL
 
         terminus_view = window.find_output_panel(panel_name)
         if terminus_view:
@@ -908,6 +908,8 @@ class ToggleTerminusPanelCommand(sublime_plugin.WindowCommand):
 
     def list_cycle_panels(self):
         window = self.window
+        recency_manager = RecencyManager.from_window(window)
+
         panels = []
         active_panel = window.active_panel()
         active_index = -1
@@ -926,7 +928,7 @@ class ToggleTerminusPanelCommand(sublime_plugin.WindowCommand):
             panels = panels[active_index+1:] + panels[:active_index+1]
         else:
             self.cycled_panels[:] = []
-            recent_panel_name = RecencyManager.recent_panel(window)
+            recent_panel_name = recency_manager.recent_panel()
             try:
                 recent_index = panels.index(recent_panel_name)
             except ValueError:
@@ -947,6 +949,7 @@ class TerminusFindTerminalMixin:
                 return terminal
 
         view = None
+        recency_manager = RecencyManager.from_window(window)
 
         # The order of discovery is the following:
         # 1. the most recent view (including panel) if it is visible
@@ -959,7 +962,7 @@ class TerminusFindTerminalMixin:
         # 8. any view
 
         if not view:
-            view = RecencyManager.recent_view(window)
+            view = recency_manager.recent_view()
             if view:
                 terminal = Terminal.from_id(view.id())
                 if not terminal or (panel_only and not terminal.show_in_panel):
@@ -972,7 +975,7 @@ class TerminusFindTerminalMixin:
                         view = None
 
         if not view:
-            panel_name = RecencyManager.recent_panel(window)
+            panel_name = recency_manager.recent_panel()
             if panel_name:
                 view = window.find_output_panel(panel_name)
                 if view:
@@ -994,14 +997,14 @@ class TerminusFindTerminalMixin:
 
         if not visible_only:
             if not view:
-                view = RecencyManager.recent_view(window)
+                view = recency_manager.recent_view()
                 if view:
                     terminal = Terminal.from_id(view.id())
                     if not terminal or (panel_only and not terminal.show_in_panel):
                         view = None
 
             if not view:
-                panel_name = RecencyManager.recent_panel(window)
+                panel_name = recency_manager.recent_panel()
                 if panel_name:
                     view = window.find_output_panel(panel_name)
                     if view:

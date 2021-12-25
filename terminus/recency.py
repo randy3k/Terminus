@@ -8,47 +8,59 @@ logger = logging.getLogger('Terminus')
 
 
 class RecencyManager:
-    cycling_panels = False
-    _recent_panel = {}
-    _recent_view = {}
+    _instances = {}
 
     @classmethod
-    def set_recent_terminal(cls, view):
+    def from_window(cls, window):
+        if window.id() in cls._instances:
+            return cls._instances[window.id()]
+        instance = cls(window)
+        cls._instances[window.id()] = instance
+        return instance
+
+    @classmethod
+    def from_view(cls, view):
+        window = get_panel_window(view)
+        if not window:
+            window = view.window()
+        return cls.from_window(window)
+
+    def __init__(self, window):
+        self.window = window
+        self.cycling_panels = False
+        self._recent_panel = None
+        self._recent_view = None
+
+    def set_recent_terminal(self, view):
+        window = self.window
+        if not window:
+            return
         terminal = Terminal.from_id(view.id())
         if not terminal:
             return
         logger.debug("set recent view: {}".format(view.id()))
         if terminal.show_in_panel and terminal.panel_name != EXEC_PANEL:
-            window = get_panel_window(view)
-            if window:
-                cls._recent_panel[window.id()] = terminal.panel_name
-                cls._recent_view[window.id()] = view
+            self._recent_panel = terminal.panel_name
+            self._recent_view = view
         else:
-            window = view.window()
-            if window:
-                cls._recent_view[window.id()] = view
+            self._recent_view = view
 
-    @classmethod
-    def recent_panel(cls, window):
+    def recent_panel(self):
+        window = self.window
         if not window:
             return
-        try:
-            panel_name = cls._recent_panel[window.id()]
+        panel_name = self._recent_panel
+        if panel_name:
             view = window.find_output_panel(panel_name)
             if view and Terminal.from_id(view.id()):
                 return panel_name
-        except KeyError:
-            return
 
-    @classmethod
-    def recent_view(cls, window):
+    def recent_view(self):
+        window = self.window
         if not window:
             return
-        try:
-            view = cls._recent_view[window.id()]
-            if view:
-                terminal = Terminal.from_id(view.id())
-                if terminal:
-                    return view
-        except KeyError:
-            return
+        view = self._recent_view
+        if view:
+            terminal = Terminal.from_id(view.id())
+            if terminal:
+                return view

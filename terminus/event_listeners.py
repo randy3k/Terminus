@@ -15,8 +15,10 @@ logger = logging.getLogger('Terminus')
 class TerminusCoreEventListener(sublime_plugin.EventListener):
 
     def on_activated_async(self, view):
+        recency_manager = RecencyManager.from_view(view)
+
         if not view.settings().get("terminus_view", False):
-            RecencyManager.cycling_panels = False
+            recency_manager.cycling_panels = False
             return
 
         if random() > 0.7:
@@ -27,7 +29,7 @@ class TerminusCoreEventListener(sublime_plugin.EventListener):
 
         terminal = Terminal.from_id(view.id())
         if terminal:
-            RecencyManager.set_recent_terminal(view)
+            recency_manager.set_recent_terminal(view)
             return
 
         settings = view.settings()
@@ -113,4 +115,5 @@ class TerminusCoreEventListener(sublime_plugin.EventListener):
             if view:
                 terminal = Terminal.from_id(view.id())
                 if terminal and terminal.show_in_panel:
-                    RecencyManager.set_recent_terminal(view)
+                    recency_manager = RecencyManager.from_view(view)
+                    recency_manager.set_recent_terminal(view)
