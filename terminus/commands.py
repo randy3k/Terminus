@@ -5,15 +5,14 @@ import os
 import re
 import sys
 import logging
-import difflib
-from random import random
 
-from .const import DEFAULT_PANEL, DEFAULT_TITLE, EXEC_PANEL, CONTINUATION
 from .clipboard import g_clipboard_history
+from .const import DEFAULT_PANEL, DEFAULT_TITLE, EXEC_PANEL, CONTINUATION
 from .key import get_key_code
+from .recency import RecencyManager
 from .terminal import Terminal
-from .utils import shlex_split
 from .utils import available_panel_name
+from .utils import shlex_split
 from .view import get_panel_window, get_panel_name, panel_is_visible, view_is_visible
 
 
@@ -23,72 +22,6 @@ KEYS = [
 ]
 
 logger = logging.getLogger('Terminus')
-
-
-class TerminusCoreEventListener(sublime_plugin.EventListener):
-
-    def on_pre_close(self, view):
-        # panel doesn't trigger on_pre_close
-        terminal = Terminal.from_id(view.id())
-        if terminal:
-            terminal.kill()
-
-    def on_modified(self, view):
-        # to catch unicode input
-        terminal = Terminal.from_id(view.id())
-        if not terminal or not terminal.process.isalive():
-            return
-        command, args, _ = view.command_history(0)
-        if command.startswith("terminus"):
-            return
-        elif command == "insert" and "characters" in args and \
-                len(view.sel()) == 1 and view.sel()[0].empty():
-            chars = args["characters"]
-            current_cursor = view.sel()[0].end()
-            region = sublime.Region(
-                max(current_cursor - len(chars), self._cursor), current_cursor)
-            text = view.substr(region)
-            self._cursor = current_cursor
-            logger.debug("text {} detected".format(text))
-            view.run_command("terminus_paste_text", {"text": text, "bracketed": False})
-        elif command:
-            logger.debug("undo {}".format(command))
-            view.run_command("soft_undo")
-
-    def on_selection_modified(self, view):
-        terminal = Terminal.from_id(view.id())
-        if not terminal or not terminal.process.isalive():
-            return
-        if len(view.sel()) != 1 or not view.sel()[0].empty():
-            return
-        self._cursor = view.sel()[0].end()
-
-    def on_text_command(self, view, name, args):
-        if not view.settings().get('terminus_view'):
-            return
-        if name == "copy":
-            return ("terminus_copy", None)
-        elif name == "paste":
-            return ("terminus_paste", None)
-        elif name == "paste_and_indent":
-            return ("terminus_paste", None)
-        elif name == "paste_from_history":
-            return ("terminus_paste_from_history", None)
-        elif name == "paste_selection_clipboard":
-            self._pre_paste = view.substr(view.visible_region())
-        elif name == "undo":
-            return ("noop", None)
-
-    def on_post_text_command(self, view, name, args):
-        if not view.settings().get('terminus_view'):
-            return
-        if name == 'terminus_copy':
-            g_clipboard_history.push_text(sublime.get_clipboard())
-        elif name == "paste_selection_clipboard":
-            added = [
-                df[2:] for df in difflib.ndiff(self._pre_paste, view.substr(view.visible_region()))
-                if df[0] == '+']
-            view.run_command("terminus_paste_text", {"text": "".join(added)})
 
 
 class TerminusOpenCommand(sublime_plugin.WindowCommand):
@@ -510,91 +443,6 @@ class TerminusCancelBuildCommand(sublime_plugin.WindowCommand):
                 view.run_command("terminus_cleanup", {"by_user": True})
 
 
-class TerminusRecencyEventListener(sublime_plugin.EventListener):
-    cycling_panels = False
-    _recent_panel = {}
-    _recent_view = {}
-
-    def on_activated_async(self, view):
-        if not view.settings().get("terminus_view", False):
-            TerminusRecencyEventListener.cycling_panels = False
-            return
-
-        if random() > 0.7:
-            # occassionally cull zombie terminals
-            Terminal.cull_terminals()
-            # clear undo stack
-            view.run_command("terminus_clear_undo_stack")
-
-        terminal = Terminal.from_id(view.id())
-        if terminal:
-            TerminusRecencyEventListener.set_recent_terminal(view)
-            return
-
-        settings = view.settings()
-        if not settings.has("terminus_view.args"):
-            return
-
-        if settings.get("terminus_view.finished", False):
-            return
-
-        kwargs = settings.get("terminus_view.args")
-        if "cmd" not in kwargs:
-            return
-
-        sublime.set_timeout(lambda: view.run_command("terminus_activate", kwargs), 100)
-
-    def on_window_command(self, window, command_name, args):
-        if command_name == "show_panel":
-            panel = args["panel"].replace("output.", "")
-            view = window.find_output_panel(panel)
-            if view:
-                terminal = Terminal.from_id(view.id())
-                if terminal and terminal.show_in_panel:
-                    TerminusRecencyEventListener.set_recent_terminal(view)
-
-    @classmethod
-    def set_recent_terminal(cls, view):
-        terminal = Terminal.from_id(view.id())
-        if not terminal:
-            return
-        logger.debug("set recent view: {}".format(view.id()))
-        if terminal.show_in_panel and terminal.panel_name != EXEC_PANEL:
-            window = get_panel_window(view)
-            if window:
-                cls._recent_panel[window.id()] = terminal.panel_name
-                cls._recent_view[window.id()] = view
-        else:
-            window = view.window()
-            if window:
-                cls._recent_view[window.id()] = view
-
-    @classmethod
-    def recent_panel(cls, window):
-        if not window:
-            return
-        try:
-            panel_name = cls._recent_panel[window.id()]
-            view = window.find_output_panel(panel_name)
-            if view and Terminal.from_id(view.id()):
-                return panel_name
-        except KeyError:
-            return
-
-    @classmethod
-    def recent_view(cls, window):
-        if not window:
-            return
-        try:
-            view = cls._recent_view[window.id()]
-            if view:
-                terminal = Terminal.from_id(view.id())
-                if terminal:
-                    return view
-        except KeyError:
-            return
-
-
 class TerminusInitializeViewCommand(sublime_plugin.TextCommand):
     def run(self, _, **kwargs):
         view = self.view
@@ -687,7 +535,7 @@ class TerminusActivateCommand(sublime_plugin.TextCommand):
             cancellable=kwargs["cancellable"],
             timeit=kwargs["timeit"]
         )
-        TerminusRecencyEventListener.set_recent_terminal(view)
+        RecencyManager.set_recent_terminal(view)
 
 
 class TerminusClearUndoStackCommand(sublime_plugin.TextCommand):
@@ -1032,9 +880,9 @@ class ToggleTerminusPanelCommand(sublime_plugin.WindowCommand):
             if panel_name:
                 raise ValueError("panel_name has to be None when cycle is True")
 
-            if not TerminusRecencyEventListener.cycling_panels:
+            if not RecencyManager.cycling_panels:
                 self.cycled_panels[:] = []
-                TerminusRecencyEventListener.cycling_panels = True
+                RecencyManager.cycling_panels = True
 
             panels = self.list_cycle_panels()
             if panels:
@@ -1047,7 +895,7 @@ class ToggleTerminusPanelCommand(sublime_plugin.WindowCommand):
                 self.cycled_panels[:] = []
 
         if not panel_name:
-            panel_name = TerminusRecencyEventListener.recent_panel(window) or DEFAULT_PANEL
+            panel_name = RecencyManager.recent_panel(window) or DEFAULT_PANEL
 
         terminus_view = window.find_output_panel(panel_name)
         if terminus_view:
@@ -1078,7 +926,7 @@ class ToggleTerminusPanelCommand(sublime_plugin.WindowCommand):
             panels = panels[active_index+1:] + panels[:active_index+1]
         else:
             self.cycled_panels[:] = []
-            recent_panel_name = TerminusRecencyEventListener.recent_panel(window)
+            recent_panel_name = RecencyManager.recent_panel(window)
             try:
                 recent_index = panels.index(recent_panel_name)
             except ValueError:
@@ -1111,7 +959,7 @@ class TerminusFindTerminalMixin:
         # 8. any view
 
         if not view:
-            view = TerminusRecencyEventListener.recent_view(window)
+            view = RecencyManager.recent_view(window)
             if view:
                 terminal = Terminal.from_id(view.id())
                 if not terminal or (panel_only and not terminal.show_in_panel):
@@ -1124,7 +972,7 @@ class TerminusFindTerminalMixin:
                         view = None
 
         if not view:
-            panel_name = TerminusRecencyEventListener.recent_panel(window)
+            panel_name = RecencyManager.recent_panel(window)
             if panel_name:
                 view = window.find_output_panel(panel_name)
                 if view:
@@ -1146,14 +994,14 @@ class TerminusFindTerminalMixin:
 
         if not visible_only:
             if not view:
-                view = TerminusRecencyEventListener.recent_view(window)
+                view = RecencyManager.recent_view(window)
                 if view:
                     terminal = Terminal.from_id(view.id())
                     if not terminal or (panel_only and not terminal.show_in_panel):
                         view = None
 
             if not view:
-                panel_name = TerminusRecencyEventListener.recent_panel(window)
+                panel_name = RecencyManager.recent_panel(window)
                 if panel_name:
                     view = window.find_output_panel(panel_name)
                     if view:

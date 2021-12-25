@@ -33,7 +33,6 @@ from .terminus.commands import (
     TerminusCloseAllCommand,
     TerminusCloseCommand,
     TerminusCopyCommand,
-    TerminusCoreEventListener,
     TerminusDeleteWordCommand,
     TerminusExecCommand,
     TerminusInitializeViewCommand,
@@ -44,11 +43,13 @@ from .terminus.commands import (
     TerminusPasteCommand,
     TerminusPasteFromHistoryCommand,
     TerminusPasteTextCommand,
-    TerminusRecencyEventListener,
     TerminusRenameTitleCommand,
     TerminusResetCommand,
     TerminusSendStringCommand,
     ToggleTerminusPanelCommand
+)
+from .terminus.event_listeners import (
+    TerminusCoreEventListener
 )
 from .terminus.mouse import (
     TerminusClickCommand,
@@ -104,7 +105,6 @@ __all__ = [
     "TerminusPasteFromHistoryCommand",
     "TerminusPasteTextCommand",
     "TerminusQueryContextListener",
-    "TerminusRecencyEventListener",
     "TerminusRenameTitleCommand",
     "TerminusRenderCommand",
     "TerminusResetCommand",
