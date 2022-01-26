@@ -207,5 +207,5 @@ def plugin_loaded():
 def plugin_unloaded():
     settings = sublime.load_settings("Terminus.sublime-settings")
     preferences = sublime.load_settings("Preferences.sublime-settings")
-    settings_on_change(settings, ["256color", "user_theme_colors", "theme"], clear=True)
+    settings_on_change(settings, ["256color", "user_theme_colors", "user_light_theme_colors", "user_dark_theme_colors", "theme"], clear=True)
     settings_on_change(preferences, "color_scheme", clear=True)
