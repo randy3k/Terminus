@@ -65,6 +65,14 @@ class TerminusGenerateThemeCommand(sublime_plugin.WindowCommand):
 
         if theme == "user":
             variables = settings.get("user_theme_colors", {})
+
+            if sublime.version() >= "4096":
+                current_style = sublime.ui_info()['theme']['style']
+                style_variables = settings.get("user_{}_theme_colors".format(current_style), None)
+
+                if isinstance(style_variables, dict):
+                    variables = dict(variables, **style_variables)
+
             for key, value in list(variables.items()):
                 if key.isdigit():
                     variables[ANSI_COLORS[int(key)]] = value
@@ -184,9 +192,9 @@ def plugin_loaded():
             lambda: sublime.active_window().run_command("terminus_generate_theme"),
             100)
 
-    settings_on_change(settings, ["256color", "user_theme_colors", "theme"])(
-        lambda _: sublime.active_window().run_command("terminus_generate_theme")
-    )
+    settings_on_change(
+        settings, ["256color", "user_theme_colors", "user_light_theme_colors", "user_dark_theme_colors", "theme"]
+    )(lambda _: sublime.active_window().run_command("terminus_generate_theme"))
 
     def check_update_theme(value):
         settings = sublime.load_settings("Terminus.sublime-settings")
