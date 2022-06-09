@@ -1,6 +1,9 @@
 # v0.3.25 - v0.3.26
 - improve clean up code
 - improve title rendering code
+- refactor event liseners
+- refactor RecencyManager
+- Add user_light_theme_colors and user_dark_theme_colors
 
 # v0.3.24
 
