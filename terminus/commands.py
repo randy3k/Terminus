@@ -7,7 +7,7 @@ import sys
 import logging
 
 from .clipboard import g_clipboard_history
-from .const import DEFAULT_PANEL, DEFAULT_TITLE, EXEC_PANEL, CONTINUATION
+from .const import DEFAULT_TITLE, EXEC_PANEL, CONTINUATION
 from .key import get_key_code
 from .recency import RecencyManager
 from .terminal import Terminal
@@ -193,7 +193,8 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
 
         if not view:
             if not panel_name:
-                panel_name = available_panel_name(window, DEFAULT_PANEL)
+                default_panel = RecencyManager.from_window(self.window).get_default_panel()
+                panel_name = available_panel_name(window, default_panel)
 
             if show_in_panel:
                 view = window.get_output_panel(panel_name)
@@ -281,7 +282,8 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
             if index == 0:
                 self.run(config_name=config_name)
             elif index == 1:
-                self.run(config_name=config_name, panel_name=DEFAULT_PANEL)
+                default_panel = RecencyManager.from_window(self.window).get_default_panel()
+                self.run(config_name=config_name, panel_name=default_panel)
 
     def get_config_by_name(self, name):
         default_config = self.default_config()
@@ -717,7 +719,8 @@ class TerminusMinimizeCommand(sublime_plugin.TextCommand):
                 else:
                     panel_name = terminal.panel_name
                     if not panel_name:
-                        panel_name = available_panel_name(window, DEFAULT_PANEL)
+                        default_panel = RecencyManager.from_window(window).get_default_panel()
+                        panel_name = available_panel_name(window, default_panel)
 
                 new_view = window.get_output_panel(panel_name)
 
@@ -895,7 +898,7 @@ class ToggleTerminusPanelCommand(sublime_plugin.WindowCommand):
                 self.cycled_panels[:] = []
 
         if not panel_name:
-            panel_name = recency_manager.recent_panel() or DEFAULT_PANEL
+            panel_name = recency_manager.recent_panel() or recency_manager.get_default_panel()
 
         terminus_view = window.find_output_panel(panel_name)
         if terminus_view:

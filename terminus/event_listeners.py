@@ -117,3 +117,6 @@ class TerminusCoreEventListener(sublime_plugin.EventListener):
                 if terminal and terminal.show_in_panel:
                     recency_manager = RecencyManager.from_view(view)
                     recency_manager.set_recent_terminal(view)
+
+    def on_load_project_async(self, window):
+        window.run_command("hide_panel")

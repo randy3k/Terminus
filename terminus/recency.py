@@ -6,16 +6,29 @@ from .view import get_panel_window
 
 logger = logging.getLogger('Terminus')
 
+def get_instance_name(window):
+    """ returns a unique name per window and per project
+        effectively a human readable hash(window.id() + window.project_file_name())
+    """
+
+    # make the the project filename as (1) unique (2) short as possible
+    file_name = window.project_file_name()
+    last_slash_index = file_name.rfind('/')
+    path_hash = hash(file_name[:last_slash_index]) % 32
+    project_name = file_name[last_slash_index+1:][:-len('.sublime-project')]
+
+    return "{}.{}/{}".format(window.id(), path_hash, project_name)
 
 class RecencyManager:
     _instances = {}
 
     @classmethod
     def from_window(cls, window):
-        if window.id() in cls._instances:
-            return cls._instances[window.id()]
+        name = get_instance_name(window)
+        if name in cls._instances:
+            return cls._instances[name]
         instance = cls(window)
-        cls._instances[window.id()] = instance
+        cls._instances[name] = instance
         return instance
 
     @classmethod
@@ -64,3 +77,7 @@ class RecencyManager:
             terminal = Terminal.from_id(view.id())
             if terminal:
                 return view
+
+
+    def get_default_panel(self):
+        return get_instance_name(self.window) + ":Terminus"
