@@ -12,10 +12,12 @@ class RecencyManager:
 
     @classmethod
     def from_window(cls, window):
-        if window in cls._instances:
-            return cls._instances[window]
+        if not window:
+            return None
+        if window.id() in cls._instances:
+            return cls._instances[window.id()]
         instance = cls(window)
-        cls._instances[window] = instance
+        cls._instances[window.id()] = instance
         return instance
 
     @classmethod

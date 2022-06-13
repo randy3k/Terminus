@@ -16,6 +16,8 @@ class TerminusCoreEventListener(sublime_plugin.EventListener):
 
     def on_activated_async(self, view):
         recency_manager = RecencyManager.from_view(view)
+        if not recency_manager:
+            return
 
         if not view.settings().get("terminus_view", False):
             recency_manager.cycling_panels = False
@@ -116,4 +118,5 @@ class TerminusCoreEventListener(sublime_plugin.EventListener):
                 terminal = Terminal.from_id(view.id())
                 if terminal and terminal.show_in_panel:
                     recency_manager = RecencyManager.from_view(view)
-                    recency_manager.set_recent_terminal(view)
+                    if recency_manager:
+                        recency_manager.set_recent_terminal(view)

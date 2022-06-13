@@ -535,7 +535,9 @@ class TerminusActivateCommand(sublime_plugin.TextCommand):
             cancellable=kwargs["cancellable"],
             timeit=kwargs["timeit"]
         )
-        RecencyManager.from_view(view).set_recent_terminal(view)
+        recency_manager = RecencyManager.from_view(view)
+        if recency_manager:
+            RecencyManager.from_view(view).set_recent_terminal(view)
 
 
 class TerminusClearUndoStackCommand(sublime_plugin.TextCommand):
@@ -876,6 +878,8 @@ class ToggleTerminusPanelCommand(sublime_plugin.WindowCommand):
     def run(self, panel_name=None, cycle=False, **kwargs):
         window = self.window
         recency_manager = RecencyManager.from_window(window)
+        if not recency_manager:
+            return
         if cycle:
             if panel_name:
                 raise ValueError("panel_name has to be None when cycle is True")
@@ -909,6 +913,8 @@ class ToggleTerminusPanelCommand(sublime_plugin.WindowCommand):
     def list_cycle_panels(self):
         window = self.window
         recency_manager = RecencyManager.from_window(window)
+        if not recency_manager:
+            return
 
         panels = []
         active_panel = window.active_panel()
@@ -950,6 +956,8 @@ class TerminusFindTerminalMixin:
 
         view = None
         recency_manager = RecencyManager.from_window(window)
+        if not recency_manager:
+            return
 
         # The order of discovery is the following:
         # 1. the most recent view (including panel) if it is visible
