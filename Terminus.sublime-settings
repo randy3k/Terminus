@@ -141,5 +141,8 @@
         // you could change settings like "font_face", "font_size" and paddings.
     },
 
+    // reactivate terminals when window starts
+    "reactivate_terminals": true,
+
     "debug": false
 }

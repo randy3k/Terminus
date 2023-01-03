@@ -45,6 +45,10 @@ class TerminusCoreEventListener(sublime_plugin.EventListener):
         if "cmd" not in kwargs:
             return
 
+        settings = sublime.load_settings("Terminus.sublime-settings")
+        if settings.get("reactivate_terminals", True) is not True:
+            return
+
         sublime.set_timeout(lambda: view.run_command("terminus_activate", kwargs), 100)
 
     def on_pre_close(self, view):
