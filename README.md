@@ -334,8 +334,8 @@ It is known that the color of the scrollback history will be lost when a termina
 
 ### Terminal panel background issue
 
-If you are using DA UI and your terminal panel has weired background color,
-try playing with the setting `panel_background_color` in `DA UI: Theme
+If you are using DA UI and your terminal panel has weird background color,
+try playing with the setting `panel_background_color` or `panel_text_output_background_color` in `DA UI: Theme
 Settings`.
 
 <img src="https://user-images.githubusercontent.com/1690993/41728204-31a9a2a2-7544-11e8-9fb6-a37b59da852a.png" width="50%" />
@@ -345,6 +345,11 @@ Settings`.
     "panel_background_color": "$background_color"
 }
 ```
+Or, to keep the Find and Replace panels unchanged:
+```json
+"panel_text_output_background_color": "$background_color"
+```
+
 
 ### Cmd.exe rendering issue in panel
 
