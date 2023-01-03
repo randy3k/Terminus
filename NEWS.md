@@ -1,3 +1,15 @@
+# v0.3.26:
+
+- fix a bug when window is None
+- Another iteration to fix None window bug
+- Add Nord theme
+- Do not animate the viewport scolling
+- allow user to override the terminal size
+- Improve "panel background issue" FAQ suggestion
+- add a setting to not reactivate terminals.
+- close panel when triggered from command palette
+- always close temrinal when auto_close is true regradless return code
+
 # v0.3.25 - v0.3.26
 - improve clean up code
 - improve title rendering code

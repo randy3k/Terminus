@@ -289,7 +289,7 @@ class TerminusCleanupCommand(sublime_plugin.TextCommand):
         terminal.kill()
         process = terminal.process
 
-        if process.exitstatus == 0 and terminal.auto_close:
+        if terminal.auto_close:
             view.run_command("terminus_close")
 
         view.run_command("terminus_trim_trailing_lines")
