@@ -903,9 +903,13 @@ class ToggleTerminusPanelCommand(sublime_plugin.WindowCommand):
 
         terminus_view = window.find_output_panel(panel_name)
         if terminus_view:
-            window.run_command(
-                "show_panel", {"panel": "output.{}".format(panel_name), "toggle": True})
-            window.focus_view(terminus_view)
+            active_panel = window.active_panel()
+            if active_panel == "output.{}".format(panel_name):
+                window.run_command("hide_panel")
+            else:
+                window.run_command(
+                    "show_panel", {"panel": "output.{}".format(panel_name), "toggle": True})
+                window.focus_view(terminus_view)
         else:
             kwargs["panel_name"] = panel_name
             window.run_command("terminus_open", kwargs)
