@@ -266,7 +266,7 @@ class TerminusShowCursorCommand(sublime_plugin.TextCommand, TerminusViewMixin):
         offset_y = view.text_to_layout(view.text_point(terminal.offset, 0))[1]
         y = max(offset_y, viewport_y)
         view.settings().set("terminus_view.viewport_y", y)
-        view.set_viewport_position((0, y), True)
+        view.set_viewport_position((0, y), False)
 
 
 class TerminusCleanupCommand(sublime_plugin.TextCommand):
