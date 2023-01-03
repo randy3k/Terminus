@@ -41,7 +41,10 @@ def view_is_visible(view):
     return window.active_view_in_group(group) == view
 
 
-def view_size(view, default=None):
+def view_size(view, default=None, force=None):
+    if force:
+        if all(force):
+            return force
     pixel_width, pixel_height = view.viewport_extent()
     pixel_per_line = view.line_height()
     pixel_per_char = view.em_width()
