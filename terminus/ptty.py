@@ -459,7 +459,7 @@ class TerminalScreen(pyte.Screen):
     # def alignment_display(self):
     #     pass
 
-    def select_graphic_rendition(self, *attrs):
+    def select_graphic_rendition(self, *attrs, private=False):
         """Set display attributes.
 
         :param list attrs: a list of display attributes to set.
