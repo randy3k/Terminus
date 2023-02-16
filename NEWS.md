@@ -1,3 +1,25 @@
+# v0.3.28
+   - make select_graphic_rendition to accept private
+
+# v0.3.27:
+
+  Other:
+   - Add Nord theme
+   - Do not animate the viewport scolling
+   - allow user to override the terminal size
+   - Improve "panel background issue" FAQ suggestion
+   - add a setting to not reactivate terminals.
+   - close panel when triggered from command palette
+   - always close temrinal when auto_close is true regradless return code
+
+  Contributors:
+   - John Purnell
+   - Raoul Wols
+   - itsxaos
+   - Randy Lai
+   - t-bltg
+
+
 # v0.3.26:
 
 - fix a bug when window is None
