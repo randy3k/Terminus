@@ -49,7 +49,8 @@ class TerminusCoreEventListener(sublime_plugin.EventListener):
         if settings.get("reactivate_terminals", True) is not True:
             return
 
-        sublime.set_timeout(lambda: view.run_command("terminus_activate", kwargs), 100)
+        if view.settings().get("terminus_view.reactivable", False):
+            sublime.set_timeout(lambda: view.run_command("terminus_activate", kwargs), 100)
 
     def on_pre_close(self, view):
         # panel doesn't trigger on_pre_close

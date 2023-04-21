@@ -48,6 +48,7 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
             post_view_hooks=[],
             auto_close=True,
             cancellable=False,
+            reactivable=True,
             timeit=False,
             paths=[],
             ):
@@ -217,6 +218,7 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
                 "tag": tag,
                 "auto_close": auto_close,
                 "cancellable": cancellable,
+                "reactivable": reactivable,
                 "timeit": timeit,
                 "file_regex": file_regex,
                 "line_regex": line_regex
@@ -418,6 +420,8 @@ class TerminusExecCommand(sublime_plugin.WindowCommand):
             kwargs["auto_close"] = False
         if "cancellable" not in kwargs:
             kwargs["cancellable"] = True
+        if "reactivable" not in kwargs:
+            kwargs["reactivable"] = False
         if "timeit" not in kwargs:
             kwargs["timeit"] = True
         for key in ["encoding", "quiet", "word_wrap", "syntax"]:
@@ -461,6 +465,8 @@ class TerminusInitializeViewCommand(sublime_plugin.TextCommand):
             view_settings.set("terminus_view.tag", kwargs["tag"])
         if "cancellable" in kwargs:
             view_settings.set("terminus_view.cancellable", kwargs["cancellable"])
+        if "reactivable" in kwargs:
+            view_settings.set("terminus_view.reactivable", kwargs["reactivable"])
 
         terminus_settings = sublime.load_settings("Terminus.sublime-settings")
         view_settings.set(
