@@ -881,7 +881,7 @@ class ToggleTerminusPanelCommand(sublime_plugin.WindowCommand):
         self.cycled_panels = []
         super().__init__(*args, **kwargs)
 
-    def run(self, panel_name=None, cycle=False, **kwargs):
+    def run(self, panel_name=None, cycle=False, hide_active=None, **kwargs):
         window = self.window
         recency_manager = RecencyManager.from_window(window)
         if not recency_manager:
@@ -910,7 +910,7 @@ class ToggleTerminusPanelCommand(sublime_plugin.WindowCommand):
         terminus_view = window.find_output_panel(panel_name)
         if terminus_view:
             active_panel = window.active_panel()
-            if active_panel == "output.{}".format(panel_name):
+            if hide_active and active_panel == "output.{}".format(panel_name):
                 window.run_command("hide_panel")
             else:
                 window.run_command(

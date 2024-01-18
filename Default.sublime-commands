@@ -26,7 +26,8 @@
     },
     {
         "caption": "Terminus: Toggle Panel",
-        "command": "toggle_terminus_panel"
+        "command": "toggle_terminus_panel",
+        "args": {"hide_active": true}
     },
     {
         "caption": "Terminus: Reset",
