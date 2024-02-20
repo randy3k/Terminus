@@ -3,27 +3,15 @@ import sublime
 import sys
 import logging
 
-# from PackageDev
-# https://github.com/SublimeText/PackageDev/blob/35a68969f94459d38341ea373ab2e583e60d8cda/main.py
-try:
-    from package_control import events
-except ImportError:
-    pass
-else:
-    if events.post_upgrade(__package__):
-        # clean up sys.modules to ensure all submodules are reloaded
-        prefix = __package__ + "."  # don't clear the base package
-        modules_to_clear = {
-            module_name
-            for module_name in sys.modules
-            if module_name.startswith(prefix) and module_name != __name__
-        }
-
-        print("[{}] Cleaning up {} cached modules after update…"
-              .format(__package__, len(modules_to_clear)))
-        for module_name in modules_to_clear:
-            del sys.modules[module_name]
-
+# Clear module cache to force reloading all modules of this package.
+prefix = __package__ + "."  # don't clear the base package
+for module_name in [
+    module_name
+    for module_name in sys.modules
+    if module_name.startswith(prefix) and module_name != __name__
+]:
+    del sys.modules[module_name]
+del prefix
 
 from .terminus.clipboard import TerminusClipboardHistoryUpdater
 from .terminus.commands import (
