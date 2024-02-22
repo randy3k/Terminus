@@ -1,3 +1,13 @@
+# v0.3.31-dev
+   - add Terminus.sublime-syntax
+
+# v0.3.29 - v0.3.30
+
+   - add reactivable setting
+   - explicit arg to hide panel from command palette
+   - Fix RuntimeError raised on ST4170+
+
+
 # v0.3.28
    - make select_graphic_rendition to accept private
 
