@@ -13,6 +13,7 @@ for module_name in [
     del sys.modules[module_name]
 del prefix
 
+
 from .terminus.clipboard import TerminusClipboardHistoryUpdater
 from .terminus.commands import (
     TerminusActivateCommand,
