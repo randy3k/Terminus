@@ -199,7 +199,7 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
             if show_in_panel:
                 view = window.get_output_panel(panel_name)
             else:
-                view = window.new_file(syntax="Terminus.sublime-syntax")
+                view = window.new_file(syntax="Terminus View.sublime-syntax")
 
         # pre_window_hooks
         for hook in pre_window_hooks:
@@ -596,7 +596,7 @@ class TerminusResetCommand(sublime_plugin.TextCommand):
                     layout = window.get_layout()
                     if not has_focus:
                         window.focus_view(view)
-                    new_view = window.new_file(syntax="Terminus.sublime-syntax")
+                    new_view = window.new_file(syntax="Terminus View.sublime-syntax")
                     view.close()
 
                     def run_attach():
@@ -668,7 +668,7 @@ class TerminusMaximizeCommand(sublime_plugin.TextCommand):
                 offset = terminal.offset
                 window = get_panel_window(view)
                 window.destroy_output_panel(terminal.panel_name)
-                new_view = window.new_file(syntax="Terminus.sublime-syntax")
+                new_view = window.new_file(syntax="Terminus View.sublime-syntax")
 
                 def run_attach():
                     new_view.run_command("terminus_initialize_view")

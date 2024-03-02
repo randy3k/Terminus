@@ -77,6 +77,15 @@
         }
     },
     {
+        "caption": "Preferences: Terminus View Settings",
+        "command": "edit_settings",
+        "args":
+        {
+            "base_file": "${packages}/Terminus/Terminus View.sublime-settings",
+            "default": "{\n\t$0\n}\n"
+        }
+    },
+    {
         "caption": "Preferences: Terminus Command Palette",
         "command": "edit_settings",
         "args":

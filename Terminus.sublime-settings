@@ -139,6 +139,8 @@
     "view_settings": {
         // these are extra view settings which are passed to the terminus_view,
         // you could change settings like "font_face", "font_size" and paddings.
+        // you should also specify these settings in the syntax specfic file
+        // "Terminus View.sublime-settings".
     },
 
     // reactivate terminals when window starts
