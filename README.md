@@ -281,7 +281,7 @@ window.run_command(
         "pre_window_hooks": [],  # a list of window hooks before opening terminal
         "post_window_hooks": [], # a list of window hooks after opening terminal
         "post_view_hooks": [],   # a list of view hooks after opening terminal
-        "auto_close": True,      # auto close terminal if process exits successfully
+        "auto_close": "always",  # auto close terminal, possible values are "always" (True), "on_success", and False.
         "cancellable": False,    # allow `cancel_build` command to terminate process, only relevent to panels
         "timeit": False          # display elapsed time when the process terminates
     }
