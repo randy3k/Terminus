@@ -170,6 +170,12 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
         if not os.path.isdir(cwd):
             raise Exception("{} does not exist".format(cwd))
 
+        if default_title:
+            default_title = sublime.expand_variables(default_title, st_vars)
+
+        if title:
+            title = sublime.expand_variables(title, st_vars)
+
         if show_in_panel is None and panel_name:
             show_in_panel = True
 
