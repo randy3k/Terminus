@@ -515,6 +515,9 @@ class TerminusInitializeViewCommand(sublime_plugin.TextCommand):
         view_settings.set("bracket_highlighter.clone_locations", {})
         # disable vintageous
         view_settings.set("__vi_external_disable", True)
+        # honor settings specified in API right before user's
+        for key, value in kwargs.get("view_settings", {}).items():
+            view_settings.set(key, value)
         for key, value in terminus_settings.get("view_settings", {}).items():
             view_settings.set(key, value)
         # disable vintage
