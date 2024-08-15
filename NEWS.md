@@ -1,3 +1,7 @@
+# 0.3.32
+
+   - revert the default auto_close setting to False
+
 # v0.3.29 - v0.3.31
 
    - add Terminus.sublime-syntax
