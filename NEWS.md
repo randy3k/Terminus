@@ -1,11 +1,10 @@
-# v0.3.31-dev
+# v0.3.29 - v0.3.31
+
    - add Terminus.sublime-syntax
-
-# v0.3.29 - v0.3.30
-
    - add reactivable setting
    - explicit arg to hide panel from command palette
    - Fix RuntimeError raised on ST4170+
+   - support python 3.8 runtime
 
 
 # v0.3.28
