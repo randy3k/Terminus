@@ -47,7 +47,7 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
             post_window_hooks=[],
             post_view_hooks=[],
             view_settings={},
-            auto_close="always",
+            auto_close=False,
             cancellable=False,
             reactivable=True,
             timeit=False,
@@ -425,7 +425,7 @@ class TerminusExecCommand(sublime_plugin.WindowCommand):
         if "focus" not in kwargs:
             kwargs["focus"] = False
         if "auto_close" not in kwargs:
-            kwargs["auto_close"] = "always"
+            kwargs["auto_close"] = False
         if "cancellable" not in kwargs:
             kwargs["cancellable"] = True
         if "reactivable" not in kwargs:
