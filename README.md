@@ -275,15 +275,16 @@ window.run_command(
         "panel_name": None,      # the name of the panel if terminal should be opened in panel
         "focus": True,           # focus to the panel
         "tag": None,             # a tag to identify the terminal
-        "file_regex": None       # the `file_regex` pattern in sublime build system
+        "file_regex": None,      # the `file_regex` pattern in sublime build system
                                  # see https://www.sublimetext.com/docs/3/build_systems.html
-        "line_regex": None       # the `file_regex` pattern in sublime build system
+        "line_regex": None,      # the `file_regex` pattern in sublime build system
         "pre_window_hooks": [],  # a list of window hooks before opening terminal
         "post_window_hooks": [], # a list of window hooks after opening terminal
         "post_view_hooks": [],   # a list of view hooks after opening terminal
+        "view_settings": {},     # extra view settings which are passed to the terminus_view
         "auto_close": "always",  # auto close terminal, possible values are "always" (True), "on_success", and False.
         "cancellable": False,    # allow `cancel_build` command to terminate process, only relevent to panels
-        "timeit": False          # display elapsed time when the process terminates
+        "timeit": False,         # display elapsed time when the process terminates
     }
 )
 ```
@@ -298,7 +299,7 @@ The fields `cmd` and `cwd` understand Sublime Text build system [variables](http
 ```json
     {
         "keys": ["ctrl+alt+w"], "command": "terminus_close", "context": [
-            { "key": "terminus_view.tag", "operator": "equal", "operand": "YOUR_TAG"}
+            { "key": "terminus_view.tag", "operator": "equal", "operand": "YOUR_TAG" }
         ]
     }
 ```
@@ -310,8 +311,8 @@ window.run_command(
     "terminus_send_string", 
     {
         "string": "ls\n",
-        "tag": "<YOUR_TAG>"        # ignore this or set it to None to send text to the first terminal found
-        "visible_only": False      # send to visible terminal only, default is `False`. Only relevent when `tag` is None
+        "tag": "<YOUR_TAG>",       # ignore this or set it to None to send text to the first terminal found
+        "visible_only": False,     # send to visible terminal only, default is `False`. Only relevent when `tag` is None
     }
 )
 ```
