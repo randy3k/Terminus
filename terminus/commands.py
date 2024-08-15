@@ -46,6 +46,7 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
             pre_window_hooks=[],
             post_window_hooks=[],
             post_view_hooks=[],
+            view_settings={},
             auto_close="always",
             cancellable=False,
             reactivable=True,
@@ -227,7 +228,8 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
                 "reactivable": reactivable,
                 "timeit": timeit,
                 "file_regex": file_regex,
-                "line_regex": line_regex
+                "line_regex": line_regex,
+                "view_settings": view_settings,
             })
 
         if show_in_panel:
