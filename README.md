@@ -282,7 +282,7 @@ window.run_command(
         "post_window_hooks": [], # a list of window hooks after opening terminal
         "post_view_hooks": [],   # a list of view hooks after opening terminal
         "view_settings": {},     # extra view settings which are passed to the terminus_view
-        "auto_close": "always",  # auto close terminal, possible values are "always" (True), "on_success", and False.
+        "auto_close": False,     # auto close terminal, possible values are "always" (True), "on_success", and False.
         "cancellable": False,    # allow `cancel_build` command to terminate process, only relevent to panels
         "timeit": False,         # display elapsed time when the process terminates
     }
