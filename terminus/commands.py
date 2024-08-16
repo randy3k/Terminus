@@ -145,6 +145,11 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
 
         _env.update(env)
 
+        #  force prompt-toolkit to use 256 color
+        if "PROMPT_TOOLKIT_COLOR_DEPTH" not in os.environ \
+                and "PROMPT_TOOLKIT_COLOR_DEPTH"  not in _env:
+            _env["PROMPT_TOOLKIT_COLOR_DEPTH"] = "DEPTH_8_BIT"
+
         # paths is passed if this was invoked from the side bar context menu
         if paths:
             cwd = paths[0]
