@@ -52,13 +52,35 @@ FILE_PARAM_PATTERN = re.compile(
     r"^File=(?P<arguments>[^:]*?):(?P<data>[a-zA-Z0-9\+/=]*)(?P<cr>\r?)$"
 )
 
-@lru_cache()
-def is_256_color(fg, bg):
-    fg_ok = fg == "default" or fg == "reverse_default" \
-        or fg in g.FG_ANSI.values() or fg in FG_AIXTERM.values() or fg in g.FG_BG_256
-    bg_ok = bg == "default" or bg == "reverse_default" \
-        or bg in g.BG_ANSI.values() or bg in BG_AIXTERM.values() or bg in g.FG_BG_256
-    return fg_ok and bg_ok
+
+@lru_cache(maxsize=10000)
+def is_true_color(c):
+    return not (c == "default" or c == "reverse_default"
+                or c in g.FG_ANSI.values() or c in FG_AIXTERM.values()
+                or c in g.BG_ANSI.values() or c in BG_AIXTERM.values() or c in g.FG_BG_256)
+
+
+RGB256 = {}
+for c in pyte.graphics.FG_BG_256:
+    RGB256[c] = tuple(int(c[i:i+2], 16) for i in (0, 2, 4))
+
+
+# https://en.wikipedia.org/wiki/Color_difference#sRGB
+@lru_cache(maxsize=10000)
+def get_closest_color(c):
+    r, g, b = tuple(int(c[i:i+2], 16) for i in (0, 2, 4))
+    dmin = 1000000
+    closest_color = (0, 0, 0)
+    for c, (r2, g2, b2) in RGB256.items():
+        if r + r2 < 128:
+            d = 2 * (r - r2) ** 2 + 4 * (g - g2)**2 + 3 * (b - b2)**2
+        else:
+            d = 3 * (r - r2) ** 2 + 4 * (g - g2)**2 + 2 * (b - b2)**2
+        if d < dmin:
+            dmin = d
+            closest_color = (r2, g2, b2)
+    return "{:02x}{:02x}{:02x}".format(*closest_color)
+
 
 def reverse_fg_bg(fg, bg):
     fg, bg = bg, fg

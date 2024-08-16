@@ -6,7 +6,7 @@ import math
 import logging
 
 from .const import CONTINUATION
-from .ptty import segment_buffer_line, is_256_color
+from .ptty import segment_buffer_line, is_true_color, get_closest_color
 from .terminal import Terminal
 from .utils import rev_wcwidth, highlight_key
 
@@ -135,9 +135,10 @@ class TerminusRenderCommand(sublime_plugin.TextCommand, TerminusViewMixin):
                 self.colored_lines[line] = []
         for s in segments:
             fg, bg, bold = s[3:]
-            if not is_256_color(fg, bg):
-                # TODO: find the closest color
-                continue
+            if is_true_color(fg):
+                fg = get_closest_color(fg)
+            if is_true_color(bg):
+                bg = get_closest_color(bg)
             if fg != "default" or bg != "default":
                 if bold and self.brighten_bold_text:
                     if fg != "default" and fg != "reverse_default" and not fg.startswith("light_"):
