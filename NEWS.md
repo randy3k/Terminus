@@ -1,3 +1,7 @@
+# 0.3.33 - 0.3.34
+
+  - do not print true color
+
 # 0.3.32
 
    - revert the default auto_close setting to False

@@ -5,6 +5,7 @@ import unicodedata
 from copy import copy
 from collections import defaultdict, deque, namedtuple
 from wcwidth import wcwidth, wcswidth
+from functools import lru_cache
 
 import pyte
 from pyte.screens import StaticDefaultDict, Margins
@@ -51,6 +52,13 @@ FILE_PARAM_PATTERN = re.compile(
     r"^File=(?P<arguments>[^:]*?):(?P<data>[a-zA-Z0-9\+/=]*)(?P<cr>\r?)$"
 )
 
+@lru_cache()
+def is_256_color(fg, bg):
+    fg_ok = fg == "default" or fg == "reverse_default" \
+        or fg in g.FG_ANSI.values() or fg in FG_AIXTERM.values() or fg in g.FG_BG_256
+    bg_ok = bg == "default" or bg == "reverse_default" \
+        or bg in g.BG_ANSI.values() or bg in BG_AIXTERM.values() or bg in g.FG_BG_256
+    return fg_ok and bg_ok
 
 def reverse_fg_bg(fg, bg):
     fg, bg = bg, fg
