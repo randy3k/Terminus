@@ -59,11 +59,7 @@
         }
     ],
 
-    // Note: for unix users, you will get better 256 color experience
-    // if you also set "unix_term" to "xterm-256color"
-    // 256 color is not working on Windows because of upstream winpty's issue
-    // https://github.com/rprichard/winpty/issues/108
-    "256color": false,
+    "256color": true,
 
     // brighten bold text
     "brighten_bold_text": true,
@@ -71,7 +67,7 @@
     // the default TERM variable of unix system. Possible values are
     // "linux", "xterm" and "xterm-256color".
     // However, please aware that not all xterm features are supported.
-    "unix_term": "linux",
+    "unix_term": "xterm-256color",
 
     // the default LANG variable of unix system.
     "unix_lang": "en_US.UTF-8",
