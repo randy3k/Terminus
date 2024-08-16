@@ -47,7 +47,7 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
             post_window_hooks=[],
             post_view_hooks=[],
             view_settings={},
-            auto_close=False,
+            auto_close=True,
             cancellable=False,
             reactivable=True,
             timeit=False,
