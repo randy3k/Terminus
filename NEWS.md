@@ -1,3 +1,6 @@
+# 0.3.35
+   - use closest 8 bit colors when a rbg color is provided
+
 # 0.3.33 - 0.3.34
 
   - do not print true color
