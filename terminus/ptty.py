@@ -48,96 +48,14 @@ BG_AIXTERM = {
 }
 
 
+ANSI_COLORS = list(set(list(pyte.graphics.FG_ANSI.values()) + list(pyte.graphics.BG_ANSI.values())))
+XTERM_COLORS = ANSI_COLORS + list(set(list(FG_AIXTERM.values()) + list(BG_AIXTERM.values())))
+XTERM_256_COLORS = XTERM_COLORS + pyte.graphics.FG_BG_256
+
+
 FILE_PARAM_PATTERN = re.compile(
     r"^File=(?P<arguments>[^:]*?):(?P<data>[a-zA-Z0-9\+/=]*)(?P<cr>\r?)$"
 )
-
-
-@lru_cache(maxsize=10000)
-def is_true_color(c):
-    return not (c == "default" or c == "reverse_default"
-                or c in g.FG_ANSI.values() or c in FG_AIXTERM.values()
-                or c in g.BG_ANSI.values() or c in BG_AIXTERM.values() or c in g.FG_BG_256)
-
-
-RGB256 = {}
-for c in pyte.graphics.FG_BG_256:
-    RGB256[c] = tuple(int(c[i:i+2], 16) for i in (0, 2, 4))
-
-
-# https://en.wikipedia.org/wiki/Color_difference#sRGB
-@lru_cache(maxsize=10000)
-def get_closest_color(c):
-    r, g, b = tuple(int(c[i:i+2], 16) for i in (0, 2, 4))
-    dmin = 1000000
-    closest_color = (0, 0, 0)
-    for c, (r2, g2, b2) in RGB256.items():
-        if r + r2 < 256:
-            d = 2 * (r - r2) ** 2 + 4 * (g - g2)**2 + 3 * (b - b2)**2
-        else:
-            d = 3 * (r - r2) ** 2 + 4 * (g - g2)**2 + 2 * (b - b2)**2
-        if d < dmin:
-            dmin = d
-            closest_color = (r2, g2, b2)
-    return "{:02x}{:02x}{:02x}".format(*closest_color)
-
-
-def reverse_fg_bg(fg, bg):
-    fg, bg = bg, fg
-    if fg == "default":
-        fg = "reverse_default"
-    if bg == "default":
-        bg = "reverse_default"
-    return fg, bg
-
-
-def segment_buffer_line(buffer_line):
-    """
-    segment a buffer line based on bg and fg colors
-    """
-    is_wide_char = False
-    text = ""
-    start = 0
-    counter = 0
-    fg = "default"
-    bg = "default"
-    bold = False
-    reverse = False
-
-    if buffer_line:
-        last_index = max(buffer_line.keys()) + 1
-    else:
-        last_index = 0
-
-    for i in range(last_index):
-        if is_wide_char:
-            is_wide_char = False
-            continue
-        char = buffer_line[i]
-        is_wide_char = wcswidth(char.data) >= 2
-
-        if counter == 0:
-            counter = i
-            text = " " * i
-
-        if fg != char.fg or bg != char.bg or bold != char.bold or reverse != char.reverse:
-            if reverse:
-                fg, bg = reverse_fg_bg(fg, bg)
-            yield text, start, counter, fg, bg, bold
-            fg = char.fg
-            bg = char.bg
-            bold = char.bold
-            reverse = char.reverse
-            text = char.data
-            start = counter
-        else:
-            text += char.data
-
-        counter += 1
-
-    if reverse:
-        fg, bg = reverse_fg_bg(fg, bg)
-    yield text, start, counter, fg, bg, bold
 
 
 class Char(namedtuple("Char", [

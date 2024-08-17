@@ -4,13 +4,101 @@ import sublime_plugin
 import time
 import math
 import logging
+import pyte
+from functools import lru_cache
+from wcwidth import wcswidth
+
 
 from .const import CONTINUATION
-from .ptty import segment_buffer_line, is_true_color, get_closest_color
+from .ptty import XTERM_256_COLORS
 from .terminal import Terminal
 from .utils import rev_wcwidth, highlight_key
 
 logger = logging.getLogger('Terminus')
+
+
+@lru_cache(maxsize=10000)
+def is_supported_color(c):
+    return c in ['default', 'reverse_default'] or c in XTERM_256_COLORS
+
+
+RGB256 = {}
+for c in pyte.graphics.FG_BG_256:
+    RGB256[c] = tuple(int(c[i:i+2], 16) for i in (0, 2, 4))
+
+
+# https://en.wikipedia.org/wiki/Color_difference#sRGB
+@lru_cache(maxsize=10000)
+def get_closest_color(c):
+    r, g, b = tuple(int(c[i:i+2], 16) for i in (0, 2, 4))
+    dmin = 1000000
+    closest_color = (0, 0, 0)
+    for c, (r2, g2, b2) in RGB256.items():
+        redmean = (r + r2) / 2
+        d = (2 + redmean / 256) * (r - r2) ** 2 + 4 * \
+            (g - g2)**2 + (2 + (255-redmean) / 256) * (b - b2)**2
+        if d < dmin:
+            dmin = d
+            closest_color = (r2, g2, b2)
+    return "{:02x}{:02x}{:02x}".format(*closest_color)
+
+
+def reverse_fg_bg(fg, bg):
+    fg, bg = bg, fg
+    if fg == "default":
+        fg = "reverse_default"
+    if bg == "default":
+        bg = "reverse_default"
+    return fg, bg
+
+
+def segment_buffer_line(buffer_line):
+    """
+    segment a buffer line based on bg and fg colors
+    """
+    is_wide_char = False
+    text = ""
+    start = 0
+    counter = 0
+    fg = "default"
+    bg = "default"
+    bold = False
+    reverse = False
+
+    if buffer_line:
+        last_index = max(buffer_line.keys()) + 1
+    else:
+        last_index = 0
+
+    for i in range(last_index):
+        if is_wide_char:
+            is_wide_char = False
+            continue
+        char = buffer_line[i]
+        is_wide_char = wcswidth(char.data) >= 2
+
+        if counter == 0:
+            counter = i
+            text = " " * i
+
+        if fg != char.fg or bg != char.bg or bold != char.bold or reverse != char.reverse:
+            if reverse:
+                fg, bg = reverse_fg_bg(fg, bg)
+            yield text, start, counter, fg, bg, bold
+            fg = char.fg
+            bg = char.bg
+            bold = char.bold
+            reverse = char.reverse
+            text = char.data
+            start = counter
+        else:
+            text += char.data
+
+        counter += 1
+
+    if reverse:
+        fg, bg = reverse_fg_bg(fg, bg)
+    yield text, start, counter, fg, bg, bold
 
 
 class TerminusViewMixin:
@@ -135,9 +223,9 @@ class TerminusRenderCommand(sublime_plugin.TextCommand, TerminusViewMixin):
                 self.colored_lines[line] = []
         for s in segments:
             fg, bg, bold = s[3:]
-            if is_true_color(fg):
+            if not is_supported_color(fg):
                 fg = get_closest_color(fg)
-            if is_true_color(bg):
+            if not is_supported_color(bg):
                 bg = get_closest_color(bg)
             if fg != "default" or bg != "default":
                 if bold and self.brighten_bold_text:
