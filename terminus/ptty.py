@@ -72,7 +72,7 @@ def get_closest_color(c):
     dmin = 1000000
     closest_color = (0, 0, 0)
     for c, (r2, g2, b2) in RGB256.items():
-        if r + r2 < 128:
+        if r + r2 < 256:
             d = 2 * (r - r2) ** 2 + 4 * (g - g2)**2 + 3 * (b - b2)**2
         else:
             d = 3 * (r - r2) ** 2 + 4 * (g - g2)**2 + 2 * (b - b2)**2
