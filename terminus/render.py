@@ -32,15 +32,15 @@ for c in pyte.graphics.FG_BG_256:
 def get_closest_color(c):
     r, g, b = tuple(int(c[i:i+2], 16) for i in (0, 2, 4))
     dmin = 1000000
-    closest_color = (0, 0, 0)
+    closest_color = "000000"
     for c, (r2, g2, b2) in RGB256.items():
         redmean = (r + r2) / 2
         d = (2 + redmean / 256) * (r - r2) ** 2 + 4 * \
             (g - g2)**2 + (2 + (255-redmean) / 256) * (b - b2)**2
         if d < dmin:
             dmin = d
-            closest_color = (r2, g2, b2)
-    return "{:02x}{:02x}{:02x}".format(*closest_color)
+            closest_color = c
+    return closest_color
 
 
 def reverse_fg_bg(fg, bg):
