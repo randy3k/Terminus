@@ -52,7 +52,7 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
             reactivable=True,
             timeit=False,
             paths=[],
-            ):
+    ):
         config = None
 
         st_vars = self.window.extract_variables()
@@ -147,7 +147,7 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
 
         #  force prompt-toolkit to use 256 color
         if "PROMPT_TOOLKIT_COLOR_DEPTH" not in os.environ \
-                and "PROMPT_TOOLKIT_COLOR_DEPTH"  not in _env:
+                and "PROMPT_TOOLKIT_COLOR_DEPTH" not in _env:
             _env["PROMPT_TOOLKIT_COLOR_DEPTH"] = "DEPTH_8_BIT"
 
         # paths is passed if this was invoked from the side bar context menu
