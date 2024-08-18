@@ -25,6 +25,25 @@ else:
 logger = logging.getLogger('Terminus')
 
 
+ANSI_COLORS = [
+    "black",
+    "red",
+    "green",
+    "brown",
+    "blue",
+    "magenta",
+    "cyan",
+    "white",
+    "light_black",
+    "light_red",
+    "light_green",
+    "light_brown",
+    "light_blue",
+    "light_magenta",
+    "light_cyan",
+    "light_white"
+]
+
 FG_AIXTERM = {
     90: "light_black",
     91: "light_red",
@@ -47,10 +66,7 @@ BG_AIXTERM = {
     107: "light_white"
 }
 
-
-ANSI_COLORS = list(set(list(pyte.graphics.FG_ANSI.values()) + list(pyte.graphics.BG_ANSI.values())))
-XTERM_COLORS = ANSI_COLORS + list(set(list(FG_AIXTERM.values()) + list(BG_AIXTERM.values())))
-XTERM_256_COLORS = XTERM_COLORS + pyte.graphics.FG_BG_256
+XTERM_256_COLORS = ANSI_COLORS + pyte.graphics.FG_BG_256
 
 
 FILE_PARAM_PATTERN = re.compile(
@@ -443,7 +459,10 @@ class TerminalScreen(pyte.Screen):
                     n = attrs.pop()
                     if n == 5:    # 256.
                         m = attrs.pop()
-                        replace[key] = g.FG_BG_256[m]
+                        if m < 16:
+                            replace[key] = ANSI_COLORS[m]
+                        else:
+                            replace[key] = g.FG_BG_256[m]
                     elif n == 2:  # 24bit.
                         # This is somewhat non-standard but is nonetheless
                         # supported in quite a few terminals. See discussion
