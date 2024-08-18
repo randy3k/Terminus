@@ -10,6 +10,8 @@ TEMPLATE = OrderedDict(
     globals=OrderedDict()
 )
 
+DEFAULT_BACKGROUND = "#262626"
+
 
 def next_color(color_text):
     """
@@ -43,7 +45,8 @@ ANSI_COLORS = [
 
 
 def generate_theme_file(
-        path, variables={}, globals={}, ansi_scopes=True, color256_scopes=False, pretty=True):
+        path, variables={}, globals={}, ansi_scopes=True, color256_scopes=False,
+        background=None, pretty=True):
     COLOR_SCHEME = deepcopy(TEMPLATE)
 
     _colors16 = OrderedDict()
@@ -67,12 +70,10 @@ def generate_theme_file(
     # The foregound and background colors would be inverted. check
     # https://github.com/SublimeTextIssues/Core/issues/817
 
-    if "background" in COLOR_SCHEME["variables"]:
+    if not background and "background" in COLOR_SCHEME["variables"]:
         background = COLOR_SCHEME["variables"]["background"]
         COLOR_SCHEME["variables"]["background"] = next_color(background)
         COLOR_SCHEME["globals"]["background"] = background
-    else:
-        background = None
 
     for key, value in COLOR_SCHEME["variables"].items():
         if key == "background":
@@ -102,10 +103,12 @@ def generate_theme_file(
                 ucolor = "var(background)"
             if v in ANSI_COLORS:
                 vcolor = "var({})".format(v)
-            elif vcolor == "#default" or vcolor == background:
+            elif vcolor == "#default":
                 vcolor = "var(background)"
             elif vcolor == "#reverse_default":
                 vcolor = "var(foreground)"
+            elif vcolor == background:
+                vcolor = next_color(vcolor)
             rule = {}
             rule["scope"] = "terminus.{}.{}".format(u, v)
             rule["foreground"] = ucolor
@@ -124,7 +127,7 @@ if __name__ == "__main__":
 
     path = os.path.join(os.path.dirname(__file__), "..", "Terminus.hidden-color-scheme")
     variables = {
-        "background": "#262626",
+        "background": DEFAULT_BACKGROUND,
         "foreground": "#ffffff",
         "caret": "white",
         "selection": "#444444",
