@@ -101,21 +101,22 @@ def rev_wcwidth(text, width):
         return i + width - w
 
 
-def settings_on_change(settings, keys, clear=False):
+def set_settings_on_change(settings, keys, on_change=None):
     if not isinstance(keys, list):
         singleton = True
         keys = [keys]
     else:
         singleton = False
+
+    _key = "terminus_{}".format(".".join(keys))
+
+    if on_change is None:
+        settings.clear_on_change(_key)
+        return
+
     _cached = {}
     for key in keys:
         _cached[key] = settings.get(key, None)
-
-    _key = "terminus_{}_{}".format(settings.settings_id, ".".join(keys))
-
-    if clear:
-        settings.clear_on_change(_key)
-        return
 
     def check_cache_values(on_change):
         run_on_change = False
@@ -132,7 +133,4 @@ def settings_on_change(settings, keys, clear=False):
             else:
                 on_change(_cached)
 
-    def _(on_change):
-        settings.add_on_change(_key, lambda: check_cache_values(on_change))
-
-    return _
+    settings.add_on_change(_key, lambda: check_cache_values(on_change))

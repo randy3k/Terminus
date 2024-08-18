@@ -5,7 +5,7 @@ import os
 
 from colorsys import rgb_to_hls
 from Terminus.tools.theme_generator import generate_theme_file, ANSI_COLORS, DEFAULT_BACKGROUND
-from .utils import settings_on_change
+from .utils import set_settings_on_change
 
 
 class TerminusSelectThemeCommand(sublime_plugin.WindowCommand):
@@ -197,21 +197,24 @@ def plugin_loaded():
             lambda: sublime.active_window().run_command("terminus_generate_theme"),
             100)
 
-    settings_on_change(
-        settings, ["256color", "user_theme_colors",
-                   "user_light_theme_colors", "user_dark_theme_colors", "theme"]
-    )(lambda _: sublime.active_window().run_command("terminus_generate_theme"))
+    set_settings_on_change(
+        settings,
+        ["256color", "user_theme_colors",
+         "user_light_theme_colors", "user_dark_theme_colors", "theme"],
+        lambda _: sublime.active_window().run_command("terminus_generate_theme"))
 
     def check_update_theme(value):
         if settings.get("theme", "adaptive") == "adaptive":
             sublime.active_window().run_command("terminus_generate_theme")
 
-    settings_on_change(preferences, "color_scheme")(check_update_theme)
+    set_settings_on_change(preferences, "color_scheme", check_update_theme)
 
 
 def plugin_unloaded():
     settings = sublime.load_settings("Terminus.sublime-settings")
     preferences = sublime.load_settings("Preferences.sublime-settings")
-    settings_on_change(settings, ["256color", "user_theme_colors",
-                       "user_light_theme_colors", "user_dark_theme_colors", "theme"], clear=True)
-    settings_on_change(preferences, "color_scheme", clear=True)
+    set_settings_on_change(
+        settings,
+        ["256color", "user_theme_colors",
+         "user_light_theme_colors", "user_dark_theme_colors", "theme"], None)
+    set_settings_on_change(preferences, "color_scheme", None)

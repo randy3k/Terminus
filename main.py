@@ -58,7 +58,7 @@ from .terminus.theme import (
     plugin_loaded as theme_plugin_loaded,
     plugin_unloaded as theme_plugin_unloaded
 )
-from .terminus.utils import settings_on_change
+from .terminus.utils import set_settings_on_change
 from .terminus.view import (
     TerminusInsertCommand,
     TerminusNukeCommand,
@@ -124,7 +124,7 @@ def plugin_loaded():
             logger.setLevel(logging.WARNING)
 
     on_change(settings.get("debug", False))
-    settings_on_change(settings, "debug")(on_change)
+    set_settings_on_change(settings, "debug", on_change)
 
 
 def plugin_unloaded():
@@ -134,4 +134,4 @@ def plugin_unloaded():
 
     theme_plugin_unloaded()
     settings = sublime.load_settings("Terminus.sublime-settings")
-    settings_on_change(settings, "debug", clear=True)
+    set_settings_on_change(settings, "debug", None)
