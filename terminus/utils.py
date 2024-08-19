@@ -29,7 +29,7 @@ def available_panel_name(window, panel_name):
             count += 1
 
 
-def highlight_key(view):
+def get_highlight_key(view):
     """
     make region keys incremental and recyclable
     """

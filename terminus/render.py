@@ -12,7 +12,7 @@ from wcwidth import wcswidth
 from .const import CONTINUATION
 from .ptty import XTERM_256_COLORS
 from .terminal import Terminal
-from .utils import rev_wcwidth, highlight_key
+from .utils import rev_wcwidth, get_highlight_key
 
 logger = logging.getLogger('Terminus')
 
@@ -235,7 +235,7 @@ class TerminusRenderCommand(sublime_plugin.TextCommand, TerminusViewMixin):
                         bg = "light_" + bg
                 a = view.text_point(line, s[1])
                 b = view.text_point(line, s[2])
-                key = highlight_key(view)
+                key = get_highlight_key(view)
                 view.add_regions(
                     key,
                     [sublime.Region(a, b)],

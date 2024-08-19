@@ -7,7 +7,7 @@ import webbrowser
 
 from .const import CONTINUATION
 from .terminal import Terminal
-from .utils import highlight_key
+from .utils import get_highlight_key
 
 logger = logging.getLogger('Terminus')
 
@@ -118,10 +118,10 @@ class TerminusMouseEventListener(sublime_plugin.EventListener):
                 view.erase_regions(link_key)
 
         url_region = find_url_region(view, pt=point)
-        print(url_region)
+
         link_key = None
         if url_region:
-            link_key = highlight_key(view)
+            link_key = get_highlight_key(view)
             view.add_regions(
                 link_key,
                 [sublime.Region(*url_region)],
