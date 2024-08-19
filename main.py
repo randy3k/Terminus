@@ -13,9 +13,8 @@ for module_name in [
     del sys.modules[module_name]
 del prefix
 
-
-from .terminus.clipboard import TerminusClipboardHistoryUpdater
-from .terminus.commands import (
+from .terminus.clipboard import TerminusClipboardHistoryUpdater  # noqa: E402
+from .terminus.commands import (  # noqa: E402
     TerminusActivateCommand,
     TerminusCancelBuildCommand,
     TerminusClearUndoStackCommand,
@@ -37,29 +36,29 @@ from .terminus.commands import (
     TerminusSendStringCommand,
     ToggleTerminusPanelCommand
 )
-from .terminus.event_listeners import (
+from .terminus.event_listeners import (  # noqa: E402
     TerminusCoreEventListener
 )
-from .terminus.mouse import (
+from .terminus.mouse import (  # noqa: E402
     TerminusClickCommand,
     TerminusMouseEventListener,
     TerminusOpenContextUrlCommand,
     TerminusOpenImageCommand
 )
-from .terminus.query import TerminusQueryContextListener
-from .terminus.render import (
+from .terminus.query import TerminusQueryContextListener  # noqa: E402
+from .terminus.render import (  # noqa: E402
     TerminusCleanupCommand,
     TerminusRenderCommand,
     TerminusShowCursorCommand
 )
-from .terminus.theme import (
+from .terminus.theme import (  # noqa: E402
     TerminusGenerateThemeCommand,
     TerminusSelectThemeCommand,
     plugin_loaded as theme_plugin_loaded,
     plugin_unloaded as theme_plugin_unloaded
 )
-from .terminus.utils import set_settings_on_change
-from .terminus.view import (
+from .terminus.utils import set_settings_on_change  # noqa: E402
+from .terminus.view import (  # noqa: E402
     TerminusInsertCommand,
     TerminusNukeCommand,
     TerminusTrimTrailingLinesCommand
