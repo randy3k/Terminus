@@ -119,6 +119,7 @@ def generate_theme_file(
     with open(path, "w") as f:
         if pretty:
             f.write(json.dumps(COLOR_SCHEME, indent=4))
+            f.write("\n")
         else:
             f.write(json.dumps(COLOR_SCHEME))
 
@@ -130,6 +131,7 @@ if __name__ == "__main__":
         "background": DEFAULT_BACKGROUND,
         "foreground": "#ffffff",
         "caret": "white",
+        "block_caret": "white",
         "selection": "#444444",
         "selection_foreground": "#ffffff"
     }
@@ -137,6 +139,7 @@ if __name__ == "__main__":
         "background": "var(background)",
         "foreground": "var(foreground)",
         "caret": "var(caret)",
+        "block_caret": "var(block_caret)",
         "selection": "var(selection)",
         "selection_foreground": "var(selection_foreground)",
         "selection_corner_style": "square",
