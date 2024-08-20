@@ -1,6 +1,6 @@
 # Bring a real terminal to Sublime Text
 
-![Package Control Downloads](https://img.shields.io/packagecontrol/dm/Terminus)
+[![Package Control Downloads](https://img.shields.io/packagecontrol/dm/Terminus)](https://packagecontrol.io/packages/Terminus)
 <a href="https://www.paypal.me/randy3k/5usd" title="Donate to this project using Paypal"><img src="https://img.shields.io/badge/paypal-donate-blue.svg" /></a>
 
 
