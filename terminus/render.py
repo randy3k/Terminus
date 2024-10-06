@@ -122,6 +122,7 @@ class TerminusRenderCommand(sublime_plugin.TextCommand, TerminusViewMixin):
         settings = sublime.load_settings("Terminus.sublime-settings")
         self.scrollback_history_size = settings.get("scrollback_history_size", 10000)
         self.brighten_bold_text = settings.get("brighten_bold_text", False)
+        self.default_color = settings.get("default_color", "white")
 
     def run(self, edit):
         view = self.view
@@ -223,6 +224,9 @@ class TerminusRenderCommand(sublime_plugin.TextCommand, TerminusViewMixin):
                 self.colored_lines[line] = []
         for s in segments:
             fg, bg, bold = s[3:]
+            # hack for #415
+            if bold and fg == "default" and self.brighten_bold_text:
+                fg = self.default_color
             if not is_supported_color(fg):
                 fg = get_closest_color(fg)
             if not is_supported_color(bg):
