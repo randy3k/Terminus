@@ -1,5 +1,5 @@
 import struct
-import imghdr
+from .vendor import imghdr
 
 
 # see https://bugs.python.org/issue16512#msg198034
