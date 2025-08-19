@@ -28,30 +28,33 @@ logger = logging.getLogger('Terminus')
 
 
 class Terminal:
-    _terminals = {}
-    _detached_terminals = []
+    _terminals = {}  # type: dict[int, Terminal]
+    _detached_terminals = []  # type: list[Terminal]
 
     def __init__(self, view=None):
-        self.view = view
-        self._cached_cursor = [0, 0]
-        self._size = sublime.load_settings('Terminus.sublime-settings').get('size', (None, None))
-        self._cached_cursor_is_hidden = [True]
-        self.image_count = 0
-        self.images = {}
-        self._strings = Queue()
-        self._pending_to_send_string = [False]
-        self._pending_to_clear_scrollback = [False]
-        self._pending_to_reset = [None]
-        self.lock = threading.Lock()
+        # type: (sublime.View | None) -> None
+        self.view = view                             # type: sublime.View | None
+        self._cached_cursor = [0, 0]                 # type: list[int]
+        self._size = sublime.load_settings('Terminus.sublime-settings').get('size', (None, None))  # type: tuple[int | None, int | None]
+        self._cached_cursor_is_hidden = [True]       # type: list[bool]
+        self.image_count = 0                         # type: int
+        self.images = {}                             # type: dict[int, str]
+        self._strings = Queue()                      # type: Queue
+        self._pending_to_send_string = [False]       # type: list[bool]
+        self._pending_to_clear_scrollback = [False]  # type: list[bool]
+        self._pending_to_reset = [None]              # type: list[bool | None]
+        self.lock = threading.Lock()                 # type: threading.Lock
 
     @classmethod
     def from_id(cls, vid):
+        # type: (int) -> Terminal | None
         if vid not in cls._terminals:
             return None
         return cls._terminals[vid]
 
     @classmethod
     def from_tag(cls, tag, current_window_only=True):
+        # type: (str, bool) -> Terminal | None
         # restrict to only current window
         for terminal in cls._terminals.values():
             if terminal.tag == tag:
@@ -66,7 +69,8 @@ class Terminal:
 
     @classmethod
     def cull_terminals(cls):
-        terminals_to_kill = []
+        # type: () -> None
+        terminals_to_kill = []  # type: list[Terminal]
         for terminal in cls._terminals.values():
             if not terminal.is_hosted():
                 terminals_to_kill.append(terminal)
@@ -76,14 +80,16 @@ class Terminal:
 
     @property
     def window(self):
+        # type: () -> sublime.Window | None
         if self.detached:
             return None
         if self.show_in_panel:
             return get_panel_window(self.view)
         else:
-            return self.view.window()
+            return self.view.window()  # type: ignore
 
     def attach_view(self, view, offset=None):
+        # type: (sublime.View, int | None) -> None
         with self.lock:
             self.view = view
             self.detached = False
@@ -95,21 +101,24 @@ class Terminal:
             self.set_offset(offset)
 
     def detach_view(self):
+        # type: () -> None
         with self.lock:
             self.detached = True
             Terminal._detached_terminals.append(self)
-            if self.view.id() in Terminal._terminals:
-                del Terminal._terminals[self.view.id()]
+            if self.view.id() in Terminal._terminals:  # type: ignore
+                del Terminal._terminals[self.view.id()]  # type: ignore
             self.view = None
 
     @responsive(period=1, default=True)
     def is_hosted(self):
+        # type: () -> bool
         if self.detached:
             # irrelevant if terminal is detached
             return True
         return self.window is not None
 
     def _need_to_render(self):
+        # type: () -> bool
         flag = False
         if self.screen.dirty:
             flag = True
@@ -126,11 +135,13 @@ class Terminal:
         return flag
 
     def _start_rendering(self):
+        # type: () -> None
         data = [""]
         done = [False]
 
         @responsive(period=1, default=False)
         def was_resized():
+            # type: () -> bool
             size = view_size(self.view, force=self._size)
             return self.screen.lines != size[0] or self.screen.columns != size[1]
 
@@ -156,7 +167,7 @@ class Terminal:
 
             def feed_data():
                 if len(data[0]) > 0:
-                    logger.debug("receieved: {}".format(data[0]))
+                    logger.debug("received: {}".format(data[0]))
                     self.stream.feed(data[0])
                     data[0] = ""
 
@@ -166,10 +177,10 @@ class Terminal:
                     if not self.detached:
                         if was_resized():
                             self.handle_resize()
-                            self.view.run_command("terminus_show_cursor")
+                            self.view.run_command("terminus_show_cursor")  # type: ignore
 
                         if self._need_to_render():
-                            self.view.run_command("terminus_render")
+                            self.view.run_command("terminus_render")  # type: ignore
                             self.screen.dirty.clear()
 
                     if done[0] or not self.is_hosted():
@@ -188,6 +199,7 @@ class Terminal:
         threading.Thread(target=renderer).start()
 
     def set_offset(self, offset=None):
+        # type: (int | None) -> None
         if offset is not None:
             self.offset = offset
         else:
@@ -202,7 +214,8 @@ class Terminal:
             self, cmd, cwd=None, env=None, default_title=None, title=None,
             show_in_panel=None, panel_name=None, tag=None, auto_close=True, cancellable=False,
             timeit=False):
-
+        # type: (str | bytes | list[str] | list[bytes], str | None, dict[str, str] | None, str | None, str | None, str | None, str | None, str | None, bool, bool, bool) -> None
+        # type: ignore (`cmd` is impossible to type correctly without imports)
         view = self.view
         if view:
             self.detached = False
@@ -229,7 +242,7 @@ class Terminal:
             view or sublime.active_window().active_view(), default=(40, 80), force=self._size)
         logger.debug("view size: {}".format(str(size)))
         _env = os.environ.copy()
-        _env.update(env)
+        _env.update(env)  # type: ignore (should pass dict[str, str] here, not None)
         self.process = TerminalPtyProcess.spawn(cmd, cwd=cwd, env=_env, dimensions=size)
         self.screen = TerminalScreen(
             size[1], size[0], process=self.process, history=10000,
@@ -241,14 +254,16 @@ class Terminal:
         self._start_rendering()
 
     def kill(self):
+        # type: () -> None
         logger.debug("kill")
 
         self.process.terminate()
-        vid = self.view.id()
+        vid = self.view.id()  # type: ignore
         if vid in self._terminals:
             del self._terminals[vid]
 
     def handle_resize(self):
+        # type: () -> None
         size = view_size(self.view, force=self._size)
         logger.debug("handle resize {} {} -> {} {}".format(
             self.screen.lines, self.screen.columns, size[0], size[1]))
@@ -260,20 +275,24 @@ class Terminal:
             pass
 
     def clear_callback(self):
+        # type: () -> None
         self._pending_to_clear_scrollback[0] = True
 
     def reset_callback(self):
+        # type: () -> None
         if self._pending_to_reset[0] is None:
             self._pending_to_reset[0] = False
         else:
             self._pending_to_reset[0] = True
 
     def send_key(self, *args, **kwargs):
+        # type: (Any, Any) -> None  # type: ignore (`from typing import Any`)
         kwargs["application_mode"] = self.application_mode_enabled()
         kwargs["new_line_mode"] = self.new_line_mode_enabled()
         self.send_string(get_key_code(*args, **kwargs), normalized=False)
 
     def send_string(self, string, normalized=True):
+        # type: (str, bool) -> None
         if normalized:
             # normalize CR and CRLF to CR (or CRLF if LNM)
             string = string.replace("\r\n", "\n")
@@ -294,6 +313,7 @@ class Terminal:
                 threading.Thread(target=self.process_send_string).start()
 
     def process_send_string(self):
+        # type: () -> None
         while True:
             try:
                 string = self._strings.get(False)
@@ -306,30 +326,35 @@ class Terminal:
                 time.sleep(0.1)
 
     def bracketed_paste_mode_enabled(self):
+        # type: () -> bool
         return (2004 << 5) in self.screen.mode
 
     def new_line_mode_enabled(self):
+        # type: () -> bool
         return (20 << 5) in self.screen.mode
 
     def application_mode_enabled(self):
+        # type: () -> bool
         return (1 << 5) in self.screen.mode
 
     def find_image(self, pt):
+        # type: (sublime.Point) -> int | None
         view = self.view
         for pid in self.images:
-            region = view.query_phantom(pid)[0]
+            region = view.query_phantom(pid)[0]  # type: ignore
             if region.end() == pt:
                 return pid
         return None
 
     def show_image(self, data, args, cr=None):
+        # type: (str, dict[str, str], str | None) -> None
         view = self.view
 
         if "inline" not in args or not args["inline"]:
             return
 
         cursor = self.screen.cursor
-        pt = view.text_point(self.offset + cursor.y, cursor.x)
+        pt = view.text_point(self.offset + cursor.y, cursor.x)  # type: ignore
 
         databytes = base64.decodebytes(data.encode())
 
@@ -349,17 +374,17 @@ class Terminal:
             height,
             args["width"] if "width" in args else None,
             args["height"] if "height" in args else None,
-            view.em_width(),
-            view.viewport_extent()[0] - 3 * view.em_width(),
+            view.em_width(),  # type: ignore
+            view.viewport_extent()[0] - 3 * view.em_width(),  # type: ignore
             args["preserveAspectRatio"] if "preserveAspectRatio" in args else 1
         )
 
         if self.find_image(pt):
-            self.view.run_command("terminus_insert", {"point": pt, "character": " "})
+            self.view.run_command("terminus_insert", {"point": pt, "character": " "})  # type: ignore
             pt += 1
 
         self.image_count += 1
-        p = view.add_phantom(
+        p = view.add_phantom(  # type: ignore
             "terminus_image#{}".format(self.image_count),
             sublime.Region(pt, pt),
             IMAGE.format(
@@ -376,11 +401,12 @@ class Terminal:
             self.screen.index()
 
     def clean_images(self):
+        # type: () -> None
         view = self.view
         for pid in list(self.images.keys()):
-            region = view.query_phantom(pid)[0]
+            region = view.query_phantom(pid)[0]  # type: ignore
             if region.empty() and region.begin() == 0:
-                view.erase_phantom_by_id(pid)
+                view.erase_phantom_by_id(pid)  # type: ignore
                 if pid in self.images:
                     try:
                         os.remove(self.images[pid])
@@ -389,6 +415,7 @@ class Terminal:
                     del self.images[pid]
 
     def __del__(self):
+        # type: () -> None
         # make sure the process is terminated
         self.process.terminate(force=True)
 
