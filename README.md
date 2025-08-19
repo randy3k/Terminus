@@ -285,6 +285,7 @@ window.run_command(
         "auto_close": False,     # auto close terminal, possible values are "always" (True), "on_success", and False.
         "cancellable": False,    # allow `cancel_build` command to terminate process, only relevent to panels
         "timeit": False,         # display elapsed time when the process terminates
+        "reuse_existing": False  # if terminal with same tag exists, switch to it instead of restarting the session
     }
 )
 ```
