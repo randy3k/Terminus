@@ -660,6 +660,7 @@ class TerminalStream(pyte.Stream):
                     continue
 
                 basic_dispatch[char]()
+
             elif char == CSI_C1:
                 # All parameters are unsigned, positive decimal integers, with
                 # the most significant digit sent first. Any parameter greater
@@ -679,6 +680,7 @@ class TerminalStream(pyte.Stream):
                 private = False
                 while True:
                     char = yield
+
                     if char == "?":
                         private = True
                     elif char in ALLOWED_IN_CSI:
@@ -705,26 +707,25 @@ class TerminalStream(pyte.Stream):
                             else:
                                 csi_dispatch[char](*params)
                             break  # CSI is finished.
-            elif char == OSC_C1:
-                code = ""
-                while True:
-                    char = yield
-                    if char in OSC_TERMINATORS or char == ";":
-                        break
-                    code += char
 
+            elif char == OSC_C1:
+                code = yield None
                 if code == "R":
                     continue  # Reset palette. Not implemented.
                 elif code == "P":
                     continue  # Set palette. Not implemented.
 
                 param = ""
-                if char == ";":
-                    while True:
-                        block = yield OSC_PARAM
-                        if block in OSC_TERMINATORS:
-                            break
-                        param += block
+                while True:
+                    char = yield None
+                    if char == ESC:
+                        char += yield None
+                    if char in OSC_TERMINATORS:
+                        break
+                    else:
+                        param += char
+
+                param = param[1:]  # Drop the ;.
 
                 osc_dispatch[code](param)
 
