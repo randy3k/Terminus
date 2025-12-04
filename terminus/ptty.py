@@ -722,7 +722,7 @@ class TerminalStream(pyte.Stream):
                     else:
                         param += char
 
-                osc_dispatch[code](param[1:]) # Drop the final ;.
+                osc_dispatch[code](param[1:]) # Drop the ;.
 
             elif char not in NUL_OR_DEL:
                 draw(char)
