@@ -1,3 +1,5 @@
+# type: ignore (`image_resize(width, height)` are impossible to type correctly)
+
 import struct
 from .vendor import imghdr
 
@@ -5,10 +7,12 @@ from .vendor import imghdr
 # see https://bugs.python.org/issue16512#msg198034
 # not added to imghdr.tests because of potential issues with reloads
 def _is_jpg(h):
+    # type: (bytes) -> bool
     return h.startswith(b'\xff\xd8')
 
 
 def get_image_info(databytes):
+    # type: (bytes) -> tuple[str, int, int] | None
     head = databytes[0:32]
     if len(head) != 32:
         return
@@ -43,10 +47,13 @@ def get_image_info(databytes):
         width, height = struct.unpack('II', head[18:26])
     else:
         return
-    return what, width, height
+    return what, width, height  # type: ignore (tuple[str, int, int] here)
 
 
 def image_resize(img_width, img_height, width, height, em_width, max_width, preserve_ratio=1):
+    # type: (int, int, str | None, str | None, int, int, str | int) -> tuple[int, int]
+    # type: ignore
+
     if width:
         if width.isdigit():
             width = int(width) * em_width

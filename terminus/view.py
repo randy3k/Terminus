@@ -5,6 +5,7 @@ import re
 
 
 def get_panel_window(view):
+    # type: (sublime.View) -> sublime.Window | None
     for w in sublime.windows():
         for panel in w.panels():
             v = w.find_output_panel(panel.replace("output.", ""))
@@ -14,6 +15,7 @@ def get_panel_window(view):
 
 
 def get_panel_name(view):
+    # type: (sublime.View) -> str | None
     for w in sublime.windows():
         for panel in w.panels():
             v = w.find_output_panel(panel.replace("output.", ""))
@@ -23,6 +25,7 @@ def get_panel_name(view):
 
 
 def panel_is_visible(view):
+    # type: (sublime.View) -> bool
     window = get_panel_window(view)
     if not window:
         return False
@@ -34,6 +37,7 @@ def panel_is_visible(view):
 
 
 def view_is_visible(view):
+    # type: (sublime.View) -> bool
     window = view.window()
     if not window:
         return False
@@ -42,9 +46,10 @@ def view_is_visible(view):
 
 
 def view_size(view, default=None, force=None):
+    # type: (sublime.View, tuple[int, int] | None, tuple[int | None, int | None] | None) -> tuple[int, int]
     if force:
         if all(force):
-            return force
+            return force  # type: ignore (is tuple[int, int] here)
     pixel_width, pixel_height = view.viewport_extent()
     pixel_per_line = view.line_height()
     pixel_per_char = view.em_width()
@@ -80,12 +85,14 @@ def view_size(view, default=None, force=None):
 class TerminusInsertCommand(sublime_plugin.TextCommand):
 
     def run(self, edit, point, character):
+        # type: (sublime.Edit, sublime.Point, str) -> None
         self.view.insert(edit, point, character)
 
 
 class TerminusTrimTrailingLinesCommand(sublime_plugin.TextCommand):
 
     def run(self, edit):
+        # type: (sublime.Edit) -> None
         view = self.view
         lastrow = view.rowcol(view.size())[0]
         if not self.is_empty(lastrow):
@@ -111,5 +118,6 @@ class TerminusTrimTrailingLinesCommand(sublime_plugin.TextCommand):
 class TerminusNukeCommand(sublime_plugin.TextCommand):
 
     def run(self, edit):
+        # type: (sublime.Edit) -> None
         view = self.view
         view.replace(edit, sublime.Region(0, view.size()), "")
