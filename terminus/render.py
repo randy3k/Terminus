@@ -153,6 +153,7 @@ class TerminusRenderCommand(sublime_plugin.TextCommand, TerminusViewMixin):
             self.trim_history(edit, terminal)
             view.run_command("terminus_show_cursor")
 
+        # Set title normally
         current_title = view.name()
         if terminal.title:
             if current_title != terminal.title:
@@ -164,6 +165,30 @@ class TerminusRenderCommand(sublime_plugin.TextCommand, TerminusViewMixin):
             else:
                 if current_title != terminal.default_title:
                     view.set_name(terminal.default_title)
+        
+        # Get panel name for status message
+        panel_name = getattr(terminal, 'panel_name', None)
+        
+        # If not found in terminal, try to get from view settings
+        if not panel_name:
+            view_args = view.settings().get("terminus_view.args", {})
+            panel_name = view_args.get("panel_name", None)
+        
+        # If still not found, try to get from the panel itself
+        if not panel_name:
+            window = view.window()
+            if window:
+                for panel in window.panels():
+                    panel_view = window.find_output_panel(panel.replace("output.", ""))
+                    if panel_view and panel_view.id() == view.id():
+                        panel_name = panel.replace("output.", "")
+                        break
+        
+        # Show panel identification via window status message
+        if panel_name:
+            window = view.window()
+            if window:
+                window.status_message(f"Terminal: {panel_name}")
 
         # we should not clear dirty lines here, it shoud be done in the eventloop
         # screen.dirty.clear()
@@ -379,16 +404,43 @@ class TerminusCleanupCommand(sublime_plugin.TextCommand):
 
         # process might became orphan, make sure the process is terminated
         terminal.kill()
-        process = terminal.process
 
-        if terminal.auto_close is True or terminal.auto_close == "always" or \
-                (process.exitstatus == 0 and terminal.auto_close == "on_success"):
-            view.run_command("terminus_close")
 
-        view.run_command("terminus_trim_trailing_lines")
-
-        if by_user:
-            view.run_command("append", {"characters": "[Cancelled]"})
+class TerminusStatusBarListener(sublime_plugin.EventListener):
+    """Event listener to show status message when switching between Terminus views"""
+    
+    def on_activated(self, view):
+        """Called when a view gains focus"""
+        if not view or not view.settings().get("terminus_view"):
+            return
+            
+        # This is a Terminus view, show status message
+        terminal = Terminal.from_id(view.id())
+        if not terminal:
+            return
+            
+        # Get panel name
+        panel_name = getattr(terminal, 'panel_name', None)
+        
+        # Try alternative methods if not found
+        if not panel_name:
+            view_args = view.settings().get("terminus_view.args", {})
+            panel_name = view_args.get("panel_name", None)
+        
+        if not panel_name:
+            window = view.window()
+            if window:
+                for panel in window.panels():
+                    panel_view = window.find_output_panel(panel.replace("output.", ""))
+                    if panel_view and panel_view.id() == view.id():
+                        panel_name = panel.replace("output.", "")
+                        break
+        
+        # Show status message
+        if panel_name:
+            window = view.window()
+            if window:
+                window.status_message(f"Terminal: {panel_name}")
 
         elif terminal.timeit:
             if process.exitstatus == 0:

@@ -37,6 +37,14 @@
     { "keys": ["pagedown"], "command": "terminus_keypress", "args": {"key": "pagedown"}, "context": [{"key": "terminus_view"}] },
     { "keys": ["home"], "command": "terminus_keypress", "args": {"key": "home"}, "context": [{"key": "terminus_view"}] },
     { "keys": ["end"], "command": "terminus_keypress", "args": {"key": "end"}, "context": [{"key": "terminus_view"}] },
+    // Create new terminal (creates "Terminus", "Terminus 2", etc.)
+
+    { "keys": ["ctrl+n"], "command": "terminus_open", "args": {"show_in_panel": true}, "context": [{"key": "terminus_view"}] },
+    
+    // Navigate between terminus panels (forward and backward)
+    { "keys": ["ctrl+tab"], "command": "toggle_terminus_panel", "args": {"cycle": true}, "context": [{"key": "terminus_view"}] },
+    { "keys": ["ctrl+shift+tab"], "command": "toggle_terminus_panel", "args": {"cycle": true, "reverse": true}, "context": [{"key": "terminus_view"}] },
+
 
     { "keys": ["escape"], "command": "terminus_keypress", "args": {"key": "escape"},
         "context": [
