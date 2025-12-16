@@ -52,6 +52,7 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
             reactivable=True,
             timeit=False,
             paths=[],
+            reuse_existing=False,
     ):
         config = None
 
@@ -200,6 +201,10 @@ class TerminusOpenCommand(sublime_plugin.WindowCommand):
         if terminal:
             # cleanup existing terminal
             view = terminal.view
+            # reuse existing view if requested
+            if reuse_existing:
+                window.focus_view(view)
+                return
             # avoid terminus_cleanup
             view.settings().set("terminus_view.finished", True)
             terminal.kill()
