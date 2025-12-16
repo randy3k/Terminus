@@ -271,7 +271,20 @@ class Terminal:
     def send_key(self, *args, **kwargs):
         kwargs["application_mode"] = self.application_mode_enabled()
         kwargs["new_line_mode"] = self.new_line_mode_enabled()
-        self.send_string(get_key_code(*args, **kwargs), normalized=False)
+        keycode = get_key_code(*args, **kwargs)
+
+        # Remap Option/Alt + Arrow keys to regular Arrow keys
+        alt_arrow_map = {
+            "\x1b[1;3A": "\x1b[A",  # Alt+Up -> Up
+            "\x1b[1;3B": "\x1b[B",  # Alt+Down -> Down
+            # "\x1b[1;3C": "\x1b[C",  # Alt+Right -> Right
+            # "\x1b[1;3D": "\x1b[D",  # Alt+Left -> Left
+            "\x1b[1;3C": "\x1bf",  # Alt+Right -> move word right
+            "\x1b[1;3D": "\x1bb",  # Alt+Left -> move word left
+        }
+        if keycode in alt_arrow_map:
+            keycode = alt_arrow_map[keycode]
+        self.send_string(keycode, normalized=False)
 
     def send_string(self, string, normalized=True):
         if normalized:
