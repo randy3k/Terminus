@@ -474,11 +474,11 @@ class TerminalScreen(pyte.Screen):
 
         self.cursor.attrs = self.cursor.attrs._replace(**replace)
 
-    # def report_device_attributes(self, mode=0, **kwargs):
-    #     pass
+    def report_device_attributes(self, mode=0, private=False):
+        pass
 
-    # def report_device_status(self, mode):
-    #     pass
+    def report_device_status(self, mode, private=False):
+        pass
 
     def write_process_input(self, data):
         self._process.write(data)
@@ -599,9 +599,12 @@ class TerminalStream(pyte.Stream):
         OSC_TERMINATORS = set([ctrl.ST_C0, ctrl.ST_C1, ctrl.BEL, ctrl.CR])
 
         def create_dispatcher(mapping):
-            return defaultdict(lambda: debug, dict(
-                (event, getattr(listener, attr))
-                for event, attr in mapping.items()))
+            return defaultdict(
+                lambda: debug,
+                dict(
+                    (event, getattr(listener, attr)) for event, attr in mapping.items()
+                ),
+            )
 
         basic_dispatch = create_dispatcher(basic)
         sharp_dispatch = create_dispatcher(self.sharp)
