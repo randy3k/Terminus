@@ -374,7 +374,7 @@ class TerminalScreen(pyte.Screen):
         if how == 0 or how == 1:
             self.erase_in_line(how)
 
-        if how == 3:
+        if how == 3 or how == 2:
             self.history.clear()
             self._clear_callback()
 
