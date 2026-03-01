@@ -56,6 +56,13 @@
             "env": {},
             "enable": true,
             "platforms": ["windows"]
+        },
+        {
+            "name": "Git Bash",
+            "cmd": ["C:/Program Files/Git/bin/sh.exe"],
+            "env": {},
+            "enable": true,
+            "platforms": ["windows"]
         }
     ],
 
