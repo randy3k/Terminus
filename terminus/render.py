@@ -123,6 +123,20 @@ class TerminusRenderCommand(sublime_plugin.TextCommand, TerminusViewMixin):
         self.scrollback_history_size = settings.get("scrollback_history_size", 10000)
         self.brighten_bold_text = settings.get("brighten_bold_text", False)
 
+        # Pre-compute default color for bold text
+        self.default_color = None
+        if self.brighten_bold_text:
+            settings = sublime.load_settings("Terminus.sublime-settings")
+            if settings.get("theme", "adaptive") == "user":
+                fg_hex = settings.get("user_theme_colors", {}).get("foreground", "#ffffff").lstrip("#")
+            else:
+                fg_hex = view.style().get("foreground", "#ffffff").lstrip("#")
+            r = int(fg_hex[0:2], 16)
+            g = int(fg_hex[2:4], 16)
+            b = int(fg_hex[4:6], 16)
+            brightness = (r * 299 + g * 587 + b * 114) / 1000
+            self.default_color = "white" if brightness >= 128 else "black"
+
     def run(self, edit):
         view = self.view
         startt = time.time()
@@ -221,17 +235,22 @@ class TerminusRenderCommand(sublime_plugin.TextCommand, TerminusViewMixin):
             self.ensure_position(edit, line, segments[-1][2])
             if line not in self.colored_lines:
                 self.colored_lines[line] = []
+
         for s in segments:
             fg, bg, bold = s[3:]
+            # When bold and fg is "default", use the theme's foreground color
+            if bold and fg == "default" and self.default_color:
+                fg = self.default_color
             if not is_supported_color(fg):
                 fg = get_closest_color(fg)
             if not is_supported_color(bg):
                 bg = get_closest_color(bg)
             if fg != "default" or bg != "default":
                 if bold and self.brighten_bold_text:
-                    if fg != "default" and fg != "reverse_default" and not fg.startswith("light_"):
+                    # Only brighten named colors (not hex colors)
+                    if fg not in ["default", "reverse_default"] and not fg.startswith("light_") and len(fg) != 6:
                         fg = "light_" + fg
-                    if bg != "default" and bg != "reverse_default" and not bg.startswith("light_"):
+                    if bg not in ["default", "reverse_default"] and not bg.startswith("light_") and len(bg) != 6:
                         bg = "light_" + bg
                 a = view.text_point(line, s[1])
                 b = view.text_point(line, s[2])
