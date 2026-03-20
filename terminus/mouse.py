@@ -21,6 +21,20 @@ rex = re.compile(
     [a-zA-Z0-9\-_~:/#@$*+=]                           # allowed end chars
     ''')
 
+# File path regex - matches file paths with optional line:column
+# Supports: /home/file, ./file, ../file, C:\file, src/file.d:42, build.lua:42
+rex_file = re.compile(
+    r'''(?x)
+    (?:
+        [a-zA-Z0-9_\-]+(?:/[a-zA-Z0-9_.\-]+)+ |  # Relative paths like src/dawn/iqm.d
+        \.{1,2}/[a-zA-Z0-9_.\-/]+ |              # Explicit relative ./ or ../
+        /[a-zA-Z0-9_.\-/]+ |                     # Unix absolute paths
+        [a-zA-Z]:[/\\][a-zA-Z0-9_.\-/\\]+ |      # Windows absolute paths
+        [a-zA-Z0-9_\-]+\.[a-zA-Z0-9_]+           # Simple filenames like build.lua
+    )
+    (?::\d+(?::\d+)?)?                           # Optional :line or :line:col
+    ''')
+
 URL_POPUP = """
 <style>
 body {
@@ -52,15 +66,19 @@ def find_url(view, event=None, pt=None):
 
     text = view.substr(line)
     text = text.replace(CONTINUATION + "\n", "")
-    it = rex.finditer(text)
 
-    for match in it:
+    # First check for web URLs
+    for match in rex.finditer(text):
         if match.start() <= (pt - line.a) and match.end() >= (pt - line.a):
             url = text[match.start():match.end()]
             if url[0:3] == "www":
                 return "http://" + url
-            else:
-                return url
+            return url
+
+    # Then check for file paths
+    for match in rex_file.finditer(text):
+        if match.start() <= (pt - line.a) and match.end() >= (pt - line.a):
+            return text[match.start():match.end()]
 
     return None
 
@@ -77,6 +95,7 @@ def find_url_region(view, event=None, pt=None):
     original_text = text
     text = text.replace(CONTINUATION + "\n", "")
 
+    # First check for web URLs
     for match in rex.finditer(text):
         if match.start() <= (pt - line.a) and match.end() >= (pt - line.a):
             a = match.start()
@@ -85,6 +104,17 @@ def find_url_region(view, event=None, pt=None):
                 if a <= marker.start() and b >= marker.start():
                     b += len(CONTINUATION) + 1
             return (line.a + a, line.a + b)
+
+    # Then check for file paths
+    for match in rex_file.finditer(text):
+        if match.start() <= (pt - line.a) and match.end() >= (pt - line.a):
+            a = match.start()
+            b = match.end()
+            for marker in re.finditer(CONTINUATION + "\n", original_text):
+                if a <= marker.start() and b >= marker.start():
+                    b += len(CONTINUATION) + 1
+            return (line.a + a, line.a + b)
+
     return None
 
 
@@ -104,14 +134,24 @@ class TerminusMouseEventListener(sublime_plugin.EventListener):
             return
         if hover_zone != sublime.HOVER_TEXT:
             return
-        url = find_url(view, pt=point)
+        target = find_url(view, pt=point)
 
-        if not url:
+        if not target:
             return
 
         def on_navigate(action):
-            if action == "open":
-                webbrowser.open_new_tab(url)
+            if action != "open":
+                return
+            # Check if it's a file path (starts with /, ./, ../, X:\, or has file extension)
+            is_file = (target.startswith('/') or target.startswith('.') or
+                       (len(target) > 1 and target[1] == ':') or
+                       '.' in target.split(':')[0])
+            if is_file:
+                # Open file in Sublime Text
+                cwd = terminal.cwd if hasattr(terminal, 'cwd') else None
+                open_file(target, view.window(), cwd)
+            else:
+                webbrowser.open_new_tab(target)
 
         def on_hide():
             if link_key:
@@ -135,10 +175,61 @@ class TerminusMouseEventListener(sublime_plugin.EventListener):
             on_navigate=on_navigate, on_hide=on_hide)
 
 
+def open_file(file_path, window, cwd=None):
+    """Open a file path in Sublime Text, with optional line:column."""
+    import os
+
+    # Parse line:column suffix
+    line = col = None
+    if ':' in file_path:
+        parts = file_path.rsplit(':', 2)
+        if len(parts) == 3 and parts[2].isdigit():
+            file_path, line, col = parts[0], int(parts[1]) - 1, int(parts[2]) - 1
+        elif len(parts) == 2 and parts[1].isdigit():
+            file_path, line = parts[0], int(parts[1]) - 1
+
+    # Expand ~ to home
+    if file_path.startswith('~/'):
+        file_path = os.path.expanduser(file_path)
+
+    # Resolve relative paths using cwd
+    if cwd and not os.path.isabs(file_path):
+        file_path = os.path.normpath(os.path.join(cwd, file_path))
+
+    if not window:
+        return
+
+    if line is not None:
+        flags = sublime.ENCODED_POSITION
+        if col is not None and col >= 0:
+            file_arg = "{}:{}:{}".format(file_path, line + 1, col + 1)
+        else:
+            file_arg = "{}:{}".format(file_path, line + 1)
+        window.open_file(file_arg, flags=flags)
+    else:
+        window.open_file(file_path)
+
+
 class TerminusOpenContextUrlCommand(sublime_plugin.TextCommand):
     def run(self, edit, event):
-        url = find_url(self.view, event)
-        webbrowser.open_new_tab(url)
+        target = find_url(self.view, event)
+        if not target:
+            return
+
+        # Check if it's a file path (starts with /, ./, ../, X:\, or has file extension)
+        is_file = (target.startswith('/') or target.startswith('.') or
+                   (len(target) > 1 and target[1] == ':') or
+                   '.' in target.split(':')[0])
+        if is_file:
+            self.open_file(target)
+        else:
+            webbrowser.open_new_tab(target)
+
+    def open_file(self, file_path):
+        """Open a file path in Sublime Text, with optional line:column."""
+        terminal = Terminal.from_id(self.view.id())
+        cwd = terminal.cwd if terminal and hasattr(terminal, 'cwd') else None
+        open_file(file_path, self.view.window(), cwd)
 
     def is_enable(self, *args, **kwargs):
         terminal = Terminal.from_id(self.view.id())
@@ -149,10 +240,18 @@ class TerminusOpenContextUrlCommand(sublime_plugin.TextCommand):
         return terminal is not None and find_url(self.view, event) is not None
 
     def description(self, event):
-        url = find_url(self.view, event)
-        if len(url) > 64:
-            url = url[0:64] + "..."
-        return "Open " + url
+        target = find_url(self.view, event)
+        if not target:
+            return "Open"
+        if len(target) > 64:
+            target = target[0:64] + "..."
+        # Check if it's a file path
+        is_file = (target.startswith('/') or target.startswith('.') or
+                   (len(target) > 1 and target[1] == ':') or
+                   '.' in target.split(':')[0])
+        if is_file:
+            return "Open File " + target
+        return "Open URL " + target
 
     def want_event(self):
         return True

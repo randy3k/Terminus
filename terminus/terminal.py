@@ -221,6 +221,7 @@ class Terminal:
             self.start_time = time.time()
         self.default_title = default_title
         self.title = title
+        self.cwd = cwd
 
         if view:
             self.set_offset()
